@@ -68,7 +68,7 @@ void Backup (char *pcName){
       fnmerge (path,drive,dir,file,".BAK");
    else
       fnmerge (path,drive,dir,file,".BAC");
-   Out (3,"\x7\Creating backup of archive (%s)\n\r",path);
+   Out (3,"\x7""Creating backup of archive (%s)\n\r",path);
    CopyFile (pcName, path);
 }
 
@@ -106,7 +106,7 @@ int SetArchive (char *pcPath, BYTE mode){
 	       Error (90,"spare copy of file header is damaged, unable to test for damage protection");
 	       g.fDamageProtected = 0;
 	    } else {
-	       Out (7,"\x5\File header has been reconstructed with spare copy of file header\n\r");
+	       Out (7,"\x5""File header has been reconstructed with spare copy of file header\n\r");
 	       g=q;
 	    }
 	 } else {

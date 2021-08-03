@@ -362,7 +362,7 @@ void Convert (char *filename, int type){
 	    convertmode=1;
 
 	    // Analyze archive to be converted
-	    Out (3,"\x4\Analyzing archive depth\n\r");
+	    Out (3,"\x4""Analyzing archive depth\n\r");
 	    RClearMask();
 	    InvHashC(); // Needed for each archive being processed!
 	    bExtractMode=0; // do NOT create directories (yet)
@@ -386,11 +386,11 @@ void Convert (char *filename, int type){
 	    strcpy (ConvDel, pcTmpFile);
 	    strcpy (pcTagFile,TmpFile(filename,0,".TMP"));
 	    strcpy (TagsDel, pcTagFile);
-	    Out (3,"\x4\Saving archive tags\n\r");
+	    Out (3,"\x4""Saving archive tags\n\r");
 	    DumpTags (tfile, pcTagFile);
 
 	    fconv=1;
-	    Out (3,"\x4\Creating empty target archive\n\r");
+	    Out (3,"\x4""Creating empty target archive\n\r");
 	    GBack();
 	    InvHashC(); // Needed for each archive being processed!
 	    MODE.fInc = 0;
@@ -411,28 +411,28 @@ void Convert (char *filename, int type){
 	    char *tp = MkTmpPath();
 
 	    if (revs-1) for (i=0;i<revs;i++){
-	       Out (3,"\x4\Processing revision %ld files \n\r",i);
+	       Out (3,"\x4""Processing revision %ld files \n\r",i);
 
 	       CExtract (tfile, tp, i, 3);
 	       GBack();
 	       CAdd (pcTmpFile, tp, 1, 1);
 	    }
 
-	    Out (3,"\x4\Processing revision free files \n\r");
+	    Out (3,"\x4""Processing revision free files \n\r");
 
 	    CExtract (tfile, tp, 0, 2);
 	    GBack();
 	    CAdd (pcTmpFile, tp, 0, 0);
 
 	    ChPath ("\\"); // ensure tdir isn't active, OS/2 2.x
-	    Out (3,"\x7\Removing temporary files/directories ");
+	    Out (3,"\x7""Removing temporary files/directories ");
             StartProgress (-1, 3);
 	    KillTmpPath();
 	    GBack();
 	    EndProgress();
             Out (3,"\n\r");
 
-	    Out (3,"\x4\Restoring archive tags\n\r");
+	    Out (3,"\x4""Restoring archive tags\n\r");
 	    ReadTags (pcTmpFile, pcTagFile);
 	    Delete (pcTagFile);
 
@@ -503,7 +503,7 @@ anyway:
 	 char tmp[20];
 	 sprintf (tmp,"U2_EX%s.BAT",ext);
 	 sprintf (com,"%s %s %s",LocateF(tmp,1),tfile,_argv[0]);
-	 Out (3,"\x4\Expanding archive %s\n\r",filename);
+	 Out (3,"\x4""Expanding archive %s\n\r",filename);
 	 Out (7,"\x7   \n\r");
 	 ssystem (com);
 	 ssystem (LocateF("U2_XTRA.BAT",2));
@@ -518,19 +518,19 @@ errr:
 	    Delete (tfile);
 	    spstat=2;
 	    GBack();
-	    Out (3,"\x7\Removing temporary files/directories ");
+	    Out (3,"\x7""Removing temporary files/directories ");
             StartProgress (-1, 3);
 	    KillTmpPath();
 	    EndProgress();
             Out (3,"\n\r");
 	    goto error;
 	 }
-	 Out (3,"\x5\Archive %s has been successfully expanded\n\r",filename);
+	 Out (3,"\x5""Archive %s has been successfully expanded\n\r",filename);
 	 Delete (TMPPREF"chk1");
 	 Delete (TMPPREF"chk2");
 	 if (CONFIG.fVscan){
 	    sprintf (com,"%s",LocateF("U2_CHECK.BAT",2));
-	    Out (3,"\x4\Testing files (virus checking etc.)\n\r");
+	    Out (3,"\x4""Testing files (virus checking etc.)\n\r");
 	    Out (7,"\x7   \n\r");
 	    ssystem (com);
 	    if (!Exists(TMPPREF"chk3")){
@@ -540,7 +540,7 @@ errr:
 		  FatalError (190,"something went wrong during testing of files (virus checking etc.)");
 	       goto errr;
 	    }
-	    Out (3,"\x5\U2_CHECK did not report problems.\n\r");
+	    Out (3,"\x5""U2_CHECK did not report problems.\n\r");
 	    Delete (TMPPREF"chk3");
 	 }
 	 GBack();
@@ -579,7 +579,7 @@ errr:
 	 CloseArchive();
 
 	 ChPath ("\\"); // ensure tdir isn't active, OS/2 2.0
-	 Out (3,"\x7\Removing temporary files/directories ");
+	 Out (3,"\x7""Removing temporary files/directories ");
          StartProgress (-1, 3);
 	 KillTmpPath();
 	 EndProgress();

@@ -192,8 +192,8 @@ void RecIt (void){
    if (!convertmode){
       if (recneeded){
 	 if (cerro){
-	    Out (7,"\x8\A UltraRecover file is present\n\r");
-	    Out (7,"\x8\Reconstruct the archive with 'UC T'\n\r");
+	    Out (7,"\x8""A UltraRecover file is present\n\r");
+	    Out (7,"\x8""Reconstruct the archive with 'UC T'\n\r");
 	 } else {
 	    Recover (pcArchivePath,pcRecPath,pcArchivePath);
 	    Delete (pcRecPath);
@@ -246,9 +246,9 @@ void IncUpdateArchive (char *pcPath){
       DWORD from=xhead[iArchArea].locCdir.dwOffset;
       DWORD len=AWLen()-from;
       if (strncmp(pcRecPath,"U$~",3)==0)
-	 Out (3,"\x7\Creating internal crash recover file ");
+	 Out (3,"\x7""Creating internal crash recover file ");
       else
-         Out (3,"\x7\Creating crash recover file %s ",pcRecPath);
+         Out (3,"\x7""Creating crash recover file %s ",pcRecPath);
       StartProgress (-1, 3);
       BYTE *pbBuf = xmalloc (16384, STMP);
       int o=Open(pcRecPath, MUST|CR|CWR);
@@ -926,11 +926,11 @@ void ScanAddR (VPTR dir, VPTR Mpath, int parents, int rapid){
       static char wh[260];
       strcpy (wh, where);
       RepTmp (wh);
-      Out (1,"\x7\Scanning %s\x7 ",wh);
+      Out (1,"\x7""Scanning %s\x7 ",wh);
       StartProgress (-1, 1);
    }
    if (!scan1){
-      Out (2,"\x7\Scanning\x7 ");
+      Out (2,"\x7""Scanning\x7 ");
       scan1=1;
       StartProgress (-1, 2);
    }
@@ -1512,8 +1512,8 @@ noq:
 	       dwMyCtr += ((REVNODE*)V(rev))->filemeta.dwLength;
 	    } else {
 	       if (!MODE.fContains && !MODE.fQuery){
-		  Out (3,"\x7\Deleting %s\n\r",WFull (rev,i));
-		  Out (4,"\x7\Delete %s\n\r",WFull (rev,i));
+		  Out (3,"\x7""Deleting %s\n\r",WFull (rev,i));
+		  Out (4,"\x7""Delete %s\n\r",WFull (rev,i));
 		  ((REVNODE*)V(rev))->bStatus = FST_DEL; // mark file for delete
 	       } else {
 		  ((REVNODE*)V(rev))->bStatus = FST_MARK; // mark file for delete
@@ -1643,7 +1643,7 @@ DWORD dwFiles, dwDirs;
 DWORD dwTSize;
 static void NotifyOld (void){
    if (CONFIG.fOut==1){
-      COut (3,"\x7\Archive ");
+      COut (3,"\x7""Archive ");
       fs (dwFiles, dwDirs, dwTSize);
       COut (3|8," \r");
    }
@@ -1883,7 +1883,7 @@ void SuperDump (void){ // A:* OK
       CONFIG.dSerial = 1;
    WritePipe (pipe, (BYTE *)&(CONFIG.dSerial), 4);
 //   Out (7,"[SUPER-DUMP 7]\n");
-   Out (1,"\x7\Compressing central directory ");
+   Out (1,"\x7""Compressing central directory ");
    StartProgress (-1, 1);
    if (compress.wMethod>=20 && compress.wMethod<30){
       compress.wMethod-=20;
@@ -2250,7 +2250,7 @@ void TTafl (VPTR dir, VPTR rev, DWORD no){
 	       if (stricmp(getenv("UC2_PUC"),"ON")==0)
 		  ((REVNODE*)V(rev))->compress.dwMasterPrefix = NOMASTER;
 	    }
-            Out (3,"\x7\Compressing %s ",WFull(rev,no));
+            Out (3,"\x7""Compressing %s ",WFull(rev,no));
             StartProgress ((int)(((REVNODE*)V(rev))->filemeta.dwLength/256), 3);
 	    if (movemode) MoveAdd (Full(rev));
 	    if (MODE.fRab) RabAdd (Full(rev));
@@ -2532,7 +2532,7 @@ void TTefl (VPTR dir, VPTR rev, DWORD no){
 #ifndef UE2
 	 if (MODE.fQuery==2) goto skipit;
 	 if (MODE.fQuery){
-	    Menu ("\x6\Print file %s ?",WFull(rev,no));
+	    Menu ("\x6""Print file %s ?",WFull(rev,no));
 	    Option ("",'Y',"es");
 	    Option ("",'N',"o");
 	    Option ("",'A',"ll files");
@@ -2550,8 +2550,8 @@ void TTefl (VPTR dir, VPTR rev, DWORD no){
 		  goto skipit;
 	    }
 	 }
-	 Out (3,"\x7\Printing file %s ",WFull(rev,no));
-         Out (4,"\x7\Print %s ",WFull(rev,no));
+	 Out (3,"\x7""Printing file %s ",WFull(rev,no));
+         Out (4,"\x7""Print %s ",WFull(rev,no));
          StartProgress (-1, 3);
 	 ARSeek ((((REVNODE*)V(rev))->location.dwVolume),
 		 (((REVNODE*)V(rev))->location.dwOffset));
@@ -2567,7 +2567,7 @@ void TTefl (VPTR dir, VPTR rev, DWORD no){
 	    char com[400];
 	    sprintf (com, "%s U$~PRF.TMP %s %s", LocateF("U2_PRINT.BAT ",2), pcArchivePath, WFull(rev,no));
 	    ssystem (com);
-	    Out (3,"\x5\OK\n\r");
+	    Out (3,"\x5""OK\n\r");
 	 } else {
 	    Doing ("printing file %s",WFull(rev,no));
 	    Error (90,"file is damaged");
@@ -2575,7 +2575,7 @@ void TTefl (VPTR dir, VPTR rev, DWORD no){
 	 }
 	 Delete ("U$~PRF.TMP");
       } else if (iVerifyMode){
-	 Out (3,"\x7\Verifying %s ",WFull(rev,no));
+	 Out (3,"\x7""Verifying %s ",WFull(rev,no));
          StartProgress ((int)(((REVNODE*)V(rev))->filemeta.dwLength/32768L), 3);
 	 ARSeek ((((REVNODE*)V(rev))->location.dwVolume),
 		 (((REVNODE*)V(rev))->location.dwOffset));
@@ -2586,7 +2586,7 @@ void TTefl (VPTR dir, VPTR rev, DWORD no){
 	 bDBar=0;
 	 ((REVNODE*)V(rev))->bStatus = FST_OLD; // mark as extracted
 	 if (((REVNODE*)V(rev))->filemeta.wFletch==Fletcher(&Fout)){
-	    Out (3,"\x5\OK\n\r");
+	    Out (3,"\x5""OK\n\r");
 	 } else {
 	    Doing ("verifying file %s",WFull(rev,no));
 	    Error (90,"file is damaged");
@@ -2627,7 +2627,7 @@ void TTefl (VPTR dir, VPTR rev, DWORD no){
 	       if (!(MODE.bExOverOpt==2)){ // not always
 		  if (MODE.bExOverOpt!=3){ // not NEVER
 		     ask=0;
-		     Menu ("\x6\Overwrite file %s ?",WFull(rev,DELREV));
+		     Menu ("\x6""Overwrite file %s ?",WFull(rev,DELREV));
 		     Option ("",'Y',"es");
 		     Option ("",'N',"o");
 		     Option ("",'A',"lways overwrite files");
@@ -2647,14 +2647,14 @@ skipit:
 			   goto skipit;
 		     }
 		  } else {
-		     Out (3,"\x7\Skipping %s (already exists)\n\r",WFull(rev,no));
+		     Out (3,"\x7""Skipping %s (already exists)\n\r",WFull(rev,no));
 		     goto skipit;
 		  }
 	       }
 	    }
 #ifndef UE2
 	    if (MODE.fQuery && ask){
-	       Menu ("\x6\Extract file %s ?",WFull(rev,DELREV));
+	       Menu ("\x6""Extract file %s ?",WFull(rev,DELREV));
 	       Option ("",'Y',"es");
 	       Option ("",'N',"o");
 	       Option ("",'A',"ll files");
@@ -2681,11 +2681,11 @@ doit:
 	 if (!smskip) closeme = iHan = Open (Full(rev), TRY|CR|CWR);
 	 if (smskip || (iHan!=-1)){
 	    if (smskip){
-	       Out (3,"\x7\Smart skipping %s ",WFull(rev,no));
+	       Out (3,"\x7""Smart skipping %s ",WFull(rev,no));
 	    } else {
-	       Out (3,"\x7\Decompressing %s ",WFull(rev,no));
+	       Out (3,"\x7""Decompressing %s ",WFull(rev,no));
                StartProgress ((int)(((REVNODE*)V(rev))->filemeta.dwLength/32768L), 3);
-	       Out (4,"\x7\Extract %s",WFull(rev,no));
+	       Out (4,"\x7""Extract %s",WFull(rev,no));
 	       ARSeek ((((REVNODE*)V(rev))->location.dwVolume),
 		       (((REVNODE*)V(rev))->location.dwOffset));
 	       bDBar=1;
@@ -2756,7 +2756,7 @@ doit:
 		  }
 	       }
 
-	       if (err!=1) Out (3,"\x5\OK");
+	       if (err!=1) Out (3,"\x5""OK");
 	       if (err==2) Out (3,"\x7  [OS/2 EA extracted]");
 	       Out (7,"\n\r");
 	    } else {
@@ -2815,7 +2815,7 @@ void TTchk (VPTR dir, VPTR rev, DWORD no){
       if (filter&&((REVNODE*)V(rev))->compress.dwMasterPrefix!=ntx)
 	 return;
       if (!doquery){
-	 Out (3,"\x7\Searching file %s ",WFull(rev,no));
+	 Out (3,"\x7""Searching file %s ",WFull(rev,no));
          StartProgress (-1, 3);
 	 ARSeek ((((REVNODE*)V(rev))->location.dwVolume),
 		 (((REVNODE*)V(rev))->location.dwOffset));
@@ -2833,8 +2833,8 @@ void TTchk (VPTR dir, VPTR rev, DWORD no){
 	    else
 	       Out (3,"\x5 %ld MATCHES\n\r\x7",Found());
 	    if (bDeleteMode && !MODE.fQuery){
-	       Out (3,"\x7\Deleting %s\n\r",WFull (rev,no));
-	       Out (4,"\x7\Delete %s\n\r",WFull (rev,no));
+	       Out (3,"\x7""Deleting %s\n\r",WFull (rev,no));
+	       Out (4,"\x7""Delete %s\n\r",WFull (rev,no));
 	    }
 	 }
 	 bDBar=0;
@@ -2867,8 +2867,8 @@ okk:
 	    }
 	 }
 	 if (bDeleteMode && revn->bStatus!=FST_OLD){
-	    Out (3,"\x7\Deleting %s\n\r",WFull (rev,no));
-	    Out (4,"\x7\Delete %s\n\r",WFull (rev,no));
+	    Out (3,"\x7""Deleting %s\n\r",WFull (rev,no));
+	    Out (4,"\x7""Delete %s\n\r",WFull (rev,no));
 	 }
 
       }

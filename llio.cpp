@@ -908,8 +908,8 @@ void CopyFile (char *from, char *onto){
 
 void DFlush (char *why){
    if (CONFIG.bRelia==2){
-      Out (3,"\x4\Flush: %s\n\r",why);
-      Out (4,"\x4\Flush\n\r");
+      Out (3,"\x4""Flush: %s\n\r",why);
+      Out (4,"\x4""Flush\n\r");
       flushall();
       if (CONFIG.fOut==4){
 	 char tmp[260];

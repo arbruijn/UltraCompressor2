@@ -405,7 +405,7 @@ void MakeNewMas (VPTR me){
    ptmp = xmalloc (max_mastitem, TMP);
    WORD wExtra;
    dwMaster = ((MASREC*)V(me))->masmeta.dwIndex;
-   Out (1,"\x7\Analyzing %s files ",ToDes(((MASREC*)V(me))));
+   Out (1,"\x7""Analyzing %s files ",ToDes(((MASREC*)V(me))));
    StartProgress (-1, 1);
    ((MASREC*)V(me))->bCache = bCache;
    if (!bCache){
@@ -471,7 +471,7 @@ void ReadOldMas (VPTR me){
       Seek (iMHandle[iArchArea], GetFileSize (iMHandle[iArchArea]));
    }
    wLen=0;
-   Out (1,"\x7\Loading %s statistics ",ToDes(((MASREC*)V(me))));
+   Out (1,"\x7""Loading %s statistics ",ToDes(((MASREC*)V(me))));
    StartProgress (3, 1);
    Hint();
    if (((MASREC*)V(me))->compress.dwMasterPrefix==0xDEDEDEDEL)
@@ -484,7 +484,7 @@ void ReadOldMas (VPTR me){
 }
 
 void AddAccess (BYTE fInc){
-   Out (2,"\x7\Analyzing ");
+   Out (2,"\x7""Analyzing ");
    StartProgress (-1, 2);
    VPTR walk = masroot[iArchArea];
    while (!IS_VNULL(walk)){
@@ -763,11 +763,11 @@ void ListMast (PIPE &p){
 	    case MS_NEWC:
 	       // compress master
 	       if (!flag){
-		  Out (2,"\x7\Optimizing compression ");
+		  Out (2,"\x7""Optimizing compression ");
                   StartProgress (-1, 2);
 		  flag=1;
 	       }
-	       Out (1,"\x7\Optimizing %s compression ",
+	       Out (1,"\x7""Optimizing %s compression ",
 		     ToDes(((MASREC*)V(walk))));
 	       AWTell (&(((MASREC*)V(walk))->location.dwVolume),
 		       &(((MASREC*)V(walk))->location.dwOffset));

@@ -159,9 +159,9 @@ int Validate (){
 void OnOff (int i){
 #ifndef UE2
    if (i==0){
-      FSOut(7,"\x5\OFF\x7\ (on)");
+      FSOut(7,"\x5""OFF\x7"" (on)");
    } else {
-      FSOut(7,"\x5\ON\x7\ (off)");
+      FSOut(7,"\x5""ON\x7"" (off)");
    }
 #endif
 }
@@ -395,7 +395,7 @@ void HelpMenu (){
       Logo();
       for (int i=0;i<9;i++) ch[i]='\x7';
       ch[opt]='\x6';
-      FSOut(7,"\x6\HELP MENU \x7(view\x3 & search \x7\documentation)\n\r");
+      FSOut(7,"\x6""HELP MENU \x7(view\x3 & search \x7""documentation)\n\r");
       FSOut(7,"  \x6 0%c   -> WHATSNEW  %s",ch[0],Check(-1,"WHATSNEW.DOC","what changed from UC2 to UC2 revision 2\x3 NEW!\n\r"));
       FSOut(7,"  \x6 1%c   -> README    %s",ch[1],Check(0,"README.DOC","how to get started, overview, features etc.\n\r"));
       FSOut(7,"  \x6 2%c   -> LICENSE   %s",ch[2],Check(1,"LICENSE.DOC","the licenses, warranty etc.\n\r"));
@@ -407,15 +407,15 @@ void HelpMenu (){
       FSOut(7,"  \x6 8%c   -> EXTEND    %s\n\r",ch[8],Check(7,"EXTEND.DOC","tools; extended commands and options\x3 NEW!\n\r"));
 
 #ifdef UCPROX
-      if (debug) FSOut(7,"\x6\CONFIGURATION [[MEM FREE : %lu]]\n\r",farcoreleft());
-      else FSOut(7,"\x6\CONFIGURATION\n\r");
+      if (debug) FSOut(7,"\x6""CONFIGURATION [[MEM FREE : %lu]]\n\r",farcoreleft());
+      else FSOut(7,"\x6""CONFIGURATION\n\r");
 #else
-      FSOut(7,"\x6\CONFIGURATION\n\r");
+      FSOut(7,"\x6""CONFIGURATION\n\r");
 #endif
       FSOut(7,"\x6   C\x7 -> (re)configure\n\r\n\r");
 again:
-      FSOut(7,"\x6\CHOICE (Escape to quit)?                                      \x7Mini help: \x3UC -?\r");
-      FSOut(7,"\x6\CHOICE (Escape to quit)? ");
+      FSOut(7,"\x6""CHOICE (Escape to quit)?                                      \x7Mini help: \x3UC -?\r");
+      FSOut(7,"\x6""CHOICE (Escape to quit)? ");
       Cursor();
       char ch=Echo(GetKey());
 got:
@@ -496,7 +496,7 @@ got:
 	    FSOut (7,"\n\r");
 	    return;
 	 default:
-	    FSOut (7,"\x8\ *** WRONG CHOICE ***\r");
+	    FSOut (7,"\x8"" *** WRONG CHOICE ***\r");
             delay (500);
             FSOut (7,"                                                         \r");
             goto again;
@@ -692,7 +692,7 @@ int Logo (void){
 	 for (int i=0;i<50;i++)
 	    delline();
    if ((StdOutType()==D_CON)&&(wherex()!=1)) Out (7,"\r\n");
-   Out (4,"\x7\UC2, Copyright 1994, Ad Infinitum Programs, all rights reserved\r\n");
+   Out (4,"\x7""UC2, Copyright 1994, Ad Infinitum Programs, all rights reserved\r\n");
    if (StdOutType()==D_CON)
       Out (3,"\x4ÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍÍ\r\n");
    else
@@ -704,7 +704,7 @@ int Logo (void){
    Out (3,"\x4°Û  °Û   °Û   °Û ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ\r\n");
    Out (3,"\x4°Û  °Û  °ÛÛÛ  °Û Copyright 1994, Ad Infinitum Programs, all rights reserved\r\n");
 #else
-   Out (3,"\x4 °ÛÛÛ   °ÛÛÛ  °ÛÛÛÛ      \x3\UltraCompressor II (tm)  revision 2\n\r");
+   Out (3,"\x4 °ÛÛÛ   °ÛÛÛ  °ÛÛÛÛ      \x3""UltraCompressor II (tm)  revision 2\n\r");
    Out (3,"\x4°Û  °Û   °Û   °Û  °Û     \"The new way of archiving.\"\r\n");
    Out (3,"\x4°ÛÛÛÛÛ   °Û   °ÛÛÛÛ  -NL \"Fast, reliable and superior compression.\"\r\n");
    Out (3,"\x4°Û  °Û   °Û   °Û ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ\r\n");
@@ -915,7 +915,7 @@ void cdecl exito (void){
       }
       switch (problemos){
          case 0:
-            Out (3,"\n\r\x5\Everything went OK");
+            Out (3,"\n\r\x5""Everything went OK");
             break;
          case 1:
             if (CONFIG.finstall){
@@ -1508,8 +1508,8 @@ restart:
          strcpy (path,"C:\\UC2");
    againo:
          clrscr();
-	 Out (7,"\x6\AIP-NL UltraCompressor II revision 2 (tm) INSTALL PROGRAM\n\r\n\r");
-         Out (7,"\x7\UltraCompressor II is a powerful datacompressor which allows you\n\r");
+	 Out (7,"\x6""AIP-NL UltraCompressor II revision 2 (tm) INSTALL PROGRAM\n\r\n\r");
+         Out (7,"\x7""UltraCompressor II is a powerful datacompressor which allows you\n\r");
          Out (7,"to keep collections of files in an archive.\n\r\n\r");
          Out (7,"Some of its special features are:\n\r");
          Out (7,"   - extremely tight compression\n\r");
@@ -1518,12 +1518,12 @@ restart:
          Out (7,"   - simple user interface (integrated help)\n\r");
          Out (7,"   - reliable (e.g. archives can recover from damaged sectors)\n\r");
          Out (7,"   - ability to store multiple versions of a file in an archive\n\r");
-         Out (7,"   - project oriented Version Manager \x6\NEW!\x7\n\r");
+         Out (7,"   - project oriented Version Manager \x6""NEW!\x7\n\r");
          Out (7,"   - transparent conversion of non-UC2 archives\n\r");
          Out (7,"   - advanced filtering on contents, date/time, attributes \x6NEW!\x7\n\r\n\r");
-         Out (7,"\x6\Please note this software can only be used, (re)distributed,\n\r");
+         Out (7,"\x6""Please note this software can only be used, (re)distributed,\n\r");
          Out (7,"etc. according to the included license agreement (license.doc)!\n\r");
-         Menu ("\x6\Do you want to install UltraCompressor II in %s\\ ?",path);
+         Menu ("\x6""Do you want to install UltraCompressor II in %s\\ ?",path);
          Option ("",'Y',"es");
          Option ("",'N',"o");
          Option ("",'D',"ifferent location");

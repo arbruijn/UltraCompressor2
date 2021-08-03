@@ -142,7 +142,7 @@ void DamPro (int iHandle){
    DWORD dwLen = GetFileSize (iHandle);
    Seek (iHandle, dwLen+1);
 //   IOut ("[dwLen=%ld]\n\r",dwLen);
-   Out (3,"\x7\Damage protecting archive ");
+   Out (3,"\x7""Damage protecting archive ");
    StartProgress ((int)(dwLen/512L), 3);
    if (dwLen!=0){
       DWORD dwSecs = dwLen/512L;
@@ -281,12 +281,12 @@ int VerifyDP (void){
 	 if (cmp!=check){
 	    Doing ("testing archive sectors");
 	    Error (90,"sector %ld is damaged",i+1);
-	    Out (3,"\x7\Continueing test ");
+	    Out (3,"\x7""Continueing test ");
             StartProgress (-1, 3);
 	    ret=0;
 	 }
       }
-      if (ret) Out (3,"  \x5\OK");
+      if (ret) Out (3,"  \x5""OK");
       Out (3,"\n\r\x7Testing protection records ");
       StartProgress (-1, 3);
       for (i=0;i<wDrs;i++){
@@ -296,13 +296,13 @@ int VerifyDP (void){
 	    if (ret==1){
 		Doing ("testing protection records");
 		Error (90,"protection record %d is damaged (but all data is 100% OK)",i+1);
-		Out (3,"\x7\Continueing test ");
+		Out (3,"\x7""Continueing test ");
                 StartProgress (-1, 3);
 		ret=0;
 	    }
 	 }
       }
-      if (ret) Out (3,"  \x5\OK");
+      if (ret) Out (3,"  \x5""OK");
       Out (3,"\n\r");
       xfree (tbuf, STMP);
    }
@@ -380,13 +380,13 @@ int RepairDP (char *dest){
       if ((cmp==check) || spec){
 	 Write (tbuf, oHandle, 512);
 	 if (cop==0){
-	    Out (3,"\x7\Copying archive sectors ");
+	    Out (3,"\x7""Copying archive sectors ");
 	    cop=1;
 	 }
 	 BC();
       } else {
 	 bc=0;
-	 Out (7,"\n\r\x7\Reconstructing sector %ld ",i+1);
+	 Out (7,"\n\r\x7""Reconstructing sector %ld ",i+1);
 	 memset (tbuf, 0, 512);
 	 WORD  x= (WORD)(i%wDrs);
 	 DWORD j= x;

@@ -215,7 +215,7 @@ int bmenu(){
    struct text_info ti;
    gettextinfo(&ti);
    int oldattr = ti.attribute;
-   Menu ("\x8\BREAK detected");
+   Menu ("\x8""BREAK detected");
 again:
    if ((skipstat!=1) || noskip){
       Option ("",'A',"bort");
@@ -304,7 +304,7 @@ void cdecl errHan(unsigned deverr, unsigned errval, unsigned far *devhdr){
   if (fatal) goto leave;
   if (cestat==0 || cestat==4){
       cestat=2;
-      Menu ("\x8\CRITICAL ERROR: %s",cerror);
+      Menu ("\x8""CRITICAL ERROR: %s",cerror);
       Option ("",'A',"bort");
       Option ("",'T',"ry again");
       switch (Choice()){
@@ -347,7 +347,7 @@ leave:
 
 void diskfull (char* file){
    if (fatal) errHan (0,0,NULL);
-   Menu ("\x8\SYSTEM ERROR: write to %s failed (disk full?)",file);
+   Menu ("\x8""SYSTEM ERROR: write to %s failed (disk full?)",file);
 again:
    Option ("",'A',"bort");
    Option ("",'T',"ry again");
@@ -362,7 +362,7 @@ again:
 	 syst();
 	 break;
    }
-   Menu ("\x8\(PENDING) SYSTEM ERROR: write to %s failed (disk full?)",file);
+   Menu ("\x8(PENDING) SYSTEM ERROR: write to %s failed (disk full?)",file);
    goto again;
 }
 
@@ -390,7 +390,7 @@ int CeAskOpen (char *name, char *why, int skip){
       Warning (30,"auto-skip triggered by '%s' (%s)",cerror,name);
       return 0; // network error
    }
-   Menu ("\x8\SYSTEM ERROR: %s (attempting to %s %s)",cerror,why,name);
+   Menu ("\x8""SYSTEM ERROR: %s (attempting to %s %s)",cerror,why,name);
 again:
    Option ("",'A',"bort");
    Option ("",'T',"ry again");
@@ -408,13 +408,13 @@ again:
       case 4:
 	 return 0;
    }
-   Menu ("\x8\(PENDING) SYSTEM ERROR: %s (attempting to %s %s)",cerror,why,name);
+   Menu ("\x8(PENDING) SYSTEM ERROR: %s (attempting to %s %s)",cerror,why,name);
    goto again;
 }
 
 void ceask (void){
    if (!cehan) return; // mode 3, retry imidiately
-   Menu ("\x8\SYSTEM ERROR: %s",cerror);
+   Menu ("\x8""SYSTEM ERROR: %s",cerror);
 again:
    Option ("",'A',"bort");
    Option ("",'T',"ry again");
@@ -429,7 +429,7 @@ again:
 	 syst();
 	 break;
    }
-   Menu ("\x8\(PENDING) SYSTEM ERROR: %s",cerror);
+   Menu ("\x8(PENDING) SYSTEM ERROR: %s",cerror);
    goto again;
 }
 

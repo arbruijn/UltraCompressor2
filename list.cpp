@@ -268,13 +268,13 @@ static void WalkDirs (){
    while (!IS_VNULL(walk)){
       TCD (walk);
       if (bVerbose)
-         Out (7,"\x4\----------------------------------------------------------------------------\r\n");
+         Out (7,"\x4""----------------------------------------------------------------------------\r\n");
       if (MODE.fGlf){
       } else if (bDump){
          Out (7, "LIST [\\%s]\r\n",GetPath(walk,TDeep()));
       } else {
 	 if (bVerbose || bListableFiles())
-            Out(7,"\x4\--> Directory of \\%s\r\n\x7",GetPath(walk,TDeep()));
+            Out(7,"\x4""--> Directory of \\%s\r\n\x7",GetPath(walk,TDeep()));
       }
       if (!bDump && !MODE.fGlf && bVerbose) Out (7,"\r\n");
       dwItemCtr=0;
@@ -295,7 +295,7 @@ void ListArchI (){
    } else if (bDump){
       Out (7, "LIST [\\]\r\n");
    } else {
-      Out(7,"\x4\--> Directory of \\%s\r\n\x7",GetPath(TWD(),TDeep()));
+      Out(7,"\x4""--> Directory of \\%s\r\n\x7",GetPath(TWD(),TDeep()));
       if (bVerbose) Out (7,"\r\n");
    }
    dwItemCtr=0;
@@ -382,7 +382,7 @@ void ListArch (VPTR Mpath){
 	 long per = (gf*1000)/ts;
 	 long aper = 1000-per;
 	 if (rat>100)
-	    Out (7,"\5\compression ratio      = 1:%ld.%02ld  (%ld.%1ld%% reduction, %ld.%1ld%% left)\r\n",rat/100,rat%100,aper/10,aper%10,per/10,per%10);
+	    Out (7,"\5""compression ratio      = 1:%ld.%02ld  (%ld.%1ld%% reduction, %ld.%1ld%% left)\r\n",rat/100,rat%100,aper/10,aper%10,per/10,per%10);
       }
    } else {
       Out (7,"\4""files listed = %s", neat(dwFil));
@@ -399,7 +399,7 @@ void ListArch (VPTR Mpath){
 	 long per = (gf*1000)/ts;
 	 long aper = 1000-per;
 	 if (rat>100)
-            Out (7,"\x5\compression ratio = 1:%ld.%02ld  (%ld.%1ld%% reduction, %ld.%1ld%% left)\r\n",rat/100,rat%100,aper/10,aper%10,per/10,per%10);
+            Out (7,"\x5""compression ratio = 1:%ld.%02ld  (%ld.%1ld%% reduction, %ld.%1ld%% left)\r\n",rat/100,rat%100,aper/10,aper%10,per/10,per%10);
       }
    }
 }
