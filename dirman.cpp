@@ -215,7 +215,7 @@ giveup:
 int MkPath (char *path){
    if (MODE.bMKDIR!=3){ // not NEVER
       if (MODE.bMKDIR!=2){ // not ALWAYS
-	 Menu ("\x6\Create directory %s ?",path);
+	 Menu ("\x6""Create directory %s ?",path);
 	 Option ("",'Y',"es");
 	 Option ("",'N',"o");
 	 Option ("",'A',"lways create directories");
@@ -244,7 +244,7 @@ char tmppath[260]="*************************";
 int tmpp=0;
 void ktmp (void){
    if (tmpp==1){
-      Out (1,"\x7\Removing temporary files/directories ");
+      Out (1,"\x7""Removing temporary files/directories ");
       StartProgress (-1, 1);
       KillTmpPath();
       EndProgress();

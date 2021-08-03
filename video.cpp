@@ -491,8 +491,8 @@ void ErrorLog (char *fmt, ...){
 fail:
 	 problemos=2; // special case for failing to access logfile
          errors++;
-	 Out (7,"\n\r\x8\FATAL ERROR 250: cannot open logfile %s\n\r",buf);
-	 EOut (7,"\n\r\x8\FATAL ERROR 250: cannot open logfile %s\n\r",buf);
+	 Out (7,"\n\r\x8""FATAL ERROR 250: cannot open logfile %s\n\r",buf);
+	 EOut (7,"\n\r\x8""FATAL ERROR 250: cannot open logfile %s\n\r",buf);
          doexit (250);
       } else
 	 ok=1;
@@ -549,12 +549,12 @@ void FatalError (int level, char *fmt, ...){
    va_list argptr;
    va_start(argptr, fmt);
    vsprintf(buf, fmt, argptr);
-   Out (7,"\n\r\x8\FATAL ERROR %d: %s\n\r",level,buf);
+   Out (7,"\n\r\x8""FATAL ERROR %d: %s\n\r",level,buf);
    if (dodo){
-      EOut (7,"\n\r\x8\FATAL ERROR %d: %s (busy with %s)\n\r",level,buf,dbuf);
+      EOut (7,"\n\r\x8""FATAL ERROR %d: %s (busy with %s)\n\r",level,buf,dbuf);
       ErrorLog (" FATAL ERROR %d: %s (busy with %s)",level,buf,dbuf);
    } else {
-      EOut (7,"\n\r\x8\FATAL ERROR %d: %s\n\r",level,buf);
+      EOut (7,"\n\r\x8""FATAL ERROR %d: %s\n\r",level,buf);
       ErrorLog (" FATAL ERROR %d: %s",level,buf);
    }
    dodo=0;
@@ -573,12 +573,12 @@ void Error (int level, char *fmt, ...){
    va_list argptr;
    va_start(argptr, fmt);
    vsprintf(buf, fmt, argptr);
-   Out (7,"\x8\ ERROR %d: %s\n\r",level,buf);
+   Out (7,"\x8"" ERROR %d: %s\n\r",level,buf);
    if (dodo){
-      EOut (7,"\x8\ERROR %d: %s (busy with %s)\n\r",level,buf,dbuf);
+      EOut (7,"\x8""ERROR %d: %s (busy with %s)\n\r",level,buf,dbuf);
       ErrorLog (" ERROR %d: %s (busy with %s)",level,buf,dbuf);
    } else {
-      EOut (7,"\x8\ERROR %d: %s\n\r",level,buf);
+      EOut (7,"\x8""ERROR %d: %s\n\r",level,buf);
       ErrorLog (" ERROR %d: %s",level,buf);
    }
    dodo=0;
@@ -593,12 +593,12 @@ void Warning (int level, char *fmt, ...){
    va_list argptr;
    va_start(argptr, fmt);
    vsprintf(buf, fmt, argptr);
-   Out (7,"\x8\ WARNING %d: %s\n\r",level,buf);
+   Out (7,"\x8"" WARNING %d: %s\n\r",level,buf);
    if (dodo){
-      EOut (7,"\x8\WARNING %d: %s (busy with %s)\n\r",level,buf,dbuf);
+      EOut (7,"\x8""WARNING %d: %s (busy with %s)\n\r",level,buf,dbuf);
       ErrorLog (" WARNING %d: %s (busy with %s)",level,buf,dbuf);
    } else {
-      EOut (7,"\x8\WARNING %d: %s\n\r",level,buf);
+      EOut (7,"\x8""WARNING %d: %s\n\r",level,buf);
       ErrorLog (" WARNING %d: %s",level,buf);
    }
    dodo=0;

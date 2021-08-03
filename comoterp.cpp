@@ -1108,7 +1108,7 @@ again:
 	 MODE.bDTT=1;
 	 ScanDT (pc, &MODE.ftDTT, 1);
 	 ftime *f=&MODE.ftDTT;
-	 Out (7,"\5\Dynamic Time Travel to "
+	 Out (7,"\5""Dynamic Time Travel to "
 		"%s-%02d-%4d %d:%02d:%02d \n\r",
 		strupr(month[f->ft_month-1]), f->ft_day, f->ft_year+1980,
 		f->ft_hour, f->ft_min, f->ft_tsec*2);
@@ -1313,7 +1313,7 @@ void TTP (char *pcArchivePath, int mustexist){
 	 Convert (pcArchivePath,0);
 	 strcpy (pcArchivePath, NewExt (pcArchivePath));
       } else {
-	 Menu ("\x6\Upgrade %s to UC2 format?",pcArchivePath);
+	 Menu ("\x6""Upgrade %s to UC2 format?",pcArchivePath);
 	 Option ("",'Y',"es");
 	 Option ("",'N',"o");
 	 switch(Choice()){
@@ -1357,7 +1357,7 @@ int Test (char *pcArchivePath){
    struct MODE m=MODE;
    Uqueue = VNULL;
    Mpath = VNULL;
-   Out (3,"\x5\Testing archive integrity\n\r");
+   Out (3,"\x5""Testing archive integrity\n\r");
    InvHashC(); // Needed for each archive being processed!
    SetArea (1);
    iVerifyMode=1;
@@ -1598,7 +1598,7 @@ RED:
 	       strcat (p," ");
 	    }
 	    Out (7,"\x7");
-	    Out (3,"\x5\Executing DOS command: %s\x7\n\r", p);
+	    Out (3,"\x5""Executing DOS command: %s\x7\n\r", p);
 	    ssystem (p);
 	    GKeep();
 	 } else if (strcmp(atom,"$EWP")==0){
@@ -1812,7 +1812,7 @@ AADD:
 	    if (szDestPath[0]=='#'){
 	       if (strlen(szDestPath+1)){
 		  if ((MODE.bMKDIR!=2) && !DirExists(szDestPath+1)){
-		     Menu ("\x6\Create %s in %s ?",szDestPath+1,pcArchivePath);
+		     Menu ("\x6""Create %s in %s ?",szDestPath+1,pcArchivePath);
 		     Option ("",'Y',"es");
 		     Option ("",'N',"o");
 		     switch(Choice()){
@@ -1840,7 +1840,7 @@ AADD:
 	    } else {
 	       if (strlen(szDestPath)){
 		  if ((MODE.bMKDIR!=2) && !DirExists(szDestPath)){
-		     Menu ("\x6\Create %s in %s ?",szDestPath,pcArchivePath);
+		     Menu ("\x6""Create %s in %s ?",szDestPath,pcArchivePath);
 		     Option ("",'Y',"es");
 		     Option ("",'N',"o");
 		     switch(Choice()){
@@ -1860,7 +1860,7 @@ AADD:
 	    }
 
 	    if (scan1) Out (2|8,"\n\r");
-	    if (smskip) Out (3,"\x5\Smart skipping %s bytes\n\r",neat(smskip));
+	    if (smskip) Out (3,"\x5""Smart skipping %s bytes\n\r",neat(smskip));
 nonono:
 	    MODE.fInc=f2;
 	    BoosterOff();
@@ -2121,9 +2121,9 @@ leave:
 	       // restore destination path
 	       szDestPath[0]=c;
 
-	       Out (7,"\x7\ษอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป\n\r");
+	       Out (7,"\x7""ษอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป\n\r");
 	       ssystem (LocateF("U2_SHOW.BAT",2));
-	       Out (7,"\x7\ศอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ\n\r");
+	       Out (7,"\x7""ศอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ\n\r");
 
 	       if (Exists("U$~BAN.GIF")) Delete ("U$~BAN.GIF");
 	       if (Exists("U$~BAN.JPG")) Delete ("U$~BAN.JPG");
@@ -2132,7 +2132,7 @@ leave:
 	       if (Exists("U$~BAN.ASK")){
 		   Delete ("U$~BAN.ASK");
 		   if (!MODE.fForce){
-		      Menu ("\x6\Continue?");
+		      Menu ("\x6""Continue?");
 		      Option ("",'Y',"es");
 		      Option ("",'N',"o");
 		      switch(Choice()){
@@ -2191,7 +2191,7 @@ leave:
 	       CopyFiles ();
 	    }
 	    if (!movemode && DetectUseal()){
-	       Out (7,"\n\r\x5\This archive contains UltraSeals which can be checked with USAFE\n\r");
+	       Out (7,"\n\r\x5""This archive contains UltraSeals which can be checked with USAFE\n\r");
 	    }
 	    if (iVlab){
 	       if (!xTail[iArchArea].pbLabel[0]){
@@ -2292,7 +2292,7 @@ listing:
 	    if (MODE.fQuery) QueryFiles("Include");
 	    ListArch(Mpath);
 	    if (DetectUseal()){
-	       Out (7,"\n\r\x5\This archive contains UltraSeals which can be checked with USAFE\n\r");
+	       Out (7,"\n\r\x5""This archive contains UltraSeals which can be checked with USAFE\n\r");
 	    }
 	    CloseArchive();
 	    DumpProbs();
@@ -2434,9 +2434,9 @@ listing:
 	       Close (i);
 	    }
 	    sprintf (com,"%s U$~COMM.TXT",LocateF("U2_EDIT.BAT",2));
-//	    Out (7,"\x7\ษอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป\n\r");
+//	    Out (7,"\x7""ษอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออป\n\r");
 	    ssystem (com);
-//	    Out (7,"\x7\ศอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ\n\r");
+//	    Out (7,"\x7""ศอออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออออผ\n\r");
 
 	    if (norev){
 	       Warning (7,"archive is protected against changes in comment");
@@ -2503,15 +2503,15 @@ listing:
 	    }
 	    if (Exists(pcRecPath)){
 	       if (MODE.fForce) goto repairit;
-	       Out (7,"\x8\A damage recover file has been found\n\r");
+	       Out (7,"\x8""A damage recover file has been found\n\r");
 	       Menu ("\x6Repair archive?");
 	       Option ("",'Y',"es");
 	       Option ("",'N',"o");
 	       switch(Choice()){
 		  case 1:
 repairit:
-		     Out (7,"\x5\Archive will be repaired with the crash recover file %s\n\r",pcRecPath);
-		     Out (7,"\x7\Creating archive %s\n\r",Fix);
+		     Out (7,"\x5""Archive will be repaired with the crash recover file %s\n\r",pcRecPath);
+		     Out (7,"\x7""Creating archive %s\n\r",Fix);
 		     Recover (pcArchivePath, pcRecPath, Fix);
 		     break;
 		  case 2:
@@ -2555,20 +2555,20 @@ repairit:
 			}
 		     }
 		     fixlevel=1;
-		     Out (7,"\x7\Creating archive %s\n\r",Fix);
+		     Out (7,"\x7""Creating archive %s\n\r",Fix);
 		     if (RepairDP (Fix)){
-			Out (7,"\x5\Archive has been repaired (using damage protection)");
+			Out (7,"\x5""Archive has been repaired (using damage protection)");
 		     } else {
 			Error (90,"failed to repair archive (using damage protection)");
 		     }
 		     CloseArchive ();
 		     InvHashC(); // Needed for each archive being processed!
-		     Out (3,"\n\r\x7\Testing/repairing %s\n\r",Fix);
+		     Out (3,"\n\r\x7""Testing/repairing %s\n\r",Fix);
 		     probeo=0;
 		     ReadArchive (Fix);
 		  }
 	       } else {
-		  Out (3,"\x7\Archive is not damage protected\n\r");
+		  Out (3,"\x7""Archive is not damage protected\n\r");
 	       }
 	       ClearMask (NULL);
 	       bExtractMode=1;
@@ -2590,7 +2590,7 @@ repairit:
 		  if (fixlevel){
 		     Convert (Fix, 2);
 		     scan1=0;
-		     Out (7,"\x8\ MESSAGE: some files might still be damaged\n\r");
+		     Out (7,"\x8"" MESSAGE: some files might still be damaged\n\r");
 		     ErrorLog (" MESSAGE: some files might still be damaged");
 		  } else {
 		     if (!MODE.fForce){
@@ -2608,12 +2608,12 @@ repairit:
 		     CopyFile (pcArchivePath, Fix);
 		     Convert (Fix, 2);
 		     scan1=0;
-		     Out (7,"\x8\ MESSAGE: some files might be damaged\n\r");
+		     Out (7,"\x8"" MESSAGE: some files might be damaged\n\r");
 		     ErrorLog (" MESSAGE: some files might be damaged");
 		  }
 	       } else {
 		  if (fixlevel){
-		     Out (7,"\x5\ MESSAGE: all files have been restored 100%%\n\r");
+		     Out (7,"\x5"" MESSAGE: all files have been restored 100%%\n\r");
 		     Out (7,"          (All found (and recovered) errors are reported in UC2_ERR.LOG)\n\r");
 		     ErrorLog (" MESSAGE: all files have been restored 100%% (into %s)",Fix);
 		  }
