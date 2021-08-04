@@ -130,11 +130,12 @@ void DamPro (int iHandle){
 #ifndef UE2
    InitChk();
    WORD wDrs;
+   DWORD i;
 
    // claim memory
    BYTE *pbIO = xmalloc (512U, STMP);
    BYTE *pbBuf[16];
-   for (DWORD i=0;i<16;i++){
+   for (i=0;i<16;i++){
       pbBuf[(WORD)i] = xmalloc (512, STMP);
    }
 
@@ -217,6 +218,7 @@ int VerifyDP (void){
 #ifndef UE2
    InitChk();
    int ret=1;
+   DWORD i;
    WORD wDrs;
    BYTE *pbBuf[16];
    DWORD dwLen = dwPLen[iArchArea];
@@ -229,7 +231,7 @@ int VerifyDP (void){
    // determine number of extra sectors
    wDrs = Calc (dwSecs);
 
-   for (DWORD i=0;i<wDrs;i++){
+   for (i=0;i<wDrs;i++){
       pbBuf[(WORD)i]=xmalloc(512, STMP);
       memset (pbBuf[(WORD)i],0,512);
    }

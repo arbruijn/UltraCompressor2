@@ -306,6 +306,7 @@ WORD Analyze (char *file, WORD comp, int handle, DWORD master){
    BYTE ln[NR_COMBINATIONS];
    DeltaBlah db;
    WORD num=1450,nm;
+   int i;
 
    DWORD fs=GetFileSize (handle);
    if (fs>1500){
@@ -319,7 +320,7 @@ WORD Analyze (char *file, WORD comp, int handle, DWORD master){
       RapidCopy (dbuf,buf,num);
       memset (fq, 0, NR_COMBINATIONS*2);
       nm=num;
-      for (int i=0;i<num;i++)
+      for (i=0;i<num;i++)
 	 fq[dbuf[i]]++;
       if (nm){
 	 fq[0]=0;

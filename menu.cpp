@@ -46,9 +46,10 @@ int breaker=0;
 
 int Choice (void){
    char c;
+   int i;
    for (;;){
       FSOut (7,"\n\r%s\x7\n\r",head);
-      for (int i=0;i<ctr;i++)
+      for (i=0;i<ctr;i++)
 	 FSOut (7,"\x6   %i \x7-> %s\x6%c\x7%s\n\r", i+1,tp1[i],tcc[i],tp2[i]);
 again:
       if (breaker)

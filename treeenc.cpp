@@ -53,8 +53,9 @@ static BYTE vval[NR_DELTA_CODES][NR_DELTA_CODES];
 static BYTE symprev[NR_SYMBOLS];
 
 void BasePrev (void){
+   int i;
    // Define the first previous trees
-   for(int i = 0;i < 32;i++) symprev[i] = 9;               // Symbol/Distance
+   for(i = 0;i < 32;i++) symprev[i] = 9;               // Symbol/Distance
    symprev[10] = 7; symprev[12] = 7; symprev[32] = 7;
    for(i = 33;i < 128;i++) symprev[i] = 8;
    symprev[46] = 7; symprev[58] = 7; symprev[92] = 7;
