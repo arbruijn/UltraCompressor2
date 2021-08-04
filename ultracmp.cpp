@@ -1029,7 +1029,8 @@ void SetIBuf (int index){
 }
 
 void ClearFreq (){
-   for (int i=0;i<256+60;i++){
+   int i;
+   for (i=0;i<256+60;i++){
       wLDFreq[i]=0;
    }
    for (i=0;i<28;i++){

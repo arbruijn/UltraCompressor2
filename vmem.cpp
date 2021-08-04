@@ -391,12 +391,13 @@ void BoosterOn (){ // put VMEM in turbo boost mode (uses most RAM !)
 static void ToDisk (BYTE b);
 
 void BoosterOff (){ // back to normal mode (all 'A' discarded)
+   int i;
    lastblock=65000U;
 #ifdef UCPROX
    if (beta && heavy) return;
 #endif
    // flust to disk & deallocate
-   for (int i=RAM_BLOCKS; i<ram_blocks; i++){
+   for (i=RAM_BLOCKS; i<ram_blocks; i++){
       if (pbClean[i]){
 	 SetStat(pwVBlock[i],BLOCK_EMPTY);
       } else {

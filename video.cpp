@@ -767,6 +767,7 @@ int pulsar (void);
 void Hint (void)
 {
    char tmp [20];
+   int i;
    if (!busy) return;
    UnPlop();
    rcount++;
@@ -778,7 +779,7 @@ void Hint (void)
       if (seg==lastseg && !pulsar()) return;
       lastseg=seg;
       strcpy (tmp,"\x7");
-      for (int i=0;i<seg;i++)
+      for (i=0;i<seg;i++)
 	 strcat (tmp, "þ");
       for (i=0;i<(6-seg);i++)
 	 strcat (tmp, "ú");

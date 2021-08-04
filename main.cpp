@@ -387,13 +387,14 @@ void HelpMenu (){
 #ifndef UE2
    char ch[9];
    int opt=3;
+   int i;
    Out (7,"\x7");
    clrscr();
    for (;;){
       menu=1;
       NoCursor();
       Logo();
-      for (int i=0;i<9;i++) ch[i]='\x7';
+      for (i=0;i<9;i++) ch[i]='\x7';
       ch[opt]='\x6';
       FSOut(7,"\x6""HELP MENU \x7(view\x3 & search \x7""documentation)\n\r");
       FSOut(7,"  \x6 0%c   -> WHATSNEW  %s",ch[0],Check(-1,"WHATSNEW.DOC","what changed from UC2 to UC2 revision 2\x3 NEW!\n\r"));

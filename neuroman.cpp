@@ -65,6 +65,7 @@ DWORD ToKey (char *pcFileName){
    char ext[5];
    setmem (name, 9, 0);
    setmem (ext, 5, 0);
+   int i;
    fnsplit (pcFileName, NULL, NULL, name, ext);
 //   if (0==strcmp (ext,".C")) strcpy (ext, ".C+H");
 //   if (0==strcmp (ext,".H")) strcpy (ext, ".C+H");
@@ -73,7 +74,7 @@ DWORD ToKey (char *pcFileName){
 //   if (0==strcmp (ext,".CPP")) strcpy (ext, ".C+H");
 //   if (0==strcmp (ext,".HPP")) strcpy (ext, ".C+H");
    if (!fhypermode){ /* file type bundling */
-      for (int i=0;i<8;i++){
+      for (i=0;i<8;i++){
 	 if (isdigit(name[i])) name[i]='#';
       }
       for (i=1;i<4;i++){
