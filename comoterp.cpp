@@ -1296,7 +1296,7 @@ int DetectUseal (void){
 	 }
 	 return 1;
       }
-next:
+next:;
    }
    return 0;
 }
@@ -1338,7 +1338,7 @@ void TTP (char *pcArchivePath, int mustexist){
       else
 	 FatalError (130,"%s does not exist",pcArchivePath);
    }
-leave:
+leave:;
 }
 
 extern DWORD smskip;

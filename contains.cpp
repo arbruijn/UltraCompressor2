@@ -53,7 +53,7 @@ void Investigate (BYTE *data, WORD len){
       } else {
 	 offset=0;
       }
-next:
+next:;
    }
 }
 
