@@ -81,12 +81,12 @@ again:
    }
    int max=strlen(pcBuf);
    for (int i=0;i<max;i++){
-      if (pcBuf[i]=='ú') pcBuf[i]='-';
-      if (pcBuf[i]=='þ') pcBuf[i]='*';
-      if (pcBuf[i]=='Ä') pcBuf[i]='-';
-      if (pcBuf[i]=='Í') pcBuf[i]='=';
-      if (pcBuf[i]=='°') pcBuf[i]='@';
-      if (pcBuf[i]=='Û') pcBuf[i]='@';
+      if (pcBuf[i]=='\xfa') pcBuf[i]='-';
+      if (pcBuf[i]=='\xfe') pcBuf[i]='*';
+      if (pcBuf[i]=='\xc4') pcBuf[i]='-';
+      if (pcBuf[i]=='\xcd') pcBuf[i]='=';
+      if (pcBuf[i]=='\xb0') pcBuf[i]='@';
+      if (pcBuf[i]=='\xdb') pcBuf[i]='@';
       if (pcBuf[i]&0x80) pcBuf[i]='*';
    }
 }
@@ -387,7 +387,7 @@ char Echo (char c){
    } else if (c==27) {
       FSOut(7,"[Esc]");
    } else if (c<32) {
-      FSOut (7,"þ");
+      FSOut (7,"\xfe");
    } else {
       FSOut (7,"%c",c);
    }
@@ -660,15 +660,15 @@ void DoPlop (void){
    int oldcheck = checkit;
    checkit=0;
 
-   gotoxy (19, 8); FSOut (7,"\x1 ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿ ");
-   gotoxy (19, 9); FSOut (7,"\x1 ³\x2                                      \x1³ ");
-   gotoxy (19,10); FSOut (7,"\x1 ³\x2                                      \x1³ ");
-   gotoxy (19,11); FSOut (7,"\x1 ³\x2                                      \x1³ ");
-   gotoxy (19,12); FSOut (7,"\x1 ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ ");
+   gotoxy (19, 8); FSOut (7,"\x1 \xda\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xbf ");
+   gotoxy (19, 9); FSOut (7,"\x1 \xb3\x2                                      \x1\xb3 ");
+   gotoxy (19,10); FSOut (7,"\x1 \xb3\x2                                      \x1\xb3 ");
+   gotoxy (19,11); FSOut (7,"\x1 \xb3\x2                                      \x1\xb3 ");
+   gotoxy (19,12); FSOut (7,"\x1 \xc0\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xc4\xd9 ");
 
    gotoxy (20+18-strlen(head)/2, 8); FSOut (7,"\x1 %s ", head);
 
-   gotoxy (20+18-strlen(cont)/2,10); FSOut (7,"\x2%s \x9(þ)", cont);
+   gotoxy (20+18-strlen(cont)/2,10); FSOut (7,"\x2%s \x9(\xfe)", cont);
 
    checkit = oldcheck;
 
@@ -755,8 +755,8 @@ void StartProgress (int ihints, int level)
    }
    y = wherey();
    gotoxy (x, y);
-//   FSOut (7,"\x7°°°°°°°°°°");
-   FSOut (7,"\x7úúúúúú");
+//   FSOut (7,"\x7\xb0\xb0\xb0\xb0\xb0\xb0\xb0\xb0\xb0\xb0");
+   FSOut (7,"\x7\xfa\xfa\xfa\xfa\xfa\xfa");
    lastseg=0;
    busy=1;
    checkit=1;
@@ -780,9 +780,9 @@ void Hint (void)
       lastseg=seg;
       strcpy (tmp,"\x7");
       for (i=0;i<seg;i++)
-	 strcat (tmp, "þ");
+	 strcat (tmp, "\xfe");
       for (i=0;i<(6-seg);i++)
-	 strcat (tmp, "ú");
+	 strcat (tmp, "\xfa");
    } else {
       if (!pulsar()) return;
       ++lastseg;
@@ -793,9 +793,9 @@ void Hint (void)
       if (lastseg>180) seg++;
       strcpy (tmp,"\x7");
       for (int i=0;i<seg;i++)
-	 strcat (tmp, "þ");
+	 strcat (tmp, "\xfe");
       for (i=0;i<(6-seg);i++)
-	 strcat (tmp, "ú");
+	 strcat (tmp, "\xfa");
    }
       static int rel;
       switch (rel++)
@@ -828,7 +828,7 @@ void EndProgress (void)
    UnPlop();
    gotoxy (x,y);
    checkit=0;
-   FSOut (7,"\x7þþþþþþ  ");
+   FSOut (7,"\x7\xfe\xfe\xfe\xfe\xfe\xfe  ");
    gotoxy (x+7, y);
 //   Out (3,"\n\r");
 //   gotoxy (x,y);

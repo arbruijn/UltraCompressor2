@@ -2272,7 +2272,7 @@ void TTafl (VPTR dir, VPTR rev, DWORD no){
 	       } else {
 		  ((REVNODE*)V(rev))->compress.wMethod = MODE.bCompressor;	       }
 //	       if ((MODE.bCompressor==4)||(MODE.bCompressor==5)){
-//		  Out (3,"\7þ");
+//		  Out (3,"\7\xfe");
 //	       }
 	    }
 	    UpdateVersion();
