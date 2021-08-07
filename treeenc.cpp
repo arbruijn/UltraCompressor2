@@ -329,7 +329,7 @@ void far pascal TreeDec(BYTE far *pbLengths)
       }
 
       // Init variables
-      setmem(pbLengths,NR_SYMBOLS,0);
+      memset(pbLengths,0,NR_SYMBOLS);
       pbSym = stream;
 
       // Now consider the bits of t that define the empty blocks

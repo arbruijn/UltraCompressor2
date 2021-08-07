@@ -123,7 +123,7 @@ int setvol(char drive, char* label) {
 	}
 
 	// Fill the create fcb
-	setmem(&create, sizeof(create), 0);
+	memset(&create, 0, sizeof(create));
 	create.flag = EXTFCBFLAG;
 	create.attr = VOLUME;
 	create.drive = drive;
