@@ -63,9 +63,9 @@ DWORD ToKey (char *pcFileName){
 //   Out (7,"[[%s->",pcFileName);
    char name[9];
    char ext[5];
-   setmem (name, 9, 0);
-   setmem (ext, 5, 0);
    int i;
+   memset (name, 0, 9);
+   memset (ext, 0, 5);
    fnsplit (pcFileName, NULL, NULL, name, ext);
 //   if (0==strcmp (ext,".C")) strcpy (ext, ".C+H");
 //   if (0==strcmp (ext,".H")) strcpy (ext, ".C+H");
