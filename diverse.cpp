@@ -38,8 +38,8 @@ void EatSpace (char *name){
 
 BYTE *Name2Rep (char *pcName){
    static BYTE ret[11];
-   char name[9];
-   char ext[4];
+   char name[MAXFILE];
+   char ext[MAXEXT];
    fnsplit(pcName, NULL, NULL, name, ext);
    memset (ret,32,11);
    memcpy (ret, name, strlen(name));

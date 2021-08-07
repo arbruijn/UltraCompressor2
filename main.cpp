@@ -358,9 +358,9 @@ int searcher=1;
 #pragma argsused
 char *Check (int i, char *file, char *blah){
 #ifndef UE2
-   static char stat[8];
+   static char stat[9];
    if (i==100){
-      for (i=0; i<8; i++)
+      for (i=0; i<9; i++)
 	 stat[i]=0;
       return "";
    }
@@ -397,7 +397,7 @@ void HelpMenu (){
       for (i=0;i<9;i++) ch[i]='\x7';
       ch[opt]='\x6';
       FSOut(7,"\x6""HELP MENU \x7(view\x3 & search \x7""documentation)\n\r");
-      FSOut(7,"  \x6 0%c   -> WHATSNEW  %s",ch[0],Check(-1,"WHATSNEW.DOC","what changed from UC2 to UC2 revision 2\x3 NEW!\n\r"));
+      FSOut(7,"  \x6 0%c   -> WHATSNEW  %s",ch[0],Check(8,"WHATSNEW.DOC","what changed from UC2 to UC2 revision 2\x3 NEW!\n\r"));
       FSOut(7,"  \x6 1%c   -> README    %s",ch[1],Check(0,"README.DOC","how to get started, overview, features etc.\n\r"));
       FSOut(7,"  \x6 2%c   -> LICENSE   %s",ch[2],Check(1,"LICENSE.DOC","the licenses, warranty etc.\n\r"));
       FSOut(7,"  \x6 3%c   -> BASIC     %s",ch[3],Check(2,"BASIC.DOC","the most essential commands of UC\n\r"));

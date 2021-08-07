@@ -86,7 +86,7 @@ int setvol(char drive, char* label) {
 #ifndef UE2
 	struct extfcb create;
 	char olddir[MAXDRIVE+MAXDIR];
-	char newdir[3];
+	char newdir[4];
 	struct REGPACK r;
 	int result;
 
@@ -164,7 +164,7 @@ int rmvol(char drive) {
 #ifndef UE2
 	struct extfcb delet;
 	char olddir[MAXPATH];
-	char newdir[3];
+	char newdir[4];
 	struct REGPACK r;
 
 	// Resolve default drive
