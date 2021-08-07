@@ -539,7 +539,7 @@ void Anal (char *spi, int fSelect){
       if (specialanal) m->fRevs=0;
    }
    fnsplit (s, drive, dir, file, ext);
-   if (ext[0]=='.') strcpy (ext, ext+1);
+   if (ext[0]=='.') memmove (ext, ext+1, strlen(ext+1));
    Exp(file,8);
    Exp(ext,3);
    fnmerge (pcTPath, drive, dir, NULL, NULL);
