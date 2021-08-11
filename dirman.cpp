@@ -1,4 +1,4 @@
-#include <sys\stat.h>
+#include <sys/stat.h>
 #include <dos.h>
 #include <string.h>
 #include <direct.h>
@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <dir.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include "main.h"
 #include "vmem.h"
 #include "comoterp.h"
@@ -136,10 +137,9 @@ void EBack (void){
 }
 
 void ChPath (char *path){
-   strupr (path);
    if (path[1]==':'){
       CSB;
-	 setdisk (path[0]-'A');
+	 setdisk (toupper(path[0])-'A');
       CSE;
       path+=2;
    }

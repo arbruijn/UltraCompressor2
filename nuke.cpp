@@ -27,6 +27,8 @@ WORD wIn13;    // next 13 bits of input stream
 WORD ptr;
 
 extern WORD *buffer;
+
+#ifdef ASM
 #define RSKIP()                                      \
    _SI = (_SI<<_DL) & 0x1FFF;                   \
    if (bInLeftc<_DL){                                \
@@ -301,5 +303,6 @@ leave:
    wInBuf=wInBufc;
    return ret;
 }
+#endif
 
 

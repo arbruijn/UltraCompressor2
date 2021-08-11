@@ -117,7 +117,7 @@ int TType (char *filename, char *aext, int mustexist){
 
 extern char pcEXEPath [260];
 extern BYTE bExtractMode;
-void Anal (char *s, int fSelect);
+void Anal (char *s, int fSelect, int fLocal=0);
 extern struct MODE MODE;
 void RClearMask (void);
 extern VPTR Mpath;
@@ -170,7 +170,7 @@ void CExtract (char *archive, char *path, DWORD revision, int mode){
 
    InvHashC(); // Needed for each archive being processed!
    SetArea (0);
-   sprintf (com,"*.*;%ld",revision);
+   sprintf (com,"*.*;%" PRIdw,revision);
    Anal (com, 1);
    BoosterOn();
    VPTR walk = Mpath;
@@ -473,7 +473,7 @@ void Convert (char *filename, int type){
 	    noskip=1;
 	 }
 	 break;
-      case 2: // non UC2
+      case 2: { // non UC2
 anyway:
 	 if (Exists(NewExt(filename))){
 	    if (conto){
@@ -607,6 +607,7 @@ errr:
          if (!convback)
 	    Delete (filename); // everything went perfect, delete old archive
 	 break;
+	 }
       case 3:
 	 Error (65,"file %s has an unknown format",filename);
 	 break;

@@ -139,7 +139,7 @@ char *ToDes (MASREC *mr){
       if (mr->szName[0]){
 	 sprintf (tmp,"%s;*",mr->szName);
       } else {
-	 sprintf (tmp,"<FILE TYPE %08lX>",dwIdx);
+	 sprintf (tmp,"<FILE TYPE %08" PRIdw"X>",dwIdx);
       }
    }
 //   Out (7,"[[%lX->%s]]",dwIdx,tmp);
@@ -541,11 +541,15 @@ static huge BYTE *adr;
 static unsigned ctr;
 
 void far *norm (void far *adr){
+#ifndef DOS
+   return adr;
+#else
    unsigned seg = FP_SEG (adr);
    unsigned off = FP_OFF (adr);
    seg+=off/16;
    off%=16;
    return MK_FP(seg,off);
+#endif
 }
 
 static void far pascal Cwrite (BYTE *buf, WORD len){
@@ -559,7 +563,7 @@ static void far pascal Cwrite (BYTE *buf, WORD len){
 
 static BYTE bMasCas=0;
 static WORD wMasLen;
-static mcbuf[4];
+static int mcbuf[4];
 
 void MMinit (void){
    if (!bMasCas&&coreleft16(6)>=3){
@@ -620,12 +624,25 @@ void Transfer (BYTE *pbAddress, WORD *pwLen, DWORD dwIndex){
    #ifdef UCPROX
 	       if (debug) Out (7,"{(Super)master diskread}");
    #endif
-	       exfp = _fsopen (pcEXEPath,"rb",SH_DENYWR);
+   #ifdef DOS
+	       char *pcSuperPath = pcEXEPath;
+   #else
+	       char pcSuperPath[MAXPATH], *p;
+	       snprintf(pcSuperPath, sizeof(pcSuperPath) - 10, "%s", _argv[0]);
+	       if ((p = strrchr(pcSuperPath, '/')))
+		  p++;
+	       else
+		  p = pcSuperPath;
+	       strcpy(p, "super.bin");
+   #endif
+	       exfp = _fsopen (pcSuperPath,"rb",SH_DENYWR);
 	       if (!exfp){
 		  Doing ("reading data from UC2 executable");
-		  FatalError (105,"cannot read %s\n\r",pcEXEPath);
+		  FatalError (105,"cannot read %s\n\r",pcSuperPath);
 	       }
+   #ifdef DOS
 	       fseek (exfp, CONFIG.dwSoffset,SEEK_SET);
+   #endif
 	       adr = pbAddress;
 	       Decompressor (4, Cread, Cwrite, NOMASTER,49152L);
 //	       Out (7,"[FLETCH: %04X]",Fletcher(&Fout));
@@ -792,7 +809,8 @@ void ListMast (PIPE &p){
 	       ResetOutCtr();
 	       if (CONFIG.fOut!=4) bCBar=1;
 	       ((MASREC*)V(walk))->compress.dwMasterPrefix = SUPERMASTER;
-	       if (stricmp (getenv("UC2_PUC"),"ON")==0)
+	       char *env;
+	       if ((env=getenv("UC2_PUC")) && stricmp (env,"ON")==0)
 		  ((MASREC*)V(walk))->compress.dwMasterPrefix = NOMASTER;
 	       Compressor (((MASREC*)V(walk))->compress.wMethod, Reader, AWrite,
 			   ((MASREC*)V(walk))->compress.dwMasterPrefix);

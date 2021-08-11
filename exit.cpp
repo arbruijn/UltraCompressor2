@@ -1,10 +1,10 @@
 // EXIT.CPP
 
+#include <stdlib.h>
+#include <dos.h>
 #include "main.h"
 #include "diverse.h"
 #include "llio.h"
-#include <stdlib.h>
-#include <dos.h>
 
 #ifdef TRACE
    extern void checkx (void);

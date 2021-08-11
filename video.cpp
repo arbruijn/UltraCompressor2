@@ -31,6 +31,7 @@ static unsigned CX;
 
 void Checkit (void)
 {
+#ifdef DOS
     static int first=1;
     if (first)
     {
@@ -40,9 +41,11 @@ void Checkit (void)
         geninterrupt (0x10);
         CX = _CX;
     }
+#endif
 }
 
 void NoCursor (void){
+#ifdef DOS
    Checkit();
    if (CONFIG.bVideo<3)
    {
@@ -51,9 +54,11 @@ void NoCursor (void){
 	_AH = 1;
 	geninterrupt (0x10);
    }
+#endif
 }
 
 void Cursor (void){
+#ifdef DOS
    Checkit();
    if (CONFIG.bVideo<3)
    {
@@ -69,6 +74,7 @@ void Cursor (void){
       _AH = 1;
       geninterrupt (0x10);
    }
+#endif
 }
 
 void NH (char *pcBuf){
@@ -76,7 +82,11 @@ void NH (char *pcBuf){
 again:
    if (!stat) return;
    if (stat==2){
+      #ifndef DOS
+      stat = 1;
+      #else
       stat = !!getenv ("UC2_NO_HIGH_ASCII");
+      #endif
       goto again;
    }
    int max=strlen(pcBuf);
@@ -334,6 +344,10 @@ void FROut (BYTE l, char *fmt, ...){
 
    if (NotAllowed (l)) return;
 
+   #ifndef DOS
+   if (dosvid) return; // already wrote screen version to redir
+   #endif
+
    static char buf[200];
    va_list argptr;
    va_start(argptr, fmt);
@@ -397,7 +411,7 @@ char Echo (char c){
 
 char *GetString (int size){
    static char tmp[140];
-   gets(tmp);
+   fgets(tmp, sizeof(tmp), stdin);
    tmp[size]=0; // assure maxlen
    return tmp;
 }
@@ -423,6 +437,7 @@ extern char month[12][4];
 
 char *DT (void){
    static char buf[50];
+#ifdef DOS
    struct dostime_t t;
    struct dosdate_t d;
    _dos_gettime (&t);
@@ -434,6 +449,17 @@ char *DT (void){
       (WORD)t.hour,
       (WORD)t.minute,
       (WORD)t.second);
+#else
+   time_t t = time(NULL);
+   struct tm *tm = localtime(&t);
+   sprintf (buf, "%s-%02d-%4d %2d:%02d:%02d",
+      strupr(month[tm->tm_mon]),
+      tm->tm_mday,
+      tm->tm_year + 1900,
+      tm->tm_hour,
+      tm->tm_min,
+      tm->tm_sec);
+#endif
    return buf;
 }
 
@@ -676,7 +702,9 @@ void DoPlop (void){
 */
 }
 
+#ifdef DOS
 #define clock() *((DWORD *)MK_FP(0x40,0x6C))
+#endif
 
 int period=0;
 

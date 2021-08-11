@@ -21,7 +21,7 @@
 // Note: with -a+ (word alignment) the default struct xfcb DOES NOT WORK!
 #pragma option -a-
 
-#ifndef UE2
+#if defined(DOS) && !defined(UE2)
 struct extfcb {
 	char flag;
 	char resv1[5];
@@ -39,8 +39,8 @@ struct extfcb {
 
 #pragma argsused
 char* getvol(char drive) {
-#ifndef UE2
 	static char label[12];
+#if defined(DOS) && !defined(UE2)
 	struct extfcb search;
 	char tmpdta[128]; // Allocate enough space for the DTA
 	char far* dta;
@@ -75,15 +75,15 @@ char* getvol(char drive) {
 		return label;
 	}
 
+#endif
 	for (int i=0;i<11;i++) label[i]=0;
 
 	return label;
-#endif
 }
 
 #pragma argsused
 int setvol(char drive, char* label) {
-#ifndef UE2
+#if defined(DOS) && !defined(UE2)
 	struct extfcb create;
 	char olddir[MAXDRIVE+MAXDIR];
 	char newdir[4];
@@ -161,7 +161,7 @@ int setvol(char drive, char* label) {
 
 #pragma argsused
 int rmvol(char drive) {
-#ifndef UE2
+#if defined(DOS) && !defined(UE2)
 	struct extfcb delet;
 	char olddir[MAXPATH];
 	char newdir[4];

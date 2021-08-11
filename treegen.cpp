@@ -93,6 +93,12 @@ void far pascal GenCodeLengths(WORD far *pwFreqCount, BYTE far *pbLen);
 void far pascal RepairLengths(BYTE far *pbLength, WORD wMaxCodeLen);
 
 
+#ifdef DOS
+#define REG register
+#else
+#define REG
+#endif
+
 /*
    Functions
 */
@@ -102,7 +108,7 @@ void far pascal BuildHeap(WORD far *pwFreqCount)
    This function builds a heap from the initial frequency-count data.
 */
 {
-   register WORD i;
+   REG WORD i;
 
    wHeapLength = 0;
 
@@ -124,9 +130,9 @@ void far pascal Reheap(WORD wHeapEntry, WORD far *pwFreqCount)
    placed on array index 1.
 */
 {
-   register int  iIndex;
-   register int  iFlag = 1;
-   register WORD wHeapValue;
+   REG int  iIndex;
+   REG int  iFlag = 1;
+   REG WORD wHeapValue;
 
    wHeapValue = wHeap[wHeapEntry];
 
@@ -156,8 +162,8 @@ void far pascal BuildCodeTree(WORD far *pwFreqCount)
    This function builds the compression code tree.
 */
 {
-   register int  iFIndex;
-   register WORD wHeapValue;
+   REG int  iFIndex;
+   REG WORD wHeapValue;
 
    // Build the huffmantree from the sorted heap
    while (wHeapLength > 1)
@@ -189,9 +195,9 @@ void far pascal GenCodeLengths(WORD far *pwFreqCount, BYTE far *pbLen)
    decoding of the tree.
 */
 {
-   register int   i;
-   register BYTE  bCurLength;
-   register short sParent;
+   REG int   i;
+   REG BYTE  bCurLength;
+   REG short sParent;
 
    // for each symbol walk the path to the top of the huffmantree
    for(i = 0;i < wNrSyms;i++)
@@ -242,7 +248,7 @@ void far pascal RepairLengths(BYTE far *pbLength, WORD wMaxCodeLen)
 
    // Initialise array
    for(i = 0;i <= MAX_CODE_LENGTH;i++) scl[i] = NO_MORE;
-   memset(LengthCount,0,MAX_CODE_LENGTH*2+2);
+   memset(LengthCount,0,(MAX_CODE_LENGTH+1)*sizeof(int));
 
    /*
       Now sort all characters on length by storing them in an array of
@@ -268,7 +274,7 @@ void far pascal RepairLengths(BYTE far *pbLength, WORD wMaxCodeLen)
 //   Out (7,"\r\n");
 
    // Calculate DCode
-   for(i = 1;i <= MAX_CODE_LENGTH;i++)
+   for(i = 1;i <= wMaxCodeLen;i++)
       DCode += (1L << (wMaxCodeLen - i)) * LengthCount[i];
 
    /*
@@ -523,12 +529,12 @@ void far pascal DCodeGen(WORD wNrSymbols, BYTE far *pbLengths,
       for(pp = scl[i];pp != NO_MORE;pp = p->next) {
 	 // Fill part of table
 	 p = Allocated + pp; sym = p->ch;
-	 /*
-	 for(j = 1 << (MAX_CODE_LENGTH - i);j > 0;j--) {
+	 #if 1
+	 for(int j = 1 << (MAX_CODE_LENGTH - i);j > 0;j--) {
 	    *pwTable++ = sym;
 	    *pbTableLengths++ = i;
 	 }
-	 */
+	 #else
 	 _SI = 1 << (MAX_CODE_LENGTH - i);
 	 asm push ds
 	 asm push es
@@ -547,6 +553,7 @@ void far pascal DCodeGen(WORD wNrSymbols, BYTE far *pbLengths,
 	 asm pop ds
 	 pwTable+= 1<<(MAX_CODE_LENGTH-i);
 	 pbTableLengths+= 1<<(MAX_CODE_LENGTH-i);
+	 #endif
       }
    }
 

@@ -49,7 +49,8 @@ void UpdateVersion (void){
       xhead[iArchArea].wVersionMadeBy = 202;
    if (xhead[iArchArea].wVersionNeededToExtract<200)
       xhead[iArchArea].wVersionNeededToExtract = 200;
-   if (stricmp (getenv("UC2_PUC"),"ON")==0)
+   char *p;
+   if ((p=getenv("UC2_PUC"))&&stricmp (p,"ON")==0)
       if (xhead[iArchArea].wVersionNeededToExtract<202)
          xhead[iArchArea].wVersionNeededToExtract = 202;
 #ifdef UCPROX
@@ -76,7 +77,7 @@ void CleanRoot (){ // A:2 OK
    dn->vpCurDir  = VNULL; // root
    dn->vpCurFile = VNULL; // none left
 
-   vpHomeDir[iArchArea] = dnRoot[iArchArea]; // CD \
+   vpHomeDir[iArchArea] = dnRoot[iArchArea]; // 'CD \'
 
    dwDirNTX[iArchArea]=1;
    dwMasNTX[iArchArea]=1;
@@ -738,7 +739,7 @@ static char EAtpt[260];
 extern int scan1;
 
 long GetOS2ExtAttrSize (char far *filename){
-#ifndef UE2
+#if !defined(UE2) && defined(DOS)
    unsigned long ret;
    static unsigned char dump[26];
    union REGS regs; struct SREGS sregs;
@@ -773,7 +774,7 @@ long GetOS2ExtAttrSize (char far *filename){
  */
 
 void GetOS2ExtAttr (char *filename, BYTE *buffer, unsigned maxlen){
-#ifndef UE2
+#if !defined(UE2) && defined(DOS)
    union REGS regs; struct SREGS sregs;
    struct EAOP {
       long dummy1;
@@ -802,6 +803,7 @@ void GetOS2ExtAttr (char *filename, BYTE *buffer, unsigned maxlen){
 
 void SetOS2ExtAttr (char *filename, BYTE *buffer)
 {
+#ifdef DOS
    union REGS regs; struct SREGS sregs;
    struct EAOP {
       long dummy1;
@@ -821,6 +823,7 @@ void SetOS2ExtAttr (char *filename, BYTE *buffer)
    regs.x.di = FP_OFF(&eaop);
    sregs.es = FP_SEG(&eaop);
    intdosx (&regs, &regs, &sregs);
+#endif
 }
 
 char noextrea=0;
@@ -902,6 +905,7 @@ void ScanAddR (VPTR dir, VPTR Mpath, int parents, int rapid){
 
    VPTR ppos = ((MPATH *)V(Mpath))->vpMasks;
    if (!MODE.fSubDirs && !IS_VNULL(ppos) && IS_VNULL(((MMASK *)V(ppos))->vpNext)){
+#ifdef DOS
       char msk[20];
       strncpy (msk, (char*)((MMASK *)V(ppos))->pbName, 15);
       msk[11] = msk[10];
@@ -914,6 +918,9 @@ void ScanAddR (VPTR dir, VPTR Mpath, int parents, int rapid){
       }
 //      Out (7,"[%s]", msk);
       strcat (mask, msk);
+#else
+      strcpy (mask, ((MMASK *)V(ppos))->pcOrig);
+#endif      
    }  else
       strcat (mask, "*.*");
    struct ffblk ffblk;
@@ -1045,6 +1052,7 @@ nounmask:
 		  if (IS_VNULL(lmc))
 		     lmc = LocMacKey (ToKey (ffblk.ff_name));
 		  strcpy (((MASREC*)V(lmc))->szName, ffblk.ff_name);
+		  Out(7, "%s -> mas %" PRIdw "\n", ffblk.ff_name, ((MASREC*)V(lmc))->masmeta.dwIndex);
 
 		  VPTR rv;
 		  if (fast)
@@ -1261,7 +1269,7 @@ int TCWI(char *pp, int f){
       };
       pt2=pt+1;
       while ((*pt2!='\\')&&(*pt2!='/')&&(*pt2!=' ')&&(*pt2!='\0')) pt2++;
-      if (pt2!='\0') ptn = pt2+1; else ptn = pt2;
+      if (*pt2!='\0') ptn = pt2+1; else ptn = pt2;
       *pt2='\0';
       memcpy (rp, Name2Rep (pt), 11);
       VPTR walk = TFirstDir();
@@ -1580,7 +1588,7 @@ char *neat (DWORD val){
    if (val>999999999L){
       t = val/1000000000L;
       val-=t*1000000000L;
-      sprintf (ret,"%ld",t);
+      sprintf (ret,"%" PRIdw,t);
       strcat (ret,",");
       m=1;
    }
@@ -1588,9 +1596,9 @@ char *neat (DWORD val){
       t = val/1000000L;
       val-=t*1000000L;
       if (!m)
-	 sprintf (tmp,"%ld",t);
+	 sprintf (tmp,"%" PRIdw,t);
       else
-	 sprintf (tmp,"%03ld",t);
+	 sprintf (tmp,"%03" PRIdw,t);
       strcat (ret,tmp);
       strcat (ret,",");
       m=1;
@@ -1599,17 +1607,17 @@ char *neat (DWORD val){
       t = val/1000L;
       val-=t*1000L;
       if (!m)
-	 sprintf (tmp,"%ld",t);
+	 sprintf (tmp,"%" PRIdw,t);
       else
-	 sprintf (tmp,"%03ld",t);
+	 sprintf (tmp,"%03" PRIdw,t);
       strcat (ret,tmp);
       strcat (ret,",");
       m=1;
    }
    if (!m)
-      sprintf (tmp,"%ld",val);
+      sprintf (tmp,"%" PRIdw,val);
    else
-      sprintf (tmp,"%03ld",val);
+      sprintf (tmp,"%03" PRIdw,val);
    strcat (ret,tmp);
    return ret;
 }
@@ -1942,7 +1950,7 @@ void SuperGet (void){ // A:*
    ReadPipe (pipe, (BYTE *)&ohead, sizeof (OHEAD));
    while (ohead.bType!=BO_EOL){
       switch (ohead.bType){
-	 case BO_MAST:
+	 case BO_MAST: {
 	    ReadPipe (pipe, (BYTE *)&masmeta, sizeof (MASMETA));
 	    VPTR mas = LocMacNtx (masmeta.dwIndex);
 	    ReadPipe (pipe, (BYTE *)&(((MASREC*)V(mas))->compress), sizeof(COMPRESS));
@@ -1951,7 +1959,8 @@ void SuperGet (void){ // A:*
 	    ((MASREC*)V(mas))->bStatus = MS_OLD;
 	    RegNtxKey (masmeta.dwIndex, masmeta.dwKey);
 	    break;
-	 case BO_FILE:
+	 }
+	 case BO_FILE: {
 	    dwFiles++;
 	    ReadPipe (pipe, (BYTE *)&osmeta, sizeof (OSMETA));
 	    if ((osmeta.wDate>maxdate) || ((osmeta.wDate==maxdate)&&(osmeta.wTime>maxtime))){
@@ -2023,7 +2032,8 @@ void SuperGet (void){ // A:*
 	    strcpy (((MASREC*)V(rn->vpMas))->szName, Rep2Name (rn->osmeta.pbName));
 	    AddToNtx (rn->compress.dwMasterPrefix, rev, rn->filemeta.dwLength);
 	    break;
-	 case BO_DIR:
+	 }
+	 case BO_DIR: {
 	    dwDirs++;
 	    if (pulsar()) NotifyOld();
 	    ReadPipe (pipe, (BYTE *)&osmeta, sizeof (OSMETA));
@@ -2052,6 +2062,7 @@ void SuperGet (void){ // A:*
 	       // "unnatural" archives
 	    }
 	    break;
+	 }
 	 default:
 	    probeo=1;
 	    Error (90,"fatal damage in central directory");
@@ -2191,7 +2202,7 @@ char *WFull (VPTR rev, DWORD hint){
       r = hint;
    if (r==DELREV) r=0;
    if (r) strcat (ret, ";");
-   if (r) strcat (ret, ultoa(r, tmp, 10));
+   if (r) sprintf(ret + strlen(ret), "%" PRIdw, r); //strcat (ret, ltoa(r, tmp, 10));
    RepTmp (ret);
    if (ret[0]=='.' && ret[1]=='\\'){
       return ret+2;

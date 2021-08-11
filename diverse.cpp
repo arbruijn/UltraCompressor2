@@ -40,11 +40,14 @@ BYTE *Name2Rep (char *pcName){
    static BYTE ret[11];
    char name[MAXFILE];
    char ext[MAXEXT];
+   int nl, el;
    fnsplit(pcName, NULL, NULL, name, ext);
    memset (ret,32,11);
-   memcpy (ret, name, strlen(name));
-   if (strlen(ext)>1)
-      memcpy (ret+8, ext+1, strlen(ext)-1);
+   nl = strlen(name);
+   memcpy (ret, name, nl>8 ? 8 : nl);
+   el = strlen(ext);
+   if (el>1)
+      memcpy (ret+8, ext+1, el>4 ? 3 : el-1);
    return ret;
 }
 
@@ -80,16 +83,26 @@ char *Rep2DName (BYTE *pbRep){
 */
 
 int StdOutType (void){
+#ifndef DOS
+   return D_DEV;
+#else
+   extern int dosvid;
+   if (dosvid)
+      return D_DEV;
    unsigned dx;
    dx = ioctl (fileno(stdout), 0, 0, 0);
    if (!(dx&0x80)) return D_FILE;  // output redirected to file
    if (dx&0x3) return D_CON;       // ouput not redirected (CON:)
    if (dx&0x4) return D_NUL;       // output redirected to NUL:
    return D_DEV;                   // output redirected to other device
+#endif
 }
 
+#undef malloc
+#undef free
 #undef farmalloc
 #undef farfree
+#include <alloc.h>
 
 #ifdef TRACE
    DWORD mallox=0;
@@ -202,8 +215,12 @@ void checkx (void){
 #endif
 
 BYTE *normalize (BYTE *base){
+#ifndef DOS
+   return base;
+#else
    if (FP_OFF(base)>65520U) IE();
    return (BYTE *)MK_FP(FP_SEG(base)+(FP_OFF(base)+15)/16,0);
+#endif
 }
 
 static BYTE *regad;
@@ -315,6 +332,9 @@ void UnGetDat (void){
 
 
 BYTE probits (void){
+#ifndef DOS
+   return 32;
+#else
    asm   pushf
    asm   xor   ax,ax
    asm   push  ax
@@ -339,9 +359,13 @@ bit16:
 bit8:
    asm   popf
    return (BYTE)8;
+#endif
 }
 
 void far RapidCopy (void far *dst, void far *src, WORD wLen){
+#ifndef ASM
+   memcpy(dst, src, wLen);
+#else
    int first, rest;
    asm cld
    if ((wLen<32U) || !m386){ // no too small moves
@@ -381,6 +405,7 @@ void far RapidCopy (void far *dst, void far *src, WORD wLen){
       asm rep  movsb
       asm pop  ds         // restore DS
    }
+#endif
 }
 
 
@@ -397,8 +422,14 @@ void DDump (char *pcFilename, BYTE *pbData, WORD wSize){
 
 int pulsar (void){
    static clock_t ct;
-   if (labs(clock()-ct)){
-      ct = clock();
+   clock_t now;
+#ifndef DOS
+   now = clock() * (182L / (long)(CLOCKS_PER_SEC * 10));
+#else
+   now = clock();
+#endif
+   if (labs(now-ct)){
+      ct = now;
       return 1;
    }
    return 0;
@@ -425,11 +456,13 @@ void Critical (void){
    if (!win) return;
 
    if (!deep++){
+#ifdef DOS
       union REGS regs;
 
       regs.x.ax = 0x1681;
 //      Out (7,"[LOCK]");
       int86(0x2F, &regs, &regs);
+#endif
    }
 }
 
@@ -437,11 +470,13 @@ void Normal (void){
    if (!win) return;
 
    if (!--deep){
+#ifdef DOS
       union REGS regs;
 
       regs.x.ax = 0x1682;
 //      Out (7,"[UNLOCK]");
       int86(0x2F, &regs, &regs);
+#endif
    }
 }
 
@@ -499,7 +534,7 @@ void RabDelete (void){
       VPTR tmp=qrot;
       qrot = *((VPTR*)V(qrot));
       if (Exists ((char*)V(tmp)+sizeof(VPTR))){ // allow over-specification
-	 WORD wAttrib;
+	 unsigned int wAttrib;
 	 CSB;
 	    _dos_getfileattr ((char*)V(tmp)+sizeof(VPTR),&wAttrib);
 	 CSE;
@@ -523,9 +558,9 @@ void RabAdd (char *file){
 
 void strrep (char *base, char *from, char *onto){
    char *p;
-   while (p=strstr(base,from)){
-      movmem (p+strlen(from), p, strlen(p)+1);
-      movmem (p, p+strlen(onto), strlen(p)+1);
+   while ((p=strstr(base,from))){
+      memmove (p+strlen(from), p, strlen(p)+1);
+      memmove (p, p+strlen(onto), strlen(p)+1);
       for (int i=0;i<strlen(onto);i++)
          p[i] = onto[i];
    }
@@ -534,7 +569,7 @@ void strrep (char *base, char *from, char *onto){
 extern char pcManPath[260];
 
 char* LocateF (char *name, int batch){
-    static char ret[260];
+    static char ret[260], *p;
     if (batch){
        if (CONFIG.pcBat[0]=='*') goto aut;
        strcpy (ret,CONFIG.pcBat);
@@ -552,8 +587,8 @@ aut:
     strcat (ret,name);
     if (Exists (ret)) return ret;
 
-    if (searchpath(name)){
-       strcpy (ret, searchpath(name));
+    if ((p=searchpath(name))){
+       strcpy (ret, p);
        return ret;
     }
 

@@ -6,11 +6,11 @@ void XorBlock (BYTE *dst, BYTE *b){
    p1 = (WORD *)dst;
    p2 = (WORD *)b;
 
-/*
+#ifndef ASM
    for (int i=0;i<256;i++){
       p1[i] ^= p2[i];
    }
-*/
+#else
    asm push DS
 
    _DS = FP_SEG (p1);
@@ -31,5 +31,6 @@ void XorBlock (BYTE *dst, BYTE *b){
    }
 
    asm pop DS
+#endif
 }
 

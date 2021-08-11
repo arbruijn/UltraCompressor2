@@ -36,7 +36,7 @@ int siz=25;
 void ask (char *q, char *a);
 
 int detectegavga (void){
-#ifndef UE2
+#if !defined (UE2) && defined(DOS)
    unsigned char tmp;
    union REGS r;
    r.h.ah = 18;
@@ -692,6 +692,8 @@ done2:
 #endif
 }
 
+extern int dosvid;
+
 #pragma argsused
 void ViewFile (int index){
    char *pcFileName;
@@ -715,9 +717,11 @@ void ViewFile (int index){
    } else
       Mode(CONFIG.bVideo);
 
-   textattr(attri);
+   if (!dosvid)
+     textattr(attri);
    FSOut (7," "); // set directvideo to right value
-   clrscr();
+   if (!dosvid)
+     clrscr();
 
 jp:
    jump=0;

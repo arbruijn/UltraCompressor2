@@ -1,5 +1,8 @@
 // Copyright 1992, all rights reserved, AIP, Nico de Vries
 // MAIN.H
+#ifndef DOS
+#include <stdint.h>
+#endif
 
 #define TRANSLEN 72
 
@@ -36,9 +39,24 @@
    extern int heavy; // heavy mode activated
 #endif
 
+#ifdef DOS
 typedef unsigned char BYTE;
-typedef unsigned WORD;
+typedef unsigned short WORD;
 typedef unsigned long DWORD;
+#define PRIdw "lu"
+#else
+typedef uint8_t BYTE;
+typedef uint16_t WORD;
+typedef uint32_t DWORD;
+#include <inttypes.h>
+#define PRIdw PRIu32
+#endif
+#ifdef DOS
+#define PATHSEP "\\"
+#else
+#define PATHSEP "/"
+#endif
+
 extern struct CONF {
    BYTE finstall;    // 1 -> has to be installed !!!
    DWORD exesize;    // size of executable in install tool
@@ -70,6 +88,10 @@ extern struct CONF {
 
 #define MAGIC 0x1AC283746L
 
+#undef farmalloc
+#undef farfree
+#undef malloc
+#undef free
 #define malloc ERROR_USE_xmalloc_PLEASE
 #define farmalloc ERROR_USE_xmalloc_PLEASE
 #define free ERROR_USE_xfree_PLEASE

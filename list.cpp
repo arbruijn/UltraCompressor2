@@ -214,7 +214,7 @@ static void ListFiles (){
 		  dwTot+=fn->filemeta.dwLength;
 	       } else {
 		  char ttmp[30];
-		  sprintf (ttmp,"%s;%ld",Rep2Name(fn->osmeta.pbName),idx);
+		  sprintf (ttmp,"%s;%" PRIdw,Rep2Name(fn->osmeta.pbName),idx);
 		  Out (7,"%-15s",ttmp);
 		  dwTot+=fn->filemeta.dwLength;
 	       }

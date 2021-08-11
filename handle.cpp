@@ -7,6 +7,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <conio.h>
+#ifndef DOS
+#include <errno.h>
+#endif
 #include "handle.h"
 #include "main.h"
 #include "video.h"
@@ -274,12 +277,15 @@ void BrkQ (void){
 }
 
 char cerror[200];
+#ifdef DOS
 DOSERROR info;
+#endif
 int netw;
 int fatal=0;
 int os2=0;
 extern int win;
 
+#ifdef DOS
 #pragma argsused
 void cdecl errHan(unsigned deverr, unsigned errval, unsigned far *devhdr){
   /* if this not disk error then another device having trouble */
@@ -344,9 +350,12 @@ leave:
      longjmp (jbCritRep,1); // restart at start of critical section
   }
 }
+#endif
 
 void diskfull (char* file){
+   #ifdef DOS
    if (fatal) errHan (0,0,NULL);
+   #endif
    Menu ("\x8""SYSTEM ERROR: write to %s failed (disk full?)",file);
 again:
    Option ("",'A',"bort");
@@ -362,11 +371,14 @@ again:
 	 syst();
 	 break;
    }
-   Menu ("\x8\(PENDING) SYSTEM ERROR: write to %s failed (disk full?)",file);
+   Menu ("\x8(PENDING) SYSTEM ERROR: write to %s failed (disk full?)",file);
    goto again;
 }
 
 void PreFab (void){
+#ifndef DOS
+   strcpy (cerror, strerror(errno));
+#else
    unsigned em=0x05;
    if (dosexterr(&info)){
       em = info.de_exterror;
@@ -379,6 +391,7 @@ void PreFab (void){
       netw=1;
    }
    sprintf (cerror, "%s", xerr_msg[em]);
+#endif
 }
 
 int CeAskOpen (char *name, char *why, int skip){
@@ -408,7 +421,7 @@ again:
       case 4:
 	 return 0;
    }
-   Menu ("\x8\(PENDING) SYSTEM ERROR: %s (attempting to %s %s)",cerror,why,name);
+   Menu ("\x8(PENDING) SYSTEM ERROR: %s (attempting to %s %s)",cerror,why,name);
    goto again;
 }
 
@@ -429,7 +442,7 @@ again:
 	 syst();
 	 break;
    }
-   Menu ("\x8\(PENDING) SYSTEM ERROR: %s",cerror);
+   Menu ("\x8(PENDING) SYSTEM ERROR: %s",cerror);
    goto again;
 }
 

@@ -26,12 +26,17 @@ void FletchUpdate (struct FREC *fr, BYTE far *dptr, unsigned len){
       len--;
       fr->sum1=1; // mark upkoming byte for halfword processing
    }
+#ifdef ASM
    // force len to become multiple of 4
    if (len%4==2){
+#else
+   while (len) {
+#endif
       fr->sum2^=*((WORD*)dptr);
       dptr+=2;
       len-=2;
    }
+#ifdef ASM
    if (len && !m386){
       _DI=fr->sum2; // current parity
       _CX=len/2;    // word counter
@@ -109,6 +114,7 @@ again2:
       fr->sum2=_DI;
       asm .8086
    }
+#endif
 }
 
 WORD Fletcher (FREC *fr){

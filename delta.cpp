@@ -39,6 +39,7 @@ void UnDelta (DeltaBlah *db, BYTE far *pbData, WORD size){
 //#define Delta DUMMY1
 //#define UnDelta DUMMY2
 
+#ifdef ASM
 static BYTE SDelta (BYTE a, WORD size, BYTE far* pbData){
    _CL = a;
    _SI = size;
@@ -84,6 +85,7 @@ loop:
    return a;
 */
 }
+#endif
 
 void Delta (DeltaBlah *db, BYTE far *pbData, WORD size){
    BYTE arra[8];
@@ -98,16 +100,20 @@ void Delta (DeltaBlah *db, BYTE far *pbData, WORD size){
    WORD ctr=db->ctr;
    WORD siz=db->size;
 
+#ifdef ASM
    if (siz==1){
       arra[0] = SDelta (arra[0],size,pbData);
    } else {
+#endif
       for (WORD i=0;i<size;i++){
 	 BYTE tmp=pbData[i];
 	 pbData[i] = tmp - arra[ctr];
 	 arra[ctr] = tmp;
 	 if (++ctr==siz) ctr=0;
       }
+#ifdef ASM
    }
+#endif
 
    db->ctr = ctr;
    db->arra[0] = arra[0];
@@ -133,15 +139,19 @@ void UnDelta (DeltaBlah *db, BYTE far *pbData, WORD size){
    WORD ctr=db->ctr;
    WORD siz=db->size;
 
+#ifdef ASM
    if (siz==1){
       arra[0] = SUnDelta (arra[0], size, pbData);
    } else {
+#endif
       for (WORD i=0;i<size;i++){
 	 pbData[i] += arra[ctr];
 	 arra[ctr] = pbData[i];
 	 if (++ctr==siz) ctr=0;
       }
+#ifdef ASM
    }
+#endif
 
    db->ctr = ctr;
    db->arra[0] = arra[0];

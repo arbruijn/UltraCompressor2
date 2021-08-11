@@ -195,6 +195,7 @@ void Default (void);
 extern int dosvid;
 
 void GetCFG (){
+#ifdef DOS
    FILE *fp = _fsopen (pcEXEPath,"rb",SH_DENYWR);
    if (!fp){
       FatalError (105, "cannot read configuration from %s",pcEXEPath);
@@ -235,10 +236,10 @@ void GetCFG (){
    } else {
       fclose (fp);
    }
-#ifdef UE2
+#else
    Default();
    if (dosvid){
-      CONFIG.fOut = 4;
+      CONFIG.fOut = 2; // 4
    } else {
       CONFIG.fOut = 2;
    }
@@ -327,12 +328,15 @@ void Default (void){
 }
 
 void NoLastS (char *buf){
+#ifdef DOS
    if (buf[0]==0){
       buf[0]='\\';
       buf[1]=0;
    }
-   if (buf[strlen(buf)-1]=='\\')
+#endif
+   if (buf[strlen(buf)-1]=='\\'||buf[strlen(buf)-1]=='/')
       buf[strlen(buf)-1]=0;
+#ifdef DOS
    if (buf[1]!=':'){
       char tmp[300];
       strcpy (tmp,"C:");
@@ -348,6 +352,7 @@ void NoLastS (char *buf){
       strcpy (buf, tmp);
    }
    strupr (buf);
+#endif
 }
 
 int menu=0;
@@ -389,7 +394,8 @@ void HelpMenu (){
    int opt=3;
    int i;
    Out (7,"\x7");
-   clrscr();
+   if (!dosvid)
+     clrscr();
    for (;;){
       menu=1;
       NoCursor();
@@ -457,7 +463,7 @@ got:
 	    ConfigMenu();
 	    gotoxy (1,1);
 	    break;
-	 case 'R':
+	 case 'R': {
 	    FSOut (7,"\x7");
 	    clrscr();
 	    char c[100], ss[100];
@@ -496,6 +502,7 @@ got:
 	    clrscr();
 	    FSOut (7,"\n\r");
 	    return;
+         }
 	 default:
 	    FSOut (7,"\x8"" *** WRONG CHOICE ***\r");
             delay (500);
@@ -543,6 +550,7 @@ void oel (void){
 // Returns the version of DR-DOS active or -1 if not DR-DOS. Returns the
 // version as a word, high word major version, low word minor version.
 int DRDosVer(void) {
+#ifdef DOS
    unsigned tmp;
 
    _FLAGS |= 1; // Set carry flag
@@ -573,9 +581,13 @@ int DRDosVer(void) {
       oe2();
    }
    return 0;
+#else
+   return -1;
+#endif
 }
 
 void DVver(int chk) {
+#ifdef DOS
    _AX = 0x2B01;
    _CX = 0x4445;
    _DX = 0x5351;
@@ -598,9 +610,11 @@ void DVver(int chk) {
 	 oe2();
       }
    }
+#endif
 }
 
 void DWin(void) {
+#ifdef DOS
    _AX = 0x160a;
    geninterrupt (0x2F);
    if (_AX==0){ // Windows 3.1
@@ -625,9 +639,11 @@ void DWin(void) {
 	 }
       }
    }
+#endif
 }
 
 void Win(void) {
+#ifdef DOS
    _AX = 0x160a;
    geninterrupt (0x2F);
    if (_AX==0){ // Windows 3.1
@@ -677,10 +693,11 @@ void Win(void) {
 	 }
       }
    }
+#endif
 }
 
 int Logo (void){
-   if (_argv[1][0]=='~'){
+   if (_argc >=2 && _argv[1][0]=='~'){
       if (StdOutType()==D_CON)
 	 return 0;
       else
@@ -723,6 +740,7 @@ int Logo (void){
    Out (3,"\x4\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xcd\r\n");
 #endif
 
+#ifdef DOS
 #ifndef UE2
    if (Validate()){
       if (CONFIG.dSerial==2212433133L){
@@ -738,6 +756,8 @@ int Logo (void){
    }
 #endif
    ctr=0;
+
+#ifdef DOS
    union REGS regs;
    regs.h.ah = 0x30;
    intdos (&regs,&regs);
@@ -760,6 +780,8 @@ int Logo (void){
       oe2();
       os2=1;
    }
+#endif
+
    DVver(0);
    Win();
 
@@ -794,6 +816,9 @@ int Logo (void){
 	 break;
    }
    oel();
+#else
+   Out (3,"LGPL Cross-Platform version 0.1");
+#endif
    Out (7,"\n\r\n\r");
    return ret;
 }
@@ -874,7 +899,8 @@ void cdecl exito (void){
    if (bDump){
       switch (problemos){
 	 case 0:
-	    if (stricmp (getenv("UC2_OK"), "OFF")!=0)
+	    char *env;
+	    if ((env = getenv("UC2_OK")) && stricmp (env, "OFF")!=0)
 	       Close (Open ("U$~RESLT.OK",MUST|CR|NOC));
 	    break;
 	 case 1:
@@ -904,12 +930,12 @@ void cdecl exito (void){
 	    sprintf (tmp,"%s and %s have been reported",err,war);
 	 } else if (errors){
 	    if (errors==1)
-	       sprintf (tmp,"1 error has been reported",err);
+	       sprintf (tmp,"1 error has been reported");
 	    else
 	       sprintf (tmp,"%s have been reported",err);
 	 } else {
             if (warnings==1)
-               sprintf (tmp,"1 warning has been reported",war);
+               sprintf (tmp,"1 warning has been reported");
             else
                sprintf (tmp,"%s have been reported",war);
          }
@@ -950,9 +976,13 @@ void cdecl exito (void){
    if (beta) Out (7,"\n\r\x7Memory: PROG=%ld DYNRAM=%ld BASETOTAL=%ld VIRTUAL=%lu",(long)progmem,(long)maximal-minimal,(long)progmem+maximal-minimal,virt);
 #endif
    if (problemos || (!dosvid && !bDump && StdOutType()==D_CON)){
-      textattr (attri);
-      cputs ("\n\r \r");
+      if (!dosvid) {
+         textattr (attri);
+         cputs ("\n\r \r");
+      }
    }
+   if (dosvid)
+      printf("\n");
 #ifdef UCPROX
    if (debug){
       Out (7,"{{Correct exit of program}}\n\r");
@@ -983,11 +1013,15 @@ int dosvid=0;
 
 #ifdef UE2
 
-   void cdecl main (int argc, char **argv){
-      if (argv[1][0]=='='){ // UC2-3PI
+   int cdecl main (int argc, char **argv){
+      _argc = argc; _argv = argv;
+      if (argc>1&&argv[1][0]=='='){ // UC2-3PI
 	 strcpy (argv[1],argv[1]+1);
 	 dosvid=1;
       }
+      #ifndef DOS
+      dosvid=1;
+      #endif
 restart:
       if ((argc==1) ||
 	  (argv[1][0]=='?' || (argv[1][0]=='-' && argv[1][1]=='?') || (argv[1][0]=='/' && argv[1][1]=='?')) ||
@@ -1069,7 +1103,9 @@ restart:
       attri = ti.attribute;
       setcbrk (0);
       ctrlbrk (breakNono);
+      #ifdef DOS
       for (int i=0;i<argc;i++) strupr (argv[i]);
+      #endif
       GetPath(argv); // MUST be called before InitVmem !!!
 
    #ifdef UCPROX
@@ -1187,6 +1223,7 @@ restart:
             } else {
                _useems=1; // 1--> XSPAWN cannot use EMS
             }
+            #ifdef DOS
             if (CONFIG.fXMS){
                gmaxXMS=0xFFFF;
                if (getenv("UC2_MAX_XMS")) gmaxXMS=atoi(getenv("UC2_MAX_XMS"))/16;
@@ -1200,6 +1237,7 @@ restart:
    //          gmaxUMB=0;
    //       }
             }
+            #endif
 
       //      if (CONFIG.fExt) gmaxI15=0xFFFF; //NEVER use raw extended memory
             if (getenv("UC2_RAW_EXT") && !gmaxXMS && !gmaxEMS && !gmaxUMB){
@@ -1260,7 +1298,11 @@ restart:
 
    void UnGetKey (char);
 
-    void cdecl main (int argc, char **argv){
+   int cdecl main (int argc, char **argv){
+      _argc = argc; _argv = argv;
+      #ifndef DOS
+      dosvid=1;
+      #endif
       if (getenv("UC2_WIN")){
          int i,ctr;
 	 window (
@@ -1276,7 +1318,7 @@ restart:
             cprintf ("\n\r");
          }
       }
-      if (argv[1][0]=='^')
+      if (argc >= 2 && argv[1][0]=='^')
       {
 	 fclose (stdout);
 	 *stdout = *fopen (argv[1]+1, "w");
@@ -1287,7 +1329,7 @@ restart:
 	 _argc--;
 	 argc--;
       }
-	if (argv[1][0]=='~' && argv[1][1]=='*'){
+	if (argc >= 2 && argv[1][0]=='~' && argv[1][1]=='*'){
 	    struct ffblk ffblk;
 	    int done;
 	    done = findfirst ("*.*", &ffblk, 0xF7);
@@ -1298,20 +1340,20 @@ restart:
 		if (strcmp(ffblk.ff_name,".") == 0) goto next;
 		if (strcmp(ffblk.ff_name,"..") == 0) goto next;
 		fclose(fopen ("u$~chk1","w"));
-		return;
+		return 0;
 next:
 		done = findnext (&ffblk);
 	    }
-	    return;
+	    return 0;
         }
-      if (argv[1][0]=='='){ // UC2-3PI
+      if (argc >=2 && argv[1][0]=='='){ // UC2-3PI
          strcpy (argv[1],argv[1]+1);
          dosvid=1;
       }
 restart:
-      if ((argv[1][0]=='?' || (argv[1][0]=='-' && argv[1][1]=='?') || (argv[1][0]=='/' && argv[1][1]=='?')) ||
+      if (argc >=2 && ((argv[1][0]=='?' || (argv[1][0]=='-' && argv[1][1]=='?') || (argv[1][0]=='/' && argv[1][1]=='?')) ||
           (argv[1][0]=='h' || (argv[1][0]=='-' && argv[1][1]=='h') || (argv[1][0]=='/' && argv[1][1]=='h')) ||
-          (argv[1][0]=='H' || (argv[1][0]=='-' && argv[1][1]=='H') || (argv[1][0]=='/' && argv[1][1]=='H'))){ // mini help
+          (argv[1][0]=='H' || (argv[1][0]=='-' && argv[1][1]=='H') || (argv[1][0]=='/' && argv[1][1]=='H')))){ // mini help
 
           if (argc>2){
               UnGetKey (13);
@@ -1405,13 +1447,19 @@ restart:
       farfree (p);
    #endif
 
+      #ifdef DOS
       _harderr(errHan);
+      #endif
       struct text_info ti;
       gettextinfo(&ti);
       attri = ti.attribute;
+      #ifdef DOS
       setcbrk (0);
       ctrlbrk (breakNono);
+      #endif
+      #ifdef DOS
       for (int i=0;i<argc;i++) strupr (argv[i]);
+      #endif
       GetPath(argv); // MUST be called before InitVmem !!!
 
    #ifdef UCPROX
@@ -1499,8 +1547,10 @@ restart:
          doexit (EXIT_SUCCESS);
       }
    #endif
+      #ifdef DOS
       ctrlbrk (breakHan);
       setcbrk(1);
+      #endif
 
       GetCFG ();
       GKeep();
@@ -1625,7 +1675,7 @@ restart:
          }
 
          int cfg=0;
-         if (argv[1][0]=='!' || (argv[1][0]=='-' && argv[1][1]=='!') || (argv[1][0]=='/' && argv[1][1]=='!')){
+         if (argc >= 2 && (argv[1][0]=='!' || (argv[1][0]=='-' && argv[1][1]=='!') || (argv[1][0]=='/' && argv[1][1]=='!'))){
             cfg=1;
             goto noarg;
          }
@@ -1640,7 +1690,8 @@ noarg:
                Mode(CONFIG.bVideo);
       //      textattr (attri);
             FSOut (7,"\x7");
-            clrscr();
+            if (!dosvid)
+              clrscr();
       #ifdef UCPROX // special testing software
             if (beta && getenv("DEBUG") && strcmp(getenv("DEBUG"),"ON")==0){
                Out (7,"[[DEBUG MODE ENABLED]]\n\r");
@@ -1683,6 +1734,7 @@ noarg:
             } else {
                _useems=1; // 1--> XSPAWN cannot use EMS
             }
+            #ifdef DOS
             if (CONFIG.fXMS){
                gmaxXMS=0xFFFF;
                if (getenv("UC2_MAX_XMS")) gmaxXMS=atoi(getenv("UC2_MAX_XMS"))/16;
@@ -1696,6 +1748,7 @@ noarg:
    //          gmaxUMB=0;
    //       }
             }
+            #endif
 
       //      if (CONFIG.fExt) gmaxI15=0xFFFF; //NEVER use raw extended memory
             if (getenv("UC2_RAW_EXT") && !gmaxXMS && !gmaxEMS && !gmaxUMB){

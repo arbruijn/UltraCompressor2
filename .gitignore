@@ -1,0 +1,16 @@
+*.o
+*~
+*.TMP
+*.UC2
+*.uc2
+*.OBJ
+tc/
+tpi/
+UCD.*
+*.BAK
+TMPS
+old/
+xspawn/*
+!xspawn/README.md
+uc
+.gdb_history
