@@ -39,6 +39,10 @@
 typedef unsigned char BYTE;
 typedef unsigned WORD;
 typedef unsigned long DWORD;
+
+#define PATHSEP "\\"
+#define PATHSEPC '\\'
+
 extern struct CONF {
    BYTE finstall;    // 1 -> has to be installed !!!
    DWORD exesize;    // size of executable in install tool

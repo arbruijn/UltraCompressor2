@@ -515,7 +515,7 @@ int specialanal=0;
 void Anal (char *spi, int fSelect){
    char s[200];
    strcpy (s,spi);
-   if (s[strlen(s)-1]=='\\') strcat (s,"*.*");
+   if (s[strlen(s)-1]==PATHSEPC) strcat (s,"*.*");
    char pcTPath[200];
    VPTR mm = Vmalloc (sizeof (MMASK));
    MMASK *m = (MMASK *)V(mm);
@@ -591,8 +591,8 @@ void SetDest (char *dp){
    strcpy (szDestPath, dp);
    if ((strlen(szDestPath)==2)&&(szDestPath[1]==':'))
       strcat (szDestPath, ".");
-   if (strlen(szDestPath) && szDestPath[strlen(szDestPath)-1]!='\\')
-      strcat (szDestPath,"\\");
+   if (strlen(szDestPath) && szDestPath[strlen(szDestPath)-1]!=PATHSEPC)
+      strcat (szDestPath,PATHSEP);
 //   Out (7,"[dest=%s]",szDestPath);
 }
 
@@ -1380,7 +1380,7 @@ int Test (char *pcArchivePath){
       BoosterOn();
       VPTR walk = Mpath;
       while (!IS_VNULL(walk)){
-	 MarkUp (".\\",VNULL, walk, 0);
+	 MarkUp ("." PATHSEP,VNULL, walk, 0);
 	 walk = ((MPATH *)V(walk))->vpNext;
       }
       BoosterOff();
@@ -1724,7 +1724,7 @@ RED:
 		  BoosterOn();
 		  VPTR walk = Mpath;
 		  while (!IS_VNULL(walk)){
-		     MarkUp (".\\",VNULL, walk, 0);
+		     MarkUp ("." PATHSEP,VNULL, walk, 0);
 		     walk = ((MPATH *)V(walk))->vpNext;
 		  }
 		  BoosterOff();
@@ -1827,11 +1827,11 @@ AADD:
 		  strcpy (q,szDestPath+1);
 		  strcpy (p,((MPATH*)V(walk))->pcTPath);
 		  if (p[1]==':') strcpy (p,p+2);
-		  if (p[0]=='\\') strcpy (p,p+1);
+		  if (p[0]==PATHSEPC) strcpy (p,p+1);
 		  strcat (q,p);
-		  strrep (q, "..\\", "\\");
-		  strrep (q, ".\\", "\\");
-		  strrep (q, "\\\\", "\\");
+		  strrep (q, ".." PATHSEP, PATHSEP);
+		  strrep (q, "." PATHSEP, PATHSEP);
+		  strrep (q, PATHSEP PATHSEP, PATHSEP);
 		  ddst=StrToDir (q);
 		  MODE.fInc = f1;
 		  ScanAdd (ddst, walk, 0);
@@ -1959,7 +1959,7 @@ nonono:
 	    BoosterOn();
 	    VPTR walk = Mpath;
 	    while (!IS_VNULL(walk)){
-	       MarkUp (".\\",VNULL, walk, 0);
+	       MarkUp ("." PATHSEP,VNULL, walk, 0);
 	       walk = ((MPATH *)V(walk))->vpNext;
 	    }
 	    BoosterOff();
@@ -2097,7 +2097,7 @@ leave:
 	       VPTR walk = Mpath;
 	       dwMyCtr=0;
 	       while (!IS_VNULL(walk)){
-		  MarkUp (".\\",VNULL, walk, 0);
+		  MarkUp ("." PATHSEP,VNULL, walk, 0);
 		  walk = ((MPATH *)V(walk))->vpNext;
 	       }
 
@@ -2164,7 +2164,7 @@ leave:
 		     strcpy (p, szDestPath+1);
 		     if (szDestPath[2]==0)
 			p[0]=0;
-		     if ((((MPATH*)V(walk))->pcTPath[0])=='\\')
+		     if ((((MPATH*)V(walk))->pcTPath[0])==PATHSEPC)
 			strcat (p, ((MPATH*)V(walk))->pcTPath+1);
 		     else
 			strcat (p, ((MPATH*)V(walk))->pcTPath);
@@ -2174,7 +2174,7 @@ leave:
 		     MarkUp (szDestPath, VNULL, walk, 0);
 		  }
 	       } else
-		  MarkUp (".\\",VNULL, walk, 0);
+		  MarkUp ("." PATHSEP,VNULL, walk, 0);
 	       walk = ((MPATH *)V(walk))->vpNext;
 	    }
 	    BoosterOff();
@@ -2283,7 +2283,7 @@ listing:
 
 	    VPTR walk = Mpath;
 	    while (!IS_VNULL(walk)){
-	       MarkUp (".\\",VNULL, walk, 0);
+	       MarkUp ("." PATHSEP,VNULL, walk, 0);
 	       walk = ((MPATH *)V(walk))->vpNext;
 	    }
 	    BoosterOff();
@@ -2422,7 +2422,7 @@ listing:
 	    BoosterOn();
 	    VPTR walk = Mpath;
 	    while (!IS_VNULL(walk)){
-	       MarkUp (".\\",VNULL, walk, 0);
+	       MarkUp ("." PATHSEP,VNULL, walk, 0);
 	       walk = ((MPATH *)V(walk))->vpNext;
 	    }
 	    BoosterOff();
@@ -2577,7 +2577,7 @@ repairit:
 	       {
 		  VPTR walk = Mpath;
 		  while (!IS_VNULL(walk)){
-		     MarkUp (".\\",VNULL, walk, 0);
+		     MarkUp ("." PATHSEP,VNULL, walk, 0);
 		     walk = ((MPATH *)V(walk))->vpNext;
 		  }
 	       }
