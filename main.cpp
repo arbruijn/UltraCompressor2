@@ -244,7 +244,7 @@ void GetCFG (){
       CONFIG.fOut = 2;
    }
    CONFIG.bVideo = 4;
-   strcpy (CONFIG.pcLog,"C:\\*");
+   strcpy (CONFIG.pcLog,"C:" PATHSEP "*");
    SPARE=CONFIG;
 #endif
 //   Out (7,"[[%ld]]",CONFIG.dwSoffset);
@@ -330,11 +330,11 @@ void Default (void){
 void NoLastS (char *buf){
 #ifdef DOS
    if (buf[0]==0){
-      buf[0]='\\';
+      buf[0]=PATHSEPC;
       buf[1]=0;
    }
 #endif
-   if (buf[strlen(buf)-1]=='\\'||buf[strlen(buf)-1]=='/')
+   if (buf[strlen(buf)-1]==PATHSEPC)
       buf[strlen(buf)-1]=0;
 #ifdef DOS
    if (buf[1]!=':'){
@@ -343,11 +343,11 @@ void NoLastS (char *buf){
       strcat (tmp, buf);
       strcpy (buf, tmp);
    }
-   if ((buf[2]!=0) && (buf[2]!='\\')){
+   if ((buf[2]!=0) && (buf[2]!=PATHSEPC)){
       char tmp[300];
       strcpy (tmp,"?:");
       tmp[0] = buf[0];
-      strcat (tmp,"\\");
+      strcat (tmp,PATHSEP);
       strcat (tmp+3, buf+2);
       strcpy (buf, tmp);
    }
@@ -956,8 +956,8 @@ void cdecl exito (void){
                FSOut (7,"\x8\n%s ",tmp);
                FROut (7,"\x8\n%s ",tmp);
                if (CONFIG.pcLog[3]!='*'){
-                  FSOut (7,"\x7(logged to %s\\UC2_ERR.LOG)",CONFIG.pcLog);
-                  FROut (7,"\x7(logged to %s\\UC2_ERR.LOG)",CONFIG.pcLog);
+                  FSOut (7,"\x7(logged to %s" PATHSEP "UC2_ERR.LOG)",CONFIG.pcLog);
+                  FROut (7,"\x7(logged to %s" PATHSEP "UC2_ERR.LOG)",CONFIG.pcLog);
                   if (size>25000){
                      FSOut (7,"\n\r\x8WARNING: size of logfile is %s bytes",neat(size));
                      FROut (7,"\n\r\x8WARNING: size of logfile is %s bytes",neat(size));
@@ -1556,7 +1556,7 @@ restart:
       GKeep();
       if (CONFIG.finstall){
          char path [MAXPATH];
-         strcpy (path,"C:\\UC2");
+         strcpy (path,"C:" PATHSEP "UC2");
    againo:
          clrscr();
 	 Out (7,"\x6""AIP-NL UltraCompressor II revision 2 (tm) INSTALL PROGRAM\n\r\n\r");
@@ -1574,7 +1574,7 @@ restart:
          Out (7,"   - advanced filtering on contents, date/time, attributes \x6NEW!\x7\n\r\n\r");
          Out (7,"\x6""Please note this software can only be used, (re)distributed,\n\r");
          Out (7,"etc. according to the included license agreement (license.doc)!\n\r");
-         Menu ("\x6""Do you want to install UltraCompressor II in %s\\ ?",path);
+         Menu ("\x6""Do you want to install UltraCompressor II in %s" PATHSEP " ?",path);
          Option ("",'Y',"es");
          Option ("",'N',"o");
          Option ("",'D',"ifferent location");
@@ -1594,7 +1594,7 @@ restart:
                   }
                   char path2[MAXPATH], *path3=path2;
                   strcpy (path2,path);
-                  strcat (path2,"\\UC.EXE");
+                  strcat (path2,PATHSEP "UC.EXE");
                   igno=1; // for debugging purposes
 
                   GetPath (&path3);
@@ -1611,7 +1611,7 @@ restart:
                   xfree (buf, STMP);
                   fclose (f2);
                   strcpy (path2,path);
-                  strcat (path2,"\\ALL.UC2");
+                  strcat (path2,PATHSEP "ALL.UC2");
                   f2 = fopen (path2,"wb");
                   ctr = CONFIG.archsize;
 		  buf = xmalloc (16384, STMP);
@@ -1636,7 +1636,7 @@ restart:
                   CONFIG.fOut=2;
                   SPARE=CONFIG;
                   strcpy (path2,path);
-                  strcat (path2,"\\ALL.UC2");
+                  strcat (path2,PATHSEP "ALL.UC2");
                   argv[1]="X";
                   argv[2]=path2;
                   memmove (path+1, path, strlen(path)+1);
@@ -1647,7 +1647,7 @@ restart:
                   InitMem (); // Use NO EMS,XMS etc.
                   InitVmem();
                   ComoTerp (4, argv);
-                  if (strlen(path)==3) strcat (path,"\\");
+                  if (strlen(path)==3) strcat (path,PATHSEP);
                   Out (7,"\n\r\n\rUltraCompressor II revision 2 is now ready for use.\n\r\n\r");
 		  Out (7,"To allow UC to be called from everywhere on your system, make\n\r");
                   Out (7,"sure %s is in the PATH statement of your AUTOEXEC.BAT.\n\r",path+1);

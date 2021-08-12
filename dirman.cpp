@@ -153,16 +153,16 @@ void ChPath (char *path){
 
 int TstPath (char *path){
    if (path[0]==0) return 1; // ""
-   if ((path[0]=='\\')&&(path[1]==0)) return 1; // "\"
+   if ((path[0]==PATHSEPC)&&(path[1]==0)) return 1; // "\"
    if ((path[0]=='.')&&(path[1]==0)) return 1; // "."
-   if ((path[0]=='\\')&&(path[1]=='.')&&(path[2]==0)) return 1; // "\."
-   if ((path[0]=='.')&&(path[1]=='\\')&&(path[2]==0)) return 1; // ".\"
+   if ((path[0]==PATHSEPC)&&(path[1]=='.')&&(path[2]==0)) return 1; // "\."
+   if ((path[0]=='.')&&(path[1]==PATHSEPC)&&(path[2]==0)) return 1; // ".\"
    if (path[1]==':'){
        if (path[2]==0) return 1; // "c:"
-       if ((path[2]=='\\')&&(path[3]==0)) return 1; // "c:\"
+       if ((path[2]==PATHSEPC)&&(path[3]==0)) return 1; // "c:\"
        if ((path[2]=='.') && (path[3]==0)) return 1; // "c:."
-       if ((path[2]=='\\') && (path[3]=='.') && (path[4]==0)) return 1; // "c:\."
-       if ((path[2]=='.') && (path[3]=='\\') && (path[4]==0)) return 1; // "c:.\"
+       if ((path[2]==PATHSEPC) && (path[3]=='.') && (path[4]==0)) return 1; // "c:\."
+       if ((path[2]=='.') && (path[3]==PATHSEPC) && (path[4]==0)) return 1; // "c:.\"
    }
 
    int ret=1;
@@ -184,11 +184,11 @@ int RCMD (char *path){
    CSE;
    if (!ret){
       for (int i=strlen(path);i>0;i--){
-	 if (path[i]=='\\' && path[i-1]!=':'){
+	 if (path[i]==PATHSEPC && path[i-1]!=':'){
 	    path[i]=0;
 	    if (!TstPath(path)){
 		if (RCMD (path)){
-		   path[i]='\\';
+		   path[i]=PATHSEPC;
                    if (0==strcmp(path,".")) return 1;
 		   CSB;
 		      ret = mkdir(path)==0;
@@ -199,7 +199,7 @@ int RCMD (char *path){
 		      goto giveup;
 		   }
 		} else {
-		   path[i]='\\';
+		   path[i]=PATHSEPC;
 		   goto giveup;
 		}
 	    }

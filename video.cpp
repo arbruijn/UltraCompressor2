@@ -496,7 +496,7 @@ void ErrorLog (char *fmt, ...){
    }
    if (!o){
       strcpy (buf, CONFIG.pcLog);
-      strcat (buf,"\\UC2_ERR.LOG");
+      strcat (buf,PATHSEP "UC2_ERR.LOG");
       ok=0;
       handle=-1;
       if (Exists(buf)){
@@ -541,7 +541,7 @@ fail:
       if ((gpcPath[1]==':')&&(gpcPath[3]==0))
          sprintf (buf," (called from %s)",gpcPath);
       else
-         sprintf (buf," (called from %s\\)",gpcPath);
+         sprintf (buf," (called from %s" PATHSEP ")",gpcPath);
       Write ((BYTE *)buf, handle, strlen(buf));
 
       sprintf (buf,"\r\n");
@@ -829,7 +829,7 @@ void Hint (void)
       switch (rel++)
       {
            case 3:
-               strcat (tmp," \\");
+               strcat (tmp," " PATHSEP);
                break;
            case 2:
                strcat (tmp," -");

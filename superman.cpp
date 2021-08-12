@@ -690,7 +690,7 @@ char * GetPath (VPTR here, int levels){ // A:2 OK
    } else {
       GetPath (((DIRNODE*)V(here))->vpParent, levels-1);
       strcat (pcGPath,Rep2Name(((DIRNODE*)V(here))->osmeta.pbName));
-      strcat (pcGPath,"\\");
+      strcat (pcGPath,PATHSEP);
    }
    return pcGPath;
 }
@@ -1263,12 +1263,12 @@ int TCWI(char *pp, int f){
    strcpy (pt, pp);
    strupr (pt);
    while (*pt){
-      if ((*pt=='\\')||(*pt=='/')||(*pt==' ')) {
+      if ((*pt==PATHSEPC)||(*pt=='/')||(*pt==' ')) {
 	 pt++;
 	 continue;
       };
       pt2=pt+1;
-      while ((*pt2!='\\')&&(*pt2!='/')&&(*pt2!=' ')&&(*pt2!='\0')) pt2++;
+      while ((*pt2!=PATHSEPC)&&(*pt2!='/')&&(*pt2!=' ')&&(*pt2!='\0')) pt2++;
       if (*pt2!='\0') ptn = pt2+1; else ptn = pt2;
       *pt2='\0';
       memcpy (rp, Name2Rep (pt), 11);
@@ -1388,7 +1388,7 @@ void MarkUp (char *rdir, VPTR dir, VPTR Mpath, int parents){
 
    static char ttmp[130];
    strcpy (ttmp, ((char *)V(buf)));
-   ttmp[strlen(ttmp)-1]=0; // remove last '\\'
+   ttmp[strlen(ttmp)-1]=0; // remove last PATHSEPC
    if (!iVerifyMode && !MODE.fPrf && bExtractMode && !TstPath(ttmp)){
       if (!MkPath (ttmp)){
 	 // failed to create (needed) path
@@ -2181,7 +2181,7 @@ char *Full (VPTR rev){
    strcpy (ret, (char *)V(((REVNODE*)V(rev))->vpDLink));
    strcat (ret, Rep2Name(((REVNODE*)V(rev))->osmeta.pbName));
    NoR (ret);
-   if (ret[0]=='.' && ret[1]=='\\'){
+   if (ret[0]=='.' && ret[1]==PATHSEPC){
       return ret+2;
    }
    return ret;
@@ -2204,7 +2204,7 @@ char *WFull (VPTR rev, DWORD hint){
    if (r) strcat (ret, ";");
    if (r) sprintf(ret + strlen(ret), "%" PRIdw, r); //strcat (ret, ltoa(r, tmp, 10));
    RepTmp (ret);
-   if (ret[0]=='.' && ret[1]=='\\'){
+   if (ret[0]=='.' && ret[1]==PATHSEPC){
       return ret+2;
    }
    return ret;

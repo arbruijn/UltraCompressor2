@@ -53,8 +53,10 @@ typedef uint32_t DWORD;
 #endif
 #ifdef DOS
 #define PATHSEP "\\"
+#define PATHSEPC '\\'
 #else
 #define PATHSEP "/"
+#define PATHSEPC '/'
 #endif
 
 extern struct CONF {

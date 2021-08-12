@@ -148,16 +148,16 @@ void ConfigMenu (){
       if (CONFIG.fNet==1) FSOut (7,"\x5""ON\x7 (auto-skip) (off)");
       if (CONFIG.fNet==2) FSOut (7,"\x5""AUTO-SKIP\x7 (off) (on)");
       FSOut(7,"\n\r \x6  S\x7 -> Location for temporary files     ");
-      FSOut(7,"[\x5%s\\\x7""]",CONFIG.pbTPATH);
+      FSOut(7,"[\x5%s" PATHSEP "\x7""]",CONFIG.pbTPATH);
       FSOut(7,"\n\r \x6  T\x7 -> First loc for manuals (*.DOC)    ");
-      FSOut(7,"[\x5%s\\\x7""]",CONFIG.pcMan);
+      FSOut(7,"[\x5%s" PATHSEP "\x7""]",CONFIG.pcMan);
       FSOut(7,"\n\r \x6  U\x7 -> Location for error logfile       ");
       if (CONFIG.pcLog[3]=='*')
          FSOut(7,"\x5NOT ACTIVE");
       else
-         FSOut(7,"[\x5%s\\\x7""]",CONFIG.pcLog);
+         FSOut(7,"[\x5%s" PATHSEP "\x7""]",CONFIG.pcLog);
       FSOut(7,"\n\r \x6  V\x7 -> First loc for batch&script files ");
-      FSOut(7,"[\x5%s\\\x7""]",CONFIG.pcBat);
+      FSOut(7,"[\x5%s" PATHSEP "\x7""]",CONFIG.pcBat);
 
       FSOut(7,"\n\r\x5""QUICK SETUP:\x6 1\x7->default\x6  2\x7->max speed\x6  3\x7->max compress\x6  4\x7->max safe\x6  5\x7->UNDO");
 
@@ -253,13 +253,13 @@ again:
             upd=1;
             break;
          case 'S':
-            strcat ((char *)CONFIG.pbTPATH,"\\");
+            strcat ((char *)CONFIG.pbTPATH,PATHSEP);
             ask ("Enter location for temporary files : ",(char *)CONFIG.pbTPATH);
             NoLastS ((char *)CONFIG.pbTPATH);
             upd=1;
             break;
          case 'T':
-            strcat ((char *)CONFIG.pcMan,"\\");
+            strcat ((char *)CONFIG.pcMan,PATHSEP);
             ask ("Enter first location for manuals (*.DOC) : ",(char *)CONFIG.pcMan);
             NoLastS (CONFIG.pcMan);
             upd=1;
@@ -269,14 +269,14 @@ again:
                strcpy (CONFIG.pcLog,"*");
                CONFIG.pcLog[3]=0;
             } else {
-               strcat ((char *)CONFIG.pcLog,"\\");
+               strcat ((char *)CONFIG.pcLog,PATHSEP);
             }
             ask ("Enter location for error logfile (enter * for NO logfile) : ",(char *)CONFIG.pcLog);
             NoLastS (CONFIG.pcLog);
             upd=1;
             break;
          case 'V':
-            strcat ((char *)CONFIG.pcBat,"\\");
+            strcat ((char *)CONFIG.pcBat,PATHSEP);
             ask ("Enter first location for batch&script files  : ",(char *)CONFIG.pcBat);
             NoLastS (CONFIG.pcBat);
             upd=1;

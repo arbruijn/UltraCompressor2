@@ -577,13 +577,13 @@ char* LocateF (char *name, int batch){
        if (CONFIG.pcMan[0]=='*') goto aut;
        strcpy (ret,CONFIG.pcMan);
     }
-    strcat (ret,"\\");
+    strcat (ret,PATHSEP);
     strcat (ret,name);
     if (Exists (ret)) return ret;
 
 aut:
     strcpy (ret, pcManPath);
-    strcat (ret,"\\");
+    strcat (ret,PATHSEP);
     strcat (ret,name);
     if (Exists (ret)) return ret;
 

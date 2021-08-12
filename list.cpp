@@ -271,10 +271,10 @@ static void WalkDirs (){
          Out (7,"\x4""----------------------------------------------------------------------------\r\n");
       if (MODE.fGlf){
       } else if (bDump){
-         Out (7, "LIST [\\%s]\r\n",GetPath(walk,TDeep()));
+         Out (7, "LIST [" PATHSEP "%s]\r\n",GetPath(walk,TDeep()));
       } else {
 	 if (bVerbose || bListableFiles())
-            Out(7,"\x4""--> Directory of \\%s\r\n\x7",GetPath(walk,TDeep()));
+            Out(7,"\x4""--> Directory of " PATHSEP "%s\r\n\x7",GetPath(walk,TDeep()));
       }
       if (!bDump && !MODE.fGlf && bVerbose) Out (7,"\r\n");
       dwItemCtr=0;
@@ -293,9 +293,9 @@ extern int iArchInHandle[MAX_AREA]; // archio.cpp
 void ListArchI (){
    if (MODE.fGlf){
    } else if (bDump){
-      Out (7, "LIST [\\]\r\n");
+      Out (7, "LIST [" PATHSEP "]\r\n");
    } else {
-      Out(7,"\x4""--> Directory of \\%s\r\n\x7",GetPath(TWD(),TDeep()));
+      Out(7,"\x4""--> Directory of " PATHSEP "%s\r\n\x7",GetPath(TWD(),TDeep()));
       if (bVerbose) Out (7,"\r\n");
    }
    dwItemCtr=0;

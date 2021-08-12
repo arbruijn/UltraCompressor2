@@ -175,7 +175,7 @@ void CExtract (char *archive, char *path, DWORD revision, int mode){
    BoosterOn();
    VPTR walk = Mpath;
    while (!IS_VNULL(walk)){
-      MarkUp (".\\",VNULL, walk, 0);
+      MarkUp ("." PATHSEP,VNULL, walk, 0);
       walk = ((MPATH *)V(walk))->vpNext;
    }
    BoosterOff();
@@ -220,7 +220,7 @@ void CAdd (char *archive, char *path, int hypermode, int backward){
    memcpy (xTail[iArchArea].pbLabel, pbCLabel, 11);
 
    RClearMask();
-   sprintf (com,"%s\\*.*",path);
+   sprintf (com,"%s" PATHSEP "*.*",path);
    Anal (com, 1);
    MODE.fSubDirs=1;
 
@@ -424,7 +424,7 @@ void Convert (char *filename, int type){
 	    GBack();
 	    CAdd (pcTmpFile, tp, 0, 0);
 
-	    ChPath ("\\"); // ensure tdir isn't active, OS/2 2.x
+	    ChPath (PATHSEP); // ensure tdir isn't active, OS/2 2.x
 	    Out (3,"\x7""Removing temporary files/directories ");
             StartProgress (-1, 3);
 	    KillTmpPath();
@@ -558,7 +558,7 @@ errr:
 	 }
 
 	 RClearMask();
-	 sprintf (com,"%s\\*.*",tp);
+	 sprintf (com,"%s" PATHSEP "*.*",tp);
 	 Anal (com, 1);
 	 MODE.fSubDirs=1;
 
@@ -578,7 +578,7 @@ errr:
 	 CopyFiles(); // copy (old) files
 	 CloseArchive();
 
-	 ChPath ("\\"); // ensure tdir isn't active, OS/2 2.0
+	 ChPath (PATHSEP); // ensure tdir isn't active, OS/2 2.0
 	 Out (3,"\x7""Removing temporary files/directories ");
          StartProgress (-1, 3);
 	 KillTmpPath();

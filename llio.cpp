@@ -792,7 +792,7 @@ char *TmpFile (char *pcLocat, int pure, char *useext){
    char ext[MAXEXT];
    strcpy (locat,pcLocat);
    if (pure){ // add file spec
-      if (locat[strlen(locat)-1]==PATHSEP[0]){
+      if (locat[strlen(locat)-1]==PATHSEPC){
 	 strcat (locat,"X");
       } else {
 	 strcat (locat,PATHSEP "X");
@@ -825,16 +825,16 @@ done:
 int Exists (char *pcP){
    char pcPath[260];
    if (pcP[1]==':'){
-      if (strstr(pcP,"\\")) goto normal;
+      if (strstr(pcP,PATHSEP)) goto normal;
       strcpy (pcPath, pcP);
-      strcpy (pcPath+2,".\\");
+      strcpy (pcPath+2,"." PATHSEP);
       strcat (pcPath, pcP+2);
    } else {
-      if (strstr(pcP,"\\") || strstr(pcP,"/"))
+      if (strstr(pcP,PATHSEP))
 normal:
 	 strcpy (pcPath, pcP);
       else {
-	 strcpy (pcPath, "./");
+	 strcpy (pcPath, "." PATHSEP);
 	 strcat (pcPath, pcP);
       }
    }
