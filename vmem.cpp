@@ -354,7 +354,7 @@ void BoosterOn (){ // put VMEM in turbo boost mode (uses most RAM !)
    kkp = minimal;
 #endif
    // keep 64k+ free for the Ultra Caching Architecture
-   while ((ram_blocks<=MAX_RAM_BLOCKS) && (farcoreleft()>75000L)){
+   while ((ram_blocks<MAX_RAM_BLOCKS) && (farcoreleft()>75000L)){
       // create new RAM block
       ppbBlock[ram_blocks] = (BYTE *)xmalloc (BLOCK_SIZE,TMP);
       pdwCounter[ram_blocks] = 0;
