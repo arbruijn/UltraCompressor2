@@ -686,21 +686,24 @@ quite simple.
 */
 
 #pragma argsused
-static void near pascal FindMaxLen (WORD pos, WORD *len, WORD *mpos, WORD upper, WORD min, WORD hash, WORD wlen){
+static void near pascal FindMaxLen (unsigned int pos, WORD *len, WORD *mpos, unsigned int upper, unsigned int min, unsigned int hash, unsigned int wlen){
 #ifndef UE2
 #ifndef ASM
-   WORD maxpos = 0;
-   WORD maxlen = 0;
+   unsigned int maxpos = 0;
+   unsigned int maxlen = 0;
    if (wlen) {
       if (wlen > upper)
          wlen = upper;
       wlen++;
-      WORD hpos = pwHash[hash];
-      BYTE c = pbDataC[(pos + min) & 65535];
+      unsigned int hpos = pwHash[hash];
+      BYTE c = pbDataC[pos + min];
+      BYTE c0 = pbDataC[pos];
+      BYTE c1 = pbDataC[pos + 1];
       while (--wlen) {
-         if (pbDataC[(hpos + min) & 65535] == c) {
-            WORD len = 0;
-            while (len < MAX_LEN && pbDataC[(pos+len)&65535] == pbDataC[(hpos+len)&65535])
+         if (pbDataC[hpos + min] == c &&
+            pbDataC[hpos] == c0 && pbDataC[hpos + 1] == c1) {
+            unsigned int len = 2;
+            while (len < MAX_LEN && pbDataC[pos+len] == pbDataC[hpos+len])
                len++;
             if (len > maxlen) {
                maxlen = len;
@@ -708,10 +711,14 @@ static void near pascal FindMaxLen (WORD pos, WORD *len, WORD *mpos, WORD upper,
                maxpos = hpos;
                if (maxlen>GIVE_UP)
                   break; // speed up repeated zero etc
-               c = pbDataC[(pos+min)&65535];
+               c = pbDataC[pos+min];
             }
 	 }
+	 #ifdef DOS
          hpos = hpos&0x8000 ? pwPrevH[hpos^0x8000] : pwPrevL[hpos];
+         #else
+         hpos = pwPrevL[hpos];
+         #endif
       }
    }
    *len = maxlen;

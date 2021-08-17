@@ -83,7 +83,7 @@ again:
    if (!stat) return;
    if (stat==2){
       #ifndef DOS
-      stat = 1;
+      stat = 0;
       #else
       stat = !!getenv ("UC2_NO_HIGH_ASCII");
       #endif
@@ -145,6 +145,12 @@ static int plop;
 
 int checkit;
 
+unsigned short unicode_b0[] = {
+   0x2591, 0x2592, 0x2593, 0x2502, 0x2524, 0x2561, 0x2562, 0x2556, 0x2555, 0x2563, 0x2551, 0x2557, 0x255d, 0x255c, 0x255b, 0x2510,
+   0x2514, 0x2534, 0x252c, 0x251c, 0x2500, 0x253c, 0x255e, 0x255f, 0x255a, 0x2554, 0x2569, 0x2566, 0x2560, 0x2550, 0x256c, 0x2567,
+   0x2568, 0x2564, 0x2565, 0x2559, 0x2558, 0x2552, 0x2553, 0x256b, 0x256a, 0x2518, 0x250c, 0x2588, 0x2584, 0x258c, 0x2590, 0x2580,
+   0x03b1, 0x00df, 0x0393, 0x03c0, 0x03a3, 0x03c3, 0x00b5, 0x03c4, 0x03a6, 0x0398, 0x03a9, 0x03b4, 0x221e, 0x03c6, 0x03b5, 0x2229,
+   0x2261, 0x00b1, 0x2265, 0x2264, 0x2320, 0x2321, 0x00f7, 0x2248, 0x00b0, 0x2219, 0x00b7, 0x221a, 0x207f, 0x00b2, 0x25a0, 0x00a0 };
 void FSOut (BYTE l, char *fmt, ...){
    if (!plop) UnPlop();
 
@@ -154,7 +160,7 @@ void FSOut (BYTE l, char *fmt, ...){
 
 //   Correct();
    char buf[200];
-   char sp[200];
+   char sp[250];
    int s;
    va_list argptr;
    va_start(argptr, fmt);
@@ -277,6 +283,16 @@ void FSOut (BYTE l, char *fmt, ...){
 //	       textcolor (LIGHTGRAY);
 	    }
 	 }
+      } else if ((unsigned char)buf[i] >= 0xb0) {
+         int u = unicode_b0[(unsigned char)buf[i]-0xb0];
+         if (u>=0x800) {
+            sp[s++]=0xe0+(u>>12);
+            sp[s++]=0x80+((u>>6)&0x3f);
+            sp[s++]=0x80+(u&0x3f);
+         } else {
+            sp[s++]=0xc0+(u>>6);
+            sp[s++]=0x80+(u&0x3f);
+         }
       } else {
 	 sp[s++]=buf[i];
       }
@@ -383,7 +399,9 @@ char GetKey (){
       return key[--flag];
    }
    fBreak=2;
+   #ifdef DOS
    while (!kbhit());
+   #endif
    char c;
    CSB;
       c = getch();
@@ -785,9 +803,15 @@ void StartProgress (int ihints, int level)
    gotoxy (x, y);
 //   FSOut (7,"\x7\xb0\xb0\xb0\xb0\xb0\xb0\xb0\xb0\xb0\xb0");
    FSOut (7,"\x7\xfa\xfa\xfa\xfa\xfa\xfa");
+   putchar(' ');
+   putchar(' ');
+   //for (int i=7;i--;) putchar('\x8');
    lastseg=0;
    busy=1;
    checkit=1;
+   #ifndef DOS
+   fflush(stdout);
+   #endif
 }
 
 int pulsar (void);
@@ -842,18 +866,24 @@ void Hint (void)
                break;
       }
       if (rel==4) rel=0;
+   for (int i=8;i--;) putchar('\x8');
    gotoxy (x, y);
    checkit=0;
    FSOut (7, tmp);
    gotoxy (x+7, y);
+   //for (i=strlen(tmp)-1;i>0;i--) putchar('\x8');
    checkit=1;
 //   gotoxy (x, y);
+   #ifndef DOS
+   fflush(stdout);
+   #endif
 }
 
 void EndProgress (void)
 {
    if (!busy) return;
    UnPlop();
+   for (int i=8;i--;) putchar('\x8');
    gotoxy (x,y);
    checkit=0;
    FSOut (7,"\x7\xfe\xfe\xfe\xfe\xfe\xfe  ");

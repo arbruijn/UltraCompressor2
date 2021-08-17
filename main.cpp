@@ -17,6 +17,9 @@ unsigned _stklen = 10240;
 #include <io.h>
 #include <ctype.h>
 #include <share.h>
+#ifndef DOS
+#include <sys/utsname.h>
+#endif
 #include "main.h"
 #include "video.h"
 #include "vmem.h"
@@ -243,7 +246,7 @@ void GetCFG (){
    } else {
       CONFIG.fOut = 2;
    }
-   CONFIG.bVideo = 4;
+   CONFIG.bVideo = 3;
    strcpy (CONFIG.pcLog,"C:" PATHSEP "*");
    SPARE=CONFIG;
 #endif
@@ -755,6 +758,7 @@ int Logo (void){
 	 Out (3,"\x4Please register ");
    }
 #endif
+#endif
    ctr=0;
 
 #ifdef DOS
@@ -780,7 +784,6 @@ int Logo (void){
       oe2();
       os2=1;
    }
-#endif
 
    DVver(0);
    Win();
@@ -818,6 +821,16 @@ int Logo (void){
    oel();
 #else
    Out (3,"LGPL Cross-Platform version 0.1");
+   struct utsname utsname;
+   if (!uname(&utsname)) {
+      oe1();
+      Out (3,"%s",utsname.sysname);
+      oe2();
+      oe1();
+      Out (3,"%s",utsname.machine);
+      oe2();
+      oel();
+   }
 #endif
    Out (7,"\n\r\n\r");
    return ret;
@@ -1300,9 +1313,9 @@ restart:
 
    int cdecl main (int argc, char **argv){
       _argc = argc; _argv = argv;
-      #ifndef DOS
-      dosvid=1;
-      #endif
+      //#ifndef DOS
+      //dosvid=1;
+      //#endif
       if (getenv("UC2_WIN")){
          int i,ctr;
 	 window (

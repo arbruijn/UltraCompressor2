@@ -90,10 +90,6 @@ extern struct CONF {
 
 #define MAGIC 0x1AC283746L
 
-#undef farmalloc
-#undef farfree
-#undef malloc
-#undef free
 #define malloc ERROR_USE_xmalloc_PLEASE
 #define farmalloc ERROR_USE_xmalloc_PLEASE
 #define free ERROR_USE_xfree_PLEASE

@@ -1136,7 +1136,7 @@ reread:
 	    SetDest (atom+1);
 	    if (!ReadAtom()) return 0;
 	 }
-	 if (atom[0]=='-'){// || atom[0]=='/'){
+	 if (atom[0]=='-' || (PATHSEPC!='/' && atom[0]=='/')){
 	    p=1;
 	    goto again;
 	 }
@@ -1153,7 +1153,7 @@ reread:
 	 p++;
 	 goto again;
       case 'T':
-	 switch (atom[p+1]){
+	 switch (toupper(atom[p+1])){
 	    case 'F':
 	       DB_TXT("opt","TF");
 	       Compressor(2);
@@ -1167,12 +1167,12 @@ reread:
 	       Compressor(4);
 	       break;
 	    case 'S':
-	       if (atom[p+2]=='T'){
+	       if (toupper(atom[p+2])=='T'){
 		  DB_TXT("opt","TST");
 		  Compressor(5);
 		  p++;
 #ifdef UCPROX
-	       } else if (atom[p+2]=='F'){
+	       } else if (toupper(atom[p+2])=='F'){
 		  DB_TXT("opt","TSF");
 		  Compressor(80);
 		  p++;
@@ -1509,7 +1509,7 @@ again:
    }
 #else
    if ((atom[0]=='-')||(atom[0]=='/')){
-      memmove (atom+1, atom, strlen(atom)+1);
+      memmove (atom, atom+1, strlen(atom)+1);
    }
    movemode=0;
    MoveClear();

@@ -946,7 +946,7 @@ void ScanAddR (VPTR dir, VPTR Mpath, int parents, int rapid){
 //      if (obj%7==0) SOut ("Scanning %s %lu (%lu)\r",where,obj,sel);
       Hint();
       obj++;
-      strupr (ffblk.ff_name);
+      //strupr (ffblk.ff_name);
       if (strcmp(ffblk.ff_name,".")!=0)
 	 if (strcmp(ffblk.ff_name,"..")!=0) {
 	    if (ffblk.ff_attrib&FA_DIREC) {
@@ -1052,7 +1052,7 @@ nounmask:
 		  if (IS_VNULL(lmc))
 		     lmc = LocMacKey (ToKey (ffblk.ff_name));
 		  strcpy (((MASREC*)V(lmc))->szName, ffblk.ff_name);
-		  Out(7, "%s -> mas %" PRIdw "\n", ffblk.ff_name, ((MASREC*)V(lmc))->masmeta.dwIndex);
+		  //Out(7, "%s -> mas %" PRIdw "\n", ffblk.ff_name, ((MASREC*)V(lmc))->masmeta.dwIndex);
 
 		  VPTR rv;
 		  if (fast)

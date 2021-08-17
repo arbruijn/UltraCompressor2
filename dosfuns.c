@@ -111,6 +111,7 @@ char **_argv;
 int _argc;
 
 void delay(int ms) {
+    fflush(stdout);
     struct timeval tv;
     tv.tv_sec = ms / 1000;
     tv.tv_usec = (ms % 1000) * 1000;

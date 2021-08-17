@@ -45,7 +45,9 @@ COMFLAGS += -ggdb -pedantic
 CC = clang
 CXX = clang++
 #COMFLAGS += -fsanitize=address
-COMFLAGS += -fsanitize=undefined
+#COMFLAGS += -fsanitize=undefined
+#COMFLAGS += -fsanitize=memory
+COMFLAGS += -O3
 
 CXXFLAGS += $(COMFLAGS) -I dos -I . -Wno-write-strings
 # -DUE2

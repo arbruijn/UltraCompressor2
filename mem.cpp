@@ -760,7 +760,11 @@ void InitMem (void){
 //   if (getenv("UC2_VMEM")) return; // hyper-virtual mode, leave mem alone
 
 #ifndef STAND_ALONE
+   #ifdef DOS
    #define MAX_MEM_USE 1265000L // qqq
+   #else
+   #define MAX_MEM_USE 0
+   #endif
    unsigned long spare = farcoreleft()-MAX_MEM_USE;
    if (getenv("UC2_VMEM")){
       WORD wSize = 1024 * atoi (getenv("UC2_VMEM"));

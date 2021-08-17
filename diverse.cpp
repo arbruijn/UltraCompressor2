@@ -84,7 +84,7 @@ char *Rep2DName (BYTE *pbRep){
 
 int StdOutType (void){
 #ifndef DOS
-   return D_DEV;
+   return isatty(1) ? D_CON : D_FILE;
 #else
    extern int dosvid;
    if (dosvid)
@@ -98,11 +98,8 @@ int StdOutType (void){
 #endif
 }
 
-#undef malloc
-#undef free
 #undef farmalloc
 #undef farfree
-#include <alloc.h>
 
 #ifdef TRACE
    DWORD mallox=0;
@@ -424,7 +421,7 @@ int pulsar (void){
    static clock_t ct;
    clock_t now;
 #ifndef DOS
-   now = clock() * (182L / (long)(CLOCKS_PER_SEC * 10));
+   now = clock() / (CLOCKS_PER_SEC / 2);
 #else
    now = clock();
 #endif
@@ -559,8 +556,8 @@ void RabAdd (char *file){
 void strrep (char *base, char *from, char *onto){
    char *p;
    while ((p=strstr(base,from))){
-      memmove (p+strlen(from), p, strlen(p)+1);
-      memmove (p, p+strlen(onto), strlen(p)+1);
+      memmove (p, p+strlen(from), strlen(p+strlen(from))+1);
+      memmove (p+strlen(onto), p, strlen(p)+1);
       for (int i=0;i<strlen(onto);i++)
          p[i] = onto[i];
    }
