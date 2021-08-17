@@ -324,7 +324,7 @@ static DWORD I_Tell (int iHan){
 
 static void I_Seek (int iHan, DWORD dwPos){
    long r=0;
-   I_Tell (afdl[iHan]->iIntHandle);
+   I_Tell (iHan);
    if (afdl[iHan]->dwPos!=dwPos){
 again:
 //      Out (7,"[SK %s %ld > %ld]",afdl[iHan]->pcFileName,afdl[iHan]->dwPos,dwPos);
