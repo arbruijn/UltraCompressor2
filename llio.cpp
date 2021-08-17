@@ -115,7 +115,7 @@ static int I_Open (char *pcP, BYTE how){
       for (int i=0;i<NO;i++){
 	 if (strncmp (pcPath, hap[i], strlen (hap[i]))==0){
 	    if ((pcPath[strlen(hap[i])]==0) || (pcPath[strlen(hap[i])]=='.')){
-	       movmem (pcPath, pcPath+1, 258);
+	       memmove (pcPath+1, pcPath, 258);
 	       pcPath[0]='_';
 	       Warning (10,"mapped (device)name %s to %s",pcP,pcPath);
 	    }

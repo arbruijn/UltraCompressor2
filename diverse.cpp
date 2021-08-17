@@ -523,9 +523,9 @@ void RabAdd (char *file){
 
 void strrep (char *base, char *from, char *onto){
    char *p;
-   while (p=strstr(base,from)){
-      movmem (p+strlen(from), p, strlen(p)+1);
-      movmem (p, p+strlen(onto), strlen(p)+1);
+   while ((p=strstr(base,from))){
+      memmove (p, p+strlen(from), strlen(p+strlen(from))+1);
+      memmove (p+strlen(onto), p, strlen(p)+1);
       for (int i=0;i<strlen(onto);i++)
          p[i] = onto[i];
    }

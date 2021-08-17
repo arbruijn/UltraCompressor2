@@ -1507,7 +1507,7 @@ again:
    }
 #else
    if ((atom[0]=='-')||(atom[0]=='/')){
-      movmem (atom+1, atom, strlen(atom)+1);
+      memmove (atom, atom+1, strlen(atom)+1);
    }
    movemode=0;
    MoveClear();
