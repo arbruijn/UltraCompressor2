@@ -1,11 +1,10 @@
 // Copyright 1992, all rights reserved, AIP, Nico de Vries
 // LLIO.CPP
 
-#include <sys\stat.h>
+#include <sys/stat.h>
 #include <stdio.h>
 #include <io.h>
 #include <dos.h>
-#include <sys\stat.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <time.h>

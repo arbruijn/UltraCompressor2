@@ -1,4 +1,4 @@
-#include <sys\stat.h>
+#include <sys/stat.h>
 #include <dos.h>
 #include <string.h>
 #include <direct.h>
