@@ -29,6 +29,12 @@
 #define WRIT 1   // deferred write cache
 #define READ 2   // read cache
 
+#ifdef DOS
+typedef int cachet_t;
+#else
+typedef int16_t cachet_t;
+#endif
+
 struct AFD {
 // low-level
    char pcFileName[120];
@@ -375,13 +381,13 @@ again:
 
 void CacheTabSize (int han){
    if (IS_VNULL(afdl[han]->cachet)){
-      afdl[han]->cachet = Vmalloc (DEFCACHETAB*sizeof(int));
+      afdl[han]->cachet = Vmalloc (DEFCACHETAB*sizeof(cachet_t));
       afdl[han]->maxentry = DEFCACHETAB-1;
    }
 }
 
 //void q (void){
-//   Out (7,"{%d}",((int*)V(afdl[2]->cachet))[1]);
+//   Out (7,"{%d}",((cachet_t*)V(afdl[2]->cachet))[1]);
 //}
 
 void Plop (char *line1, char*line2);
@@ -407,8 +413,8 @@ void Flush (int han){
 	 while (siz){
 	    WORD trans = (WORD)MIN(MIN(fre,siz),16384-loff);
 //	    q();
-//	    Out (7,"[%d %d<%d]",han,((int*)V(afdl[han]->cachet))[pos], pos);
-	    from16 (ofs, ((int*)V(afdl[han]->cachet))[pos], loff, trans);
+//	    Out (7,"[%d %d<%d]",han,((cachet_t*)V(afdl[han]->cachet))[pos], pos);
+	    from16 (ofs, ((cachet_t*)V(afdl[han]->cachet))[pos], loff, trans);
 	    siz-=trans;
 	    loff+=trans;
 	    if (loff==16384){
@@ -435,7 +441,7 @@ void Flush (int han){
    }
    if (afdl[han]->cmode!=NONE){ // READ & WRIT
       for (int i=0;i<((afdl[han]->size+16383)/16384);i++)
-	 free16(4,((int*)V(afdl[han]->cachet))[i]);
+	 free16(4,((cachet_t*)V(afdl[han]->cachet))[i]);
       afdl[han]->size=0;
       afdl[han]->offset=afdl[han]->vfptr;
    }
@@ -501,7 +507,7 @@ void CacheRT (int han){ // attempt a total-cache
       WORD pos=0;
       WORD ofs=0;
       CacheTabSize (han);
-      ((int*)V(afdl[han]->cachet))[pos]=malloc16(4);
+      ((cachet_t*)V(afdl[han]->cachet))[pos]=malloc16(4);
       while (todo){
 	 WORD red = (WORD)(MIN (len, todo));
 	 PlopQ();
@@ -510,12 +516,12 @@ void CacheRT (int han){ // attempt a total-cache
 	 todo-=red;
 	 while (red){
 	    WORD trn=MIN (16384-ofs, red);
-	    to16 (((int*)V(afdl[han]->cachet))[pos], ofs, ddt, trn);
+	    to16 (((cachet_t*)V(afdl[han]->cachet))[pos], ofs, ddt, trn);
 	    ofs+=trn;
 	    ddt+=trn;
 	    if (ofs==16384){
 	       pos++;
-	       ((int*)V(afdl[han]->cachet))[pos]=malloc16(4);
+	       ((cachet_t*)V(afdl[han]->cachet))[pos]=malloc16(4);
 	       ofs=0;
 	    }
 	    red-=trn;
@@ -525,7 +531,7 @@ void CacheRT (int han){ // attempt a total-cache
 //      UnPlop();
 //      Out (7,"CT2:UnGetDat\n\r");
       if (ofs==0){
-	 free16 (4, ((int*)V(afdl[han]->cachet))[pos]);
+	 free16 (4, ((cachet_t*)V(afdl[han]->cachet))[pos]);
       }
    }
    TRACEM("Leave CacheRT");
@@ -606,7 +612,7 @@ fit:
 	 WORD ret = wSize;
 	 while (wSize){
 	    WORD trn = MIN (16384-ofs,wSize);
-	    from16 (bBuf, ((int*)V(afdl[iHandle]->cachet))[pos], ofs, trn);
+	    from16 (bBuf, ((cachet_t*)V(afdl[iHandle]->cachet))[pos], ofs, trn);
 	    wSize-=trn;
 	    ofs+=trn;
 	    if (ofs==16384){
@@ -663,8 +669,8 @@ noca:
 	 afdl[iHandle]->size = I_Read (dat, iHandle, 16384);
 
       CacheTabSize (iHandle);
-      ((int*)V(afdl[iHandle]->cachet))[0]=malloc16(4);
-      to16 (((int*)V(afdl[iHandle]->cachet))[0], 0, dat, (WORD)afdl[iHandle]->size);
+      ((cachet_t*)V(afdl[iHandle]->cachet))[0]=malloc16(4);
+      to16 (((cachet_t*)V(afdl[iHandle]->cachet))[0], 0, dat, (WORD)afdl[iHandle]->size);
       UnGetDat();
 //      Out (7,"RD2:UnGetDat\n\r");
       goto fit;
@@ -703,26 +709,26 @@ toca:
 	 afdl[iHandle]->vfptr+=wSize;
 	 CacheTabSize (iHandle);
 	 if (ofs==0){
-	    ((int*)V(afdl[iHandle]->cachet))[pos] = malloc16(4);
+	    ((cachet_t*)V(afdl[iHandle]->cachet))[pos] = malloc16(4);
 //	    q();
-//	    Out (7,"[%d %d<-%d]",iHandle, ((int*)V(afdl[iHandle]->cachet))[pos], pos);
+//	    Out (7,"[%d %d<-%d]",iHandle, ((cachet_t*)V(afdl[iHandle]->cachet))[pos], pos);
 	 }
 	 while (wSize){
 	    WORD trn = MIN (16384-ofs, wSize);
-	    to16 (((int*)V(afdl[iHandle]->cachet))[pos],ofs,bBuf,trn);
+	    to16 (((cachet_t*)V(afdl[iHandle]->cachet))[pos],ofs,bBuf,trn);
 	    bBuf+=trn;
 	    wSize-=trn;
 	    ofs+=trn;
 	    if (ofs==16384){
 	       pos++;
 	       ofs=0;
-	       ((int*)V(afdl[iHandle]->cachet))[pos] = malloc16(4);
+	       ((cachet_t*)V(afdl[iHandle]->cachet))[pos] = malloc16(4);
 //	       q();
-//	       Out (7,"[%d %d<-%d]",iHandle, ((int*)V(afdl[iHandle]->cachet))[pos], pos);
+//	       Out (7,"[%d %d<-%d]",iHandle, ((cachet_t*)V(afdl[iHandle]->cachet))[pos], pos);
 	    }
 	 }
 	 if (ofs==0){
-	    free16 (4, ((int*)V(afdl[iHandle]->cachet))[pos]);
+	    free16 (4, ((cachet_t*)V(afdl[iHandle]->cachet))[pos]);
 	 }
       }
    } else {
