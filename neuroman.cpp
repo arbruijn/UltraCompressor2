@@ -139,7 +139,7 @@ char *ToDes (MASREC *mr){
       if (mr->szName[0]){
 	 sprintf (tmp,"%s;*",mr->szName);
       } else {
-	 sprintf (tmp,"<FILE TYPE %08" PRIdw"X>",dwIdx);
+	 sprintf (tmp,"<FILE TYPE %08" PRIXdw ">",dwIdx);
       }
    }
 //   Out (7,"[[%lX->%s]]",dwIdx,tmp);

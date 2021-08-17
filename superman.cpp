@@ -1052,7 +1052,6 @@ nounmask:
 		  if (IS_VNULL(lmc))
 		     lmc = LocMacKey (ToKey (ffblk.ff_name));
 		  strcpy (((MASREC*)V(lmc))->szName, ffblk.ff_name);
-		  //Out(7, "%s -> mas %" PRIdw "\n", ffblk.ff_name, ((MASREC*)V(lmc))->masmeta.dwIndex);
 
 		  VPTR rv;
 		  if (fast)
@@ -2202,7 +2201,7 @@ char *WFull (VPTR rev, DWORD hint){
       r = hint;
    if (r==DELREV) r=0;
    if (r) strcat (ret, ";");
-   if (r) sprintf(ret + strlen(ret), "%" PRIdw, r); //strcat (ret, ltoa(r, tmp, 10));
+   if (r) sprintf(ret+strlen(ret), "%" PRIdw, r);
    RepTmp (ret);
    if (ret[0]=='.' && ret[1]==PATHSEPC){
       return ret+2;
