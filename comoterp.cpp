@@ -1411,7 +1411,7 @@ VPTR StrToDir (char *path);
 
 void Recover (char *old, char *rec, char *nw);
 
-static char* Fix = "FIX_0000.UC2";
+static char Fix[] = "FIX_0000.UC2";
 void NewFix (void){
    for (int i=1;i<10000;i++){
       sprintf (Fix,"FIX_%04d.UC2",i);
