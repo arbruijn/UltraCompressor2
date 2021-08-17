@@ -681,7 +681,7 @@ void Win(void) {
 }
 
 int Logo (void){
-   if (_argv[1][0]=='~'){
+   if (_argc>=2 && _argv[1][0]=='~'){
       if (StdOutType()==D_CON)
 	 return 0;
       else
@@ -985,7 +985,7 @@ int dosvid=0;
 #ifdef UE2
 
    void cdecl main (int argc, char **argv){
-      if (argv[1][0]=='='){ // UC2-3PI
+      if (argc>=2 && argv[1][0]=='='){ // UC2-3PI
 	 strcpy (argv[1],argv[1]+1);
 	 dosvid=1;
       }
@@ -1277,7 +1277,7 @@ restart:
             cprintf ("\n\r");
          }
       }
-      if (argv[1][0]=='^')
+      if (argc>=2 && argv[1][0]=='^')
       {
 	 fclose (stdout);
 	 *stdout = *fopen (argv[1]+1, "w");
@@ -1288,7 +1288,7 @@ restart:
 	 _argc--;
 	 argc--;
       }
-	if (argv[1][0]=='~' && argv[1][1]=='*'){
+	if (argc>=2 && argv[1][0]=='~' && argv[1][1]=='*'){
 	    struct ffblk ffblk;
 	    int done;
 	    done = findfirst ("*.*", &ffblk, 0xF7);
@@ -1299,20 +1299,20 @@ restart:
 		if (strcmp(ffblk.ff_name,".") == 0) goto next;
 		if (strcmp(ffblk.ff_name,"..") == 0) goto next;
 		fclose(fopen ("u$~chk1","w"));
-		return;
+		return 0;
 next:
 		done = findnext (&ffblk);
 	    }
-	    return;
+	    return 0;
         }
-      if (argv[1][0]=='='){ // UC2-3PI
+      if (argc>=2 && argv[1][0]=='='){ // UC2-3PI
          strcpy (argv[1],argv[1]+1);
          dosvid=1;
       }
 restart:
-      if ((argv[1][0]=='?' || (argv[1][0]=='-' && argv[1][1]=='?') || (argv[1][0]=='/' && argv[1][1]=='?')) ||
+      if (argc>=2 && ((argv[1][0]=='?' || (argv[1][0]=='-' && argv[1][1]=='?') || (argv[1][0]=='/' && argv[1][1]=='?')) ||
           (argv[1][0]=='h' || (argv[1][0]=='-' && argv[1][1]=='h') || (argv[1][0]=='/' && argv[1][1]=='h')) ||
-          (argv[1][0]=='H' || (argv[1][0]=='-' && argv[1][1]=='H') || (argv[1][0]=='/' && argv[1][1]=='H'))){ // mini help
+          (argv[1][0]=='H' || (argv[1][0]=='-' && argv[1][1]=='H') || (argv[1][0]=='/' && argv[1][1]=='H')))){ // mini help
 
           if (argc>2){
               UnGetKey (13);
@@ -1626,7 +1626,7 @@ restart:
          }
 
          int cfg=0;
-         if (argv[1][0]=='!' || (argv[1][0]=='-' && argv[1][1]=='!') || (argv[1][0]=='/' && argv[1][1]=='!')){
+         if (argc>=2 && (argv[1][0]=='!' || (argv[1][0]=='-' && argv[1][1]=='!') || (argv[1][0]=='/' && argv[1][1]=='!'))){
             cfg=1;
             goto noarg;
          }
