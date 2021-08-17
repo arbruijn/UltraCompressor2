@@ -1676,7 +1676,11 @@ int nuke2 (){
 	    Out (7,"{%u %u}\n\r",len,dst);
 #endif
 	 for (WORD i=0;i<len;i++)
+	    #ifdef DOS
+	    pbDataD[wTOE+i] = pbDataD[wTOE-dst+i];
+	    #else
 	    pbDataD[(wTOE+i) & 65535] = pbDataD[(wTOE-dst+i) & 65535];
+	    #endif
 	 wTOE+=len;
       }
       if ((wTOE&0x8000) == wComp){

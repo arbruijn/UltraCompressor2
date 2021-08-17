@@ -920,7 +920,7 @@ void ScanAddR (VPTR dir, VPTR Mpath, int parents, int rapid){
       strcat (mask, msk);
 #else
       strcpy (mask, ((MMASK *)V(ppos))->pcOrig);
-#endif      
+#endif
    }  else
       strcat (mask, "*.*");
    struct ffblk ffblk;
