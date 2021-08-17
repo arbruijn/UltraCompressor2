@@ -1942,7 +1942,7 @@ void SuperGet (void){ // A:*
    ReadPipe (pipe, (BYTE *)&ohead, sizeof (OHEAD));
    while (ohead.bType!=BO_EOL){
       switch (ohead.bType){
-	 case BO_MAST:
+	 case BO_MAST: {
 	    ReadPipe (pipe, (BYTE *)&masmeta, sizeof (MASMETA));
 	    VPTR mas = LocMacNtx (masmeta.dwIndex);
 	    ReadPipe (pipe, (BYTE *)&(((MASREC*)V(mas))->compress), sizeof(COMPRESS));
@@ -1951,7 +1951,8 @@ void SuperGet (void){ // A:*
 	    ((MASREC*)V(mas))->bStatus = MS_OLD;
 	    RegNtxKey (masmeta.dwIndex, masmeta.dwKey);
 	    break;
-	 case BO_FILE:
+	 }
+	 case BO_FILE: {
 	    dwFiles++;
 	    ReadPipe (pipe, (BYTE *)&osmeta, sizeof (OSMETA));
 	    if ((osmeta.wDate>maxdate) || ((osmeta.wDate==maxdate)&&(osmeta.wTime>maxtime))){
@@ -2023,7 +2024,8 @@ void SuperGet (void){ // A:*
 	    strcpy (((MASREC*)V(rn->vpMas))->szName, Rep2Name (rn->osmeta.pbName));
 	    AddToNtx (rn->compress.dwMasterPrefix, rev, rn->filemeta.dwLength);
 	    break;
-	 case BO_DIR:
+	 }
+	 case BO_DIR: {
 	    dwDirs++;
 	    if (pulsar()) NotifyOld();
 	    ReadPipe (pipe, (BYTE *)&osmeta, sizeof (OSMETA));
@@ -2052,6 +2054,7 @@ void SuperGet (void){ // A:*
 	       // "unnatural" archives
 	    }
 	    break;
+	 }
 	 default:
 	    probeo=1;
 	    Error (90,"fatal damage in central directory");

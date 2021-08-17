@@ -1666,7 +1666,7 @@ RED:
 	       sspec=NULL;
 	       break;
 #endif
-	    case 'M':
+	    case 'M': {
 	       CONFIG.fOut=4;
 	       bDump=1;
 	       char c = GetKey();
@@ -1688,6 +1688,7 @@ RED:
 		     break;
 	       }
 	       break;
+	    }
 #ifndef UE2
 	    case 'R':
 	       CONFIG.fOut=4;

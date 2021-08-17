@@ -473,7 +473,7 @@ void Convert (char *filename, int type){
 	    noskip=1;
 	 }
 	 break;
-      case 2: // non UC2
+      case 2: { // non UC2
 anyway:
 	 if (Exists(NewExt(filename))){
 	    if (conto){
@@ -607,6 +607,7 @@ errr:
          if (!convback)
 	    Delete (filename); // everything went perfect, delete old archive
 	 break;
+	 }
       case 3:
 	 Error (65,"file %s has an unknown format",filename);
 	 break;

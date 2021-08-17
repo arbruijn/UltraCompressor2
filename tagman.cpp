@@ -185,7 +185,7 @@ static void ReadAll (){
 	       XCleanTags (((REVNODE*)V(rev))->extnode);
 	       ((REVNODE*)V(rev))->extnode = VNULL;
 	       break;
-	    case TM_ADD:
+	    case TM_ADD: {
 	       // create EXTNODE
 	       VPTR en = Vmalloc (sizeof(EXTNODE));
 
@@ -231,6 +231,7 @@ static void ReadAll (){
 		  }
 	       }
 	       break;
+            }
 	    default:
 	       IE();
 	       break;

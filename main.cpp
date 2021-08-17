@@ -457,7 +457,7 @@ got:
 	    ConfigMenu();
 	    gotoxy (1,1);
 	    break;
-	 case 'R':
+	 case 'R': {
 	    FSOut (7,"\x7");
 	    clrscr();
 	    char c[100], ss[100];
@@ -496,6 +496,7 @@ got:
 	    clrscr();
 	    FSOut (7,"\n\r");
 	    return;
+         }
 	 default:
 	    FSOut (7,"\x8"" *** WRONG CHOICE ***\r");
             delay (500);
