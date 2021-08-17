@@ -248,7 +248,7 @@ void far pascal RepairLengths(BYTE far *pbLength, WORD wMaxCodeLen)
 
    // Initialise array
    for(i = 0;i <= MAX_CODE_LENGTH;i++) scl[i] = NO_MORE;
-   memset(LengthCount,0,(MAX_CODE_LENGTH+1)*sizeof(int));
+   memset(LengthCount,0,sizeof(LengthCount));
 
    /*
       Now sort all characters on length by storing them in an array of
@@ -274,7 +274,7 @@ void far pascal RepairLengths(BYTE far *pbLength, WORD wMaxCodeLen)
 //   Out (7,"\r\n");
 
    // Calculate DCode
-   for(i = 1;i <= wMaxCodeLen;i++)
+   for(i = 1;i <= MAX_CODE_LENGTH;i++)
       DCode += (1L << (wMaxCodeLen - i)) * LengthCount[i];
 
    /*
@@ -529,7 +529,7 @@ void far pascal DCodeGen(WORD wNrSymbols, BYTE far *pbLengths,
       for(pp = scl[i];pp != NO_MORE;pp = p->next) {
 	 // Fill part of table
 	 p = Allocated + pp; sym = p->ch;
-	 #if 1
+	 #ifndef ASM
 	 for(int j = 1 << (MAX_CODE_LENGTH - i);j > 0;j--) {
 	    *pwTable++ = sym;
 	    *pbTableLengths++ = i;
