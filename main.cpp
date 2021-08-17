@@ -700,7 +700,7 @@ void Win(void) {
 }
 
 int Logo (void){
-   if (_argc >=2 && _argv[1][0]=='~'){
+   if (_argc>=2 && _argv[1][0]=='~'){
       if (StdOutType()==D_CON)
 	 return 0;
       else
@@ -1028,7 +1028,7 @@ int dosvid=0;
 
    int cdecl main (int argc, char **argv){
       _argc = argc; _argv = argv;
-      if (argc>1&&argv[1][0]=='='){ // UC2-3PI
+      if (argc>=2 && argv[1][0]=='='){ // UC2-3PI
 	 strcpy (argv[1],argv[1]+1);
 	 dosvid=1;
       }
@@ -1331,7 +1331,7 @@ restart:
             cprintf ("\n\r");
          }
       }
-      if (argc >= 2 && argv[1][0]=='^')
+      if (argc>=2 && argv[1][0]=='^')
       {
 	 fclose (stdout);
 	 *stdout = *fopen (argv[1]+1, "w");
@@ -1342,7 +1342,7 @@ restart:
 	 _argc--;
 	 argc--;
       }
-	if (argc >= 2 && argv[1][0]=='~' && argv[1][1]=='*'){
+	if (argc>=2 && argv[1][0]=='~' && argv[1][1]=='*'){
 	    struct ffblk ffblk;
 	    int done;
 	    done = findfirst ("*.*", &ffblk, 0xF7);
@@ -1359,12 +1359,12 @@ next:
 	    }
 	    return 0;
         }
-      if (argc >=2 && argv[1][0]=='='){ // UC2-3PI
+      if (argc>=2 && argv[1][0]=='='){ // UC2-3PI
          strcpy (argv[1],argv[1]+1);
          dosvid=1;
       }
 restart:
-      if (argc >=2 && ((argv[1][0]=='?' || (argv[1][0]=='-' && argv[1][1]=='?') || (argv[1][0]=='/' && argv[1][1]=='?')) ||
+      if (argc>=2 && ((argv[1][0]=='?' || (argv[1][0]=='-' && argv[1][1]=='?') || (argv[1][0]=='/' && argv[1][1]=='?')) ||
           (argv[1][0]=='h' || (argv[1][0]=='-' && argv[1][1]=='h') || (argv[1][0]=='/' && argv[1][1]=='h')) ||
           (argv[1][0]=='H' || (argv[1][0]=='-' && argv[1][1]=='H') || (argv[1][0]=='/' && argv[1][1]=='H')))){ // mini help
 
@@ -1688,7 +1688,7 @@ restart:
          }
 
          int cfg=0;
-         if (argc >= 2 && (argv[1][0]=='!' || (argv[1][0]=='-' && argv[1][1]=='!') || (argv[1][0]=='/' && argv[1][1]=='!'))){
+         if (argc>=2 && (argv[1][0]=='!' || (argv[1][0]=='-' && argv[1][1]=='!') || (argv[1][0]=='/' && argv[1][1]=='!'))){
             cfg=1;
             goto noarg;
          }
