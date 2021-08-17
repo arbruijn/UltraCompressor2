@@ -339,9 +339,13 @@ bit16:
 bit8:
    asm   popf
    return (BYTE)8;
+#endif
 }
 
 void far RapidCopy (void far *dst, void far *src, WORD wLen){
+#ifndef ASM
+   memcpy(dst, src, wLen);
+#else
    int first, rest;
    asm cld
    if ((wLen<32U) || !m386){ // no too small moves
@@ -381,6 +385,7 @@ void far RapidCopy (void far *dst, void far *src, WORD wLen){
       asm rep  movsb
       asm pop  ds         // restore DS
    }
+#endif
 }
 
 

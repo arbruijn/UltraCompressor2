@@ -523,12 +523,12 @@ void far pascal DCodeGen(WORD wNrSymbols, BYTE far *pbLengths,
       for(pp = scl[i];pp != NO_MORE;pp = p->next) {
 	 // Fill part of table
 	 p = Allocated + pp; sym = p->ch;
-	 /*
-	 for(j = 1 << (MAX_CODE_LENGTH - i);j > 0;j--) {
+	 #ifndef ASM
+	 for(int j = 1 << (MAX_CODE_LENGTH - i);j > 0;j--) {
 	    *pwTable++ = sym;
 	    *pbTableLengths++ = i;
 	 }
-	 */
+	 #else
 	 _SI = 1 << (MAX_CODE_LENGTH - i);
 	 asm push ds
 	 asm push es
@@ -547,6 +547,7 @@ void far pascal DCodeGen(WORD wNrSymbols, BYTE far *pbLengths,
 	 asm pop ds
 	 pwTable+= 1<<(MAX_CODE_LENGTH-i);
 	 pbTableLengths+= 1<<(MAX_CODE_LENGTH-i);
+	 #endif
       }
    }
 

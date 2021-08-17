@@ -137,7 +137,11 @@ void InitAlloc1 (){ // approx 250 k (256000 bytes)
 void InitAlloc2 (){ // approx 250 k (256000 bytes)
 #ifndef UE2
 //#if BUF_SIZE > 32768L // unusual situations only
+#ifndef DOS
+      pwPrevH = (WORD *)(((BYTE *)pwPrevL)+65536);
+#else
       pwPrevH = (WORD *)MK_FP(FP_SEG(pwPrevL)+4096,0);
+#endif
 //#endif
 
    mal_pwHash = xmalloc (HASH_SIZE*2L+15L,TMP);
@@ -181,7 +185,9 @@ void NoSpec (){
        Hash chain management.
 */
 
-//#define NO_ASM_HASH
+#ifndef ASM
+#define NO_ASM_HASH
+#endif
 
 #define HL1 3
 #define HL2 6
@@ -577,6 +583,13 @@ void ReadMore (void){ // called if wTOE passed wLP
 #pragma argsused
 static WORD near pascal MatchLen (WORD p1, WORD p2){
 #ifndef UE2
+#ifndef ASM
+   WORD i;
+   for (i = 0; i < MAX_LEN; i++)
+      if (pbDataC[(p1 + i) & 65535] != pbDataC[(p2 + i) & 65535])
+         break;
+   return i;
+#else
    WORD DS = _DS;
 
    _ES = _DS = FP_SEG(pbDataC);
@@ -625,6 +638,7 @@ fast:
    _DS = DS;
    return _AX;
 #endif
+#endif
 }
 
 // find best match
@@ -672,8 +686,50 @@ quite simple.
 */
 
 #pragma argsused
-static void near pascal FindMaxLen (WORD pos, WORD *len, WORD *mpos, WORD upper, WORD min, WORD hash, WORD wlen){
+static void near pascal FindMaxLen (unsigned int pos, WORD *len, WORD *mpos, unsigned int upper, unsigned int min, unsigned int hash, unsigned int wlen){
 #ifndef UE2
+#ifndef ASM
+   unsigned int maxpos = 0;
+   unsigned int maxlen = 0;
+   if (wlen) {
+      if (wlen > upper)
+         wlen = upper;
+      wlen++;
+      unsigned int hpos = pwHash[hash];
+      BYTE c = pbDataC[pos + min];
+      BYTE c0 = pbDataC[pos];
+      BYTE c1 = pbDataC[pos + 1];
+      while (--wlen) {
+         if (pbDataC[hpos + min] == c &&
+            pbDataC[hpos] == c0 && pbDataC[hpos + 1] == c1) {
+            unsigned int len = 2;
+            while (len < MAX_LEN && pbDataC[pos+len] == pbDataC[hpos+len])
+               len++;
+            if (len > maxlen) {
+               maxlen = len;
+               min = len;
+               maxpos = hpos;
+               if (maxlen>GIVE_UP)
+                  break; // speed up repeated zero etc
+               c = pbDataC[pos+min];
+            }
+	 }
+	 #ifdef DOS
+         hpos = hpos&0x8000 ? pwPrevH[hpos^0x8000] : pwPrevL[hpos];
+         #else
+         hpos = pwPrevL[hpos];
+         #endif
+      }
+   }
+   *len = maxlen;
+   *mpos = maxpos;
+
+   // add current position to hash chains
+   WORD tmp = pwHash[hash];
+   pwHash[hash] = pos;
+   PutPrev (pos, tmp);
+   pwLen[hash]++;
+#else
 // prepare match finding
 //   WORD hash = HASH (pos);
    WORD maxlen = 0;
@@ -956,6 +1012,7 @@ giveup: // leave 2
    pwHash[hash] = _SI;
    PutPrev (_SI, tmp);
    pwLen[hash]++;
+#endif
 #endif
 }
 
@@ -1590,7 +1647,7 @@ extern int nuke1 (WORD es, WORD ds);
 DWORD glob;
 #endif
 
-#ifdef UCPROX
+#if defined(UCPROX) || !defined(ASM)
 
 int nuke2 (){
    WORD dst, len;
@@ -1619,7 +1676,11 @@ int nuke2 (){
 	    Out (7,"{%u %u}\n\r",len,dst);
 #endif
 	 for (WORD i=0;i<len;i++)
+	    #ifdef DOS
 	    pbDataD[wTOE+i] = pbDataD[wTOE-dst+i];
+	    #else
+	    pbDataD[(wTOE+i) & 65535] = pbDataD[(wTOE-dst+i) & 65535];
+	    #endif
 	 wTOE+=len;
       }
       if ((wTOE&0x8000) == wComp){
@@ -1698,6 +1759,9 @@ void pascal far UltraDecompressor (DWORD dwMaster, BYTE bDelta, DWORD len){
    InitBitsIn((WORD *)(pownor+49152U));
    WORD no = GetNo();
    while (no){
+#ifndef ASM
+      if (nuke2()) goto end; // C++
+#else
 #ifdef UCPROX
       if (beta && 0==strcmp(strupr(getenv("SMASHDUMP")),"ON")) {
 	 if (nuke2()) goto end; // C++
@@ -1706,6 +1770,7 @@ void pascal far UltraDecompressor (DWORD dwMaster, BYTE bDelta, DWORD len){
       }
 #else
       if (nuke1(FP_SEG(pownor), FP_SEG(pbDataD))) goto end; // ASM
+#endif
 #endif
       BrkQ();
       no = GetNo();
