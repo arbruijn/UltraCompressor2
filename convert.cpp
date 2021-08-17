@@ -170,7 +170,7 @@ void CExtract (char *archive, char *path, DWORD revision, int mode){
 
    InvHashC(); // Needed for each archive being processed!
    SetArea (0);
-   sprintf (com,"*.*;%ld",revision);
+   sprintf (com,"*.*;%" PRIdw,revision);
    Anal (com, 1);
    BoosterOn();
    VPTR walk = Mpath;

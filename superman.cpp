@@ -1580,7 +1580,7 @@ char *neat (DWORD val){
    if (val>999999999L){
       t = val/1000000000L;
       val-=t*1000000000L;
-      sprintf (ret,"%ld",t);
+      sprintf (ret,"%" PRIdw,t);
       strcat (ret,",");
       m=1;
    }
@@ -1588,9 +1588,9 @@ char *neat (DWORD val){
       t = val/1000000L;
       val-=t*1000000L;
       if (!m)
-	 sprintf (tmp,"%ld",t);
+	 sprintf (tmp,"%" PRIdw,t);
       else
-	 sprintf (tmp,"%03ld",t);
+	 sprintf (tmp,"%03" PRIdw,t);
       strcat (ret,tmp);
       strcat (ret,",");
       m=1;
@@ -1599,17 +1599,17 @@ char *neat (DWORD val){
       t = val/1000L;
       val-=t*1000L;
       if (!m)
-	 sprintf (tmp,"%ld",t);
+	 sprintf (tmp,"%" PRIdw,t);
       else
-	 sprintf (tmp,"%03ld",t);
+	 sprintf (tmp,"%03" PRIdw,t);
       strcat (ret,tmp);
       strcat (ret,",");
       m=1;
    }
    if (!m)
-      sprintf (tmp,"%ld",val);
+      sprintf (tmp,"%" PRIdw,val);
    else
-      sprintf (tmp,"%03ld",val);
+      sprintf (tmp,"%03" PRIdw,val);
    strcat (ret,tmp);
    return ret;
 }
@@ -2194,7 +2194,7 @@ char *WFull (VPTR rev, DWORD hint){
       r = hint;
    if (r==DELREV) r=0;
    if (r) strcat (ret, ";");
-   if (r) strcat (ret, ultoa(r, tmp, 10));
+   if (r) sprintf(ret+strlen(ret), "%" PRIdw, r);
    RepTmp (ret);
    if (ret[0]=='.' && ret[1]==PATHSEPC){
       return ret+2;

@@ -1,5 +1,9 @@
 // Copyright 1992, all rights reserved, AIP, Nico de Vries
 // MAIN.H
+#ifndef DOS
+#include <stdint.h>
+#include <inttypes.h>
+#endif
 
 #define TRANSLEN 72
 
@@ -36,9 +40,19 @@
    extern int heavy; // heavy mode activated
 #endif
 
+#ifdef DOS
 typedef unsigned char BYTE;
 typedef unsigned WORD;
 typedef unsigned long DWORD;
+#define PRIdw "lu"
+#define PRIXdw "lX"
+#else
+typedef uint8_t BYTE;
+typedef uint16_t WORD;
+typedef uint32_t DWORD;
+#define PRIdw PRIu32
+#define PRIXdw PRIX32
+#endif
 
 #define PATHSEP "\\"
 #define PATHSEPC '\\'
