@@ -482,7 +482,7 @@ void Exp (char *pc, int i){
    pc[i]=0;
    for (int j=0;j<i;j++){
       if (mode==0 && pc[j]==0) mode = 2;
-      if (pc[j]=='*') mode = 1;
+      if (mode==0 && pc[j]=='*') mode = 1;
       if (mode==1) pc[j]='?';
       if (mode==2) pc[j]=' ';
    }
