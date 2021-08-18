@@ -33,10 +33,36 @@ typedef unsigned long DWORD;
 
 #endif
 
+#ifndef DOS
+
+typedef void *VPTR;
+#define V(p) (p)
+#define VNULL NULL
+#define UnAcc(p)
+#define Acc(p) ((BYTE *)(p))
+VPTR LLVmalloc(int size);
+void LLVfree(VPTR p);
+void InitVmem();
+
+#define BoosterOn()
+#define BoosterOff()
+
+inline int IS_VNULL (VPTR me){
+   return !me;
+}
+
+inline int CMP_VPTR (VPTR a, VPTR b){
+   return a == b;
+}
+
+#else
+
 struct VPTR {
    WORD wBlock;
    WORD wOffset;
 };
+
+#endif
 
 struct PIPE {
    VPTR vpStart, vpCurrent, vpTail;
@@ -50,6 +76,8 @@ struct PIPENODE {
    WORD wLen;
    VPTR vpDat;
 };
+
+#ifdef DOS
 
 extern VPTR VNULL; // virtual NULL pointer
 
@@ -90,6 +118,8 @@ void UnAcc (VPTR vpAdr);
 
 BYTE *V (VPTR vpAdr);
    // get access (automatic UnAcc after 'DEEP' succesive calls)
+
+#endif
 
 void MakePipe (PIPE &p);
    // create new PIPE
