@@ -611,7 +611,7 @@ again:
       case '#':
          if (iDrv==0 && isalpha(atom[1]) && atom[2]==':')
          {
-            iDrv = atom[1]-'A'+1;
+            iDrv = toupper(atom[1])-'A'+1;
 //            Out (7,"[%d]",iDrv);
          }
 	 SetDest (atom+1);
@@ -625,7 +625,7 @@ again:
       default:
          if (once && iDrv==0 && isalpha(atom[0]) && atom[1]==':')
          {
-            iDrv = atom[0]-'A'+1;
+            iDrv = toupper(atom[0])-'A'+1;
 //            Out (7,"[%d]",iDrv);
          }
          once=0;
@@ -945,15 +945,15 @@ again:
 	 goto again;
       }
    }
-   if (strncmp(pc,"FILTER",6)==0){
+   if (strnicmp(pc,"FILTER",6)==0){
       CheckIs (pc[6]);
       strcpy (pcFilter, pc+7);
       iFilterMode = 1;
    } else
-   if (strncmp(pc,"TSN",3)==0){
+   if (strnicmp(pc,"TSN",3)==0){
       iTsn=1;
    } else
-   if (strncmp(pc,"VLAB",4)==0){
+   if (strnicmp(pc,"VLAB",4)==0){
       iVlab = 1;
       if (pc[4]&&pc[5]) {
 	 iDrvBack = iDrv = pc[5]-'A'+1;
@@ -961,28 +961,28 @@ again:
 	 iDrvBack = iDrv = 0;
       }
    } else
-   if (strncmp(pc,"ARCA",4)==0){
+   if (strnicmp(pc,"ARCA",4)==0){
       MODE.fArca=1;
    } else
-   if (strncmp(pc,"NEWER",5)==0){
+   if (strnicmp(pc,"NEWER",5)==0){
       MODE.fNewer=1;
    } else
-   if (strncmp(pc,"NOF",3)==0){
+   if (strnicmp(pc,"NOF",3)==0){
       MODE.fNof=1;
    } else
-   if (strncmp(pc,"BAK",3)==0){
+   if (strnicmp(pc,"BAK",3)==0){
       MODE.fBak=1;
    } else
-   if (strncmp(pc,"RAB",3)==0){
+   if (strnicmp(pc,"RAB",3)==0){
       MODE.fRab=1;
    } else
-   if (strncmp(pc,"ASUB",4)==0){
+   if (strnicmp(pc,"ASUB",4)==0){
       MODE.fASubDirs=1;
    } else
-   if (strncmp(pc,"QUERY",5)==0){
+   if (strnicmp(pc,"QUERY",5)==0){
       MODE.fQuery=1;
    } else
-   if (strncmp(pc,"EFA",3)==0){
+   if (strnicmp(pc,"EFA",3)==0){
       CheckIs (pc[3]);
       if (strstr(pc+4,"H")) MODE.bExcludeAttr |= FA_HIDDEN;
       if (strstr(pc+4,"A")) MODE.bExcludeAttr |= FA_ARCH;
@@ -991,7 +991,7 @@ again:
    } else {
       if (!strstr(pc,"="))
 	 CheckIs (pc[strlen(pc)]);
-      if (strncmp(pc,"CONTAINS=",9)==0){
+      if (strnicmp(pc,"CONTAINS=",9)==0){
 	 strcpy (MODE.szContains, pc+9);
 	 if (!strlen(MODE.szContains)){
 	    if (!ReadAtom() || strlen(atom)==0) FatalError (120,"contains string is too short");
@@ -1004,91 +1004,91 @@ again:
 //       Out (7,"[Search=\"%s\"]",MODE.szContains);
 	 MODE.fContains=1;
       } else
-      if (strncmp(pc,"RELIA=D",7)==0){
+      if (strnicmp(pc,"RELIA=D",7)==0){
 	 CONFIG.bRelia = 0;
       } else
-      if (strncmp(pc,"RELIA=P",7)==0){
+      if (strnicmp(pc,"RELIA=P",7)==0){
 	 CONFIG.bRelia = 1;
 	 MODE.bDamageProof=1;
       } else
-      if (strncmp(pc,"RELIA=E",7)==0){
+      if (strnicmp(pc,"RELIA=E",7)==0){
 	 CONFIG.bRelia = 2;
 	 MODE.bDamageProof=1;
       } else
-      if (strncmp(pc,"ARCON=ON",8)==0){
+      if (strnicmp(pc,"ARCON=ON",8)==0){
 	 CONFIG.fAutoCon = 1;
       } else
-      if (strncmp(pc,"ARCON=OF",8)==0){
+      if (strnicmp(pc,"ARCON=OF",8)==0){
 	 CONFIG.fAutoCon = 0;
       } else
-      if (strncmp(pc,"SMSKIP=ON",9)==0){
+      if (strnicmp(pc,"SMSKIP=ON",9)==0){
 	 CONFIG.fSMSkip = 1;
 	 MODE.fSMSkip = 1;
       } else
-      if (strncmp(pc,"SMSKIP=OF",9)==0){
+      if (strnicmp(pc,"SMSKIP=OF",9)==0){
 	 CONFIG.fSMSkip = 0;
 	 MODE.fSMSkip = 0;
       } else
-      if (strncmp(pc,"BAN=AS",6)==0){
+      if (strnicmp(pc,"BAN=AS",6)==0){
 	 CONFIG.fMul = 0;
       } else
-      if (strncmp(pc,"BAN=AL",6)==0){
+      if (strnicmp(pc,"BAN=AL",6)==0){
 	 CONFIG.fMul = 1;
       } else
-      if (strncmp(pc,"BAN=ON",6)==0){
+      if (strnicmp(pc,"BAN=ON",6)==0){
 	 CONFIG.fMul = 1;
       } else
-      if (strncmp(pc,"BAN=N",5)==0){
+      if (strnicmp(pc,"BAN=N",5)==0){
 	 CONFIG.fMul = 2;
       } else
-      if (strncmp(pc,"BAN=OF",5)==0){
+      if (strnicmp(pc,"BAN=OF",5)==0){
 	 CONFIG.fMul = 2;
       } else
-      if (strncmp(pc,"VSCAN=ON",8)==0){
+      if (strnicmp(pc,"VSCAN=ON",8)==0){
 	 CONFIG.fVscan = 1;
       } else
-      if (strncmp(pc,"VSCAN=OF",8)==0){
+      if (strnicmp(pc,"VSCAN=OF",8)==0){
 	 CONFIG.fVscan = 0;
       } else
-      if (strncmp(pc,"SOS2EA=ON",9)==0){
+      if (strnicmp(pc,"SOS2EA=ON",9)==0){
 	 CONFIG.fEA = 1;
       } else
-      if (strncmp(pc,"SOS2EA=OF",9)==0){
+      if (strnicmp(pc,"SOS2EA=OF",9)==0){
 	 CONFIG.fEA = 0;
       } else
-      if (strncmp(pc,"SYSHID=AS",9)==0){
+      if (strnicmp(pc,"SYSHID=AS",9)==0){
 	 CONFIG.fHID = 2;
 	 MODE.bHid=1;
       } else
-      if (strncmp(pc,"SYSHID=AL",9)==0){
+      if (strnicmp(pc,"SYSHID=AL",9)==0){
 	 CONFIG.fHID = 1;
 	 MODE.bHid=2;
       } else
-      if (strncmp(pc,"SYSHID=ON",9)==0){
+      if (strnicmp(pc,"SYSHID=ON",9)==0){
 	 CONFIG.fHID = 1;
 	 MODE.bHid=2;
       } else
-      if (strncmp(pc,"SYSHID=N",8)==0){
+      if (strnicmp(pc,"SYSHID=N",8)==0){
 	 CONFIG.fHID = 0;
 	 MODE.bHid=3;
       } else
-      if (strncmp(pc,"SYSHID=OF",8)==0){
+      if (strnicmp(pc,"SYSHID=OF",8)==0){
 	 CONFIG.fHID = 0;
 	 MODE.bHid=3;
       } else
-      if (strncmp(pc,"NET=ON",6)==0){
+      if (strnicmp(pc,"NET=ON",6)==0){
 	 CONFIG.fNet = 1;
       } else
-      if (strncmp(pc,"NET=OF",6)==0){
+      if (strnicmp(pc,"NET=OF",6)==0){
 	 CONFIG.fNet = 0;
       } else
-      if (strncmp(pc,"NET=A",5)==0){
+      if (strnicmp(pc,"NET=A",5)==0){
 	 CONFIG.fNet = 2;
       } else
-      if (strncmp(pc,"NOLOCK",6)==0){
+      if (strnicmp(pc,"NOLOCK",6)==0){
 	 MODE.fNoLock = 1;
       } else
-      if (strncmp(pc,"ELD=",4)==0){
+      if (strnicmp(pc,"ELD=",4)==0){
 	 MODE.bELD=1;
 	 ScanDT (pc, &MODE.ftELD, 0);
    //      ftime *f=&MODE.ftELD;
@@ -1096,7 +1096,7 @@ again:
    //	     strupr(month[f->ft_month-1]), f->ft_day, f->ft_year+1980,
    //	     f->ft_hour, f->ft_min, f->ft_tsec*2);
       } else
-      if (strncmp(pc,"EED=",4)==0){
+      if (strnicmp(pc,"EED=",4)==0){
 	 MODE.bEED=1;
 	 ScanDT (pc, &MODE.ftEED, 1);
    //      ftime *f=&MODE.ftEED;
@@ -1104,7 +1104,7 @@ again:
    //	     strupr(month[f->ft_month-1]), f->ft_day, f->ft_year+1980,
    //	     f->ft_hour, f->ft_min, f->ft_tsec*2);
       } else
-      if (strncmp(pc,"DTT=",4)==0){ // YYYYMMDDHHMMSS
+      if (strnicmp(pc,"DTT=",4)==0){ // YYYYMMDDHHMMSS
 	 MODE.bDTT=1;
 	 ScanDT (pc, &MODE.ftDTT, 1);
 	 ftime *f=&MODE.ftDTT;
@@ -1123,7 +1123,7 @@ int GetOptions(int p=1){
 #ifndef UE2
    if (p==-1) goto reread;
 again:
-   switch (atom[p]){
+   switch (toupper(atom[p])){
       case '#':
 	 SetDest (atom+p+1);
 	 // now get a new atom!
@@ -1151,7 +1151,7 @@ reread:
 	 p++;
 	 goto again;
       case 'T':
-	 switch (atom[p+1]){
+	 switch (toupper(atom[p+1])){
 	    case 'F':
 	       DB_TXT("opt","TF");
 	       Compressor(2);
@@ -1165,12 +1165,12 @@ reread:
 	       Compressor(4);
 	       break;
 	    case 'S':
-	       if (atom[p+2]=='T'){
+	       if (toupper(atom[p+2])=='T'){
 		  DB_TXT("opt","TST");
 		  Compressor(5);
 		  p++;
 #ifdef UCPROX
-	       } else if (atom[p+2]=='F'){
+	       } else if (toupper(atom[p+2])=='F'){
 		  DB_TXT("opt","TSF");
 		  Compressor(80);
 		  p++;
@@ -1513,7 +1513,7 @@ again:
    MoveClear();
 #endif
 normal:
-   switch (atom[0]){
+   switch (toupper(atom[0])){
 #ifndef UE2
       case '$':
 	 int r;
