@@ -758,10 +758,7 @@ int Logo (void){
 	 Out (3,"\x4Please register ");
    }
 #endif
-#endif
    ctr=0;
-
-#ifdef DOS
    union REGS regs;
    regs.h.ah = 0x30;
    intdos (&regs,&regs);
@@ -784,7 +781,6 @@ int Logo (void){
       oe2();
       os2=1;
    }
-
    DVver(0);
    Win();
 
@@ -821,6 +817,7 @@ int Logo (void){
    oel();
 #else
    Out (3,"LGPL Cross-Platform version 0.1");
+   ctr=0;
    struct utsname utsname;
    if (!uname(&utsname)) {
       oe1();
