@@ -792,7 +792,7 @@ void ListMast (PIPE &p){
 	       ResetOutCtr();
 	       if (CONFIG.fOut!=4) bCBar=1;
 	       ((MASREC*)V(walk))->compress.dwMasterPrefix = SUPERMASTER;
-	       if (stricmp (getenv("UC2_PUC"),"ON")==0)
+	       if (getenv("UC2_PUC") && stricmp (getenv("UC2_PUC"),"ON")==0)
 		  ((MASREC*)V(walk))->compress.dwMasterPrefix = NOMASTER;
 	       Compressor (((MASREC*)V(walk))->compress.wMethod, Reader, AWrite,
 			   ((MASREC*)V(walk))->compress.dwMasterPrefix);

@@ -1555,7 +1555,7 @@ void pascal far SpComp (WORD len, WORD dst){
 
 #ifdef UCPROX
    if (beta){
-      if (0==stricmp(getenv("BUGS"),"ON")){
+      if (getenv("BUGS") && 0==stricmp(getenv("BUGS"),"ON")){
 	 dst-=1;
 	 Out (7,"AUTO-BUG (tm)");
       }

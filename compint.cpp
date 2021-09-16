@@ -169,7 +169,7 @@ WORD pascal far Compressor (
       } else
 	 UltraCompressor(dwMaster,bDelta);
    } else if (wMethod == 5){ // -TSX compression
-      if (strcmp(strupr(getenv("TUX")),"ON")==0)
+      if (getenv("TUX") && stricmp(getenv("TUX"),"ON")==0)
 	 TuneComp (60000U,60000U,500,500);
       else
 //	 TuneComp (15000,8000,400,200);

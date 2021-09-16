@@ -875,7 +875,7 @@ void cdecl exito (void){
    if (bDump){
       switch (problemos){
 	 case 0:
-	    if (stricmp (getenv("UC2_OK"), "OFF")!=0)
+	    if (getenv("UC2_OK") && stricmp (getenv("UC2_OK"), "OFF")!=0)
 	       Close (Open ("U$~RESLT.OK",MUST|CR|NOC));
 	    break;
 	 case 1:
