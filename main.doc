@@ -1,0 +1,947 @@
+4. MAIN: the use of the UC command in detail
+============================================
+
+UltraCompressor II (tm) from Ad Infinitum Programs (AIP-NL) is an
+archiver. An archiver is a file handling and compression utility. It
+will make most of your files significantly smaller and it can keep
+related files together. When you need the files, you can decompress
+them with the same UC utility. UC is very easy to use, thanks to its
+highly developed user interface, and has support for all archiving
+needs.
+
+All details on ordering UltraCompressor II are built into ORDER.EXE.
+
+One general point about UC is that you can consider an archive in the
+same way as you would a disk. It has a root directory, sub-directories
+and so on. UC always contains the full directory structure. With UC,
+you do not have to deal with 'match path', 'store full path', 'junk
+directory name' etc..
+
+The file extension of UC archives is currently .UC2. In the future, if
+a major new version of UC is released, the extension will become .UC3.
+This means that there can be no confusion about which version of UC
+should be used.
+
+While using UC, the screen will indicate whether everything is working
+properly. When errors occur they are shown in detail on the screen and
+are also written to an error-log file. When this error-log file grows
+over 25,000 bytes, UC will give a warning.
+
+In this document all commands/options in the examples given are in
+upper case, and parameters are always in lower case. In use, however,
+the case is never important. Any mix of upper and lower case can be
+used.
+
+This document contains the following paragraphs:
+
+        - A. Commands/options summary
+        - B. Adding files, listing contents
+        - C. Extracting files
+        - D. Other commands and options
+        - E. Version management
+        - F. Features and automatics
+        - G. Credits
+        - H. Acknowledgements
+        - Z. Summary
+
+To jump to a certain paragraph, press the corresponding letter. To
+jump to a specific document/chapter, press the corresponding digit.
+See chapter 1 paragraph E for an overview of all documentation.
+
+
+4.A COMMAND/OPTION SUMMARY.
+===========================
+
+General: UC command [option(s)] archive-name [files]
+
+Starting UC with no commands at all, starts the MANUAL VIEWER and
+CONFIGURATION MENU.
+
+Commands:
+---------
+   A D E     ADD/DELETE/EXTRACT files to/from archive.
+             (See paragraph B and C.)
+
+   L V       LIST/VERBOSE LIST contents of archive.
+
+   P         make archive DAMAGE PROTECTED (approx 1% overhead). Once
+             an archive becomes damage protected, it remains damage
+             protected, even if it is altered. The P command can be
+             combined with other commands (e.g. AP).
+
+   U         remove damage protection (if present) from archive.
+
+   T         fully TEST archive. When it is damaged, UC will ask if
+             it needs to be repaired. In force mode (see options), UC
+             will repair without asking.
+             If an archive is repaired 100% this is reported. If the
+             archive cannot be repaired 100%, the problems (such as
+             which files are still damaged, etc.) are reported on
+             screen and in the error-log file.
+
+   C         CONVERT ZIP, ARC, ARJ etc. archives to UC archives.
+             (See chapter 5 paragraph A.)
+
+   O         OPTIMIZE archive can make an archive even smaller without
+             deleting anything from the archive. Especially if an
+             archive has been updated many times and/or contains many
+             versions (revisions) of specific files, optimize can
+             significantly reduce the size of an archive.
+
+   R         REVISE archive comment.
+             (See paragraph D.)
+
+Options:
+--------
+   Options can be concatenated to the command (UC ES arch) or they can
+   be prefixed by a - or / (UC E -S arch).
+
+   TF TN TT  Type-Fast; Type-Normal (default) or Type-Tight/multimedia
+             compression.
+
+             In TT mode, UC will detect whether a file is a multimedia
+             file. Special (lossless) multimedia compression will then
+             take place.
+
+             Please note multimedia compression is not able to
+             compress already compressed files (e.g. *.GIF or *.JPG
+             cannot be significantly compressed).
+
+   TST       Type-Super-Tight compresses a bit better that TT
+             compression, but takes noticeable more time. Only
+             recommended if time is not an issue. TST compression does
+             not affect decompression speed, which remains very fast.
+
+   S         also process all SUB-DIRECTORIES. By default only the
+             files in the current directory are processed.
+
+   M         MOVE mode, after addition/extraction the used source files
+             are deleted. UC assures the addition/extraction completed
+             successfully before it deletes the source file.
+
+   F         FORCE mode. Using this mode, the program will work
+             silently. Almost nothing will be asked during execution.
+             In all cases where a question would be asked, the program
+             acts as if 'yes' was answered. When not using this mode,
+             the program will often ask what you want in case of doubt.
+
+                when NOT in force mode
+                ----------------------
+                   - UC will prompt you before overwriting files
+                   - UC will prompt you before creating directories
+                   - UC will optionally ask if hidden/system files
+                     should be processed
+                   - UC will optionally ask permission to convert
+                     archives
+                   - UC will optionally ask permission to show/play
+                     multimedia banners
+                   - UC will prompt you before repairing a damaged
+                     archive (T command)
+
+                when in force mode
+                ------------------
+                   - UC will overwrite files without asking
+                   - UC will create directories without asking
+                   - UC will add hidden/system files (unless
+                     the configuration does not allow that)
+                   - UC will always apply auto-conversion
+                   - UC will show/play multimedia banners (unless
+                     the configuration does not allow that)
+                   - UC will repair an archive immediately, if
+                     the T (test) command finds a problem
+
+   I         INCREMENTAL mode, for FAST updates and version control.
+             Version control is also called revision management. The
+             original archive is not changed, changed files are
+             appended to the archive. Previous versions (revisions) of
+             a file remain accessible this way (version control).
+             (See paragraph E.)
+
+   B         BASIC mode (default unless UC is configured otherwise).
+             This is the opposite of incremental mode. In basic mode
+             UC overwrites files in the archive. No former versions of
+             a file are kept in the archive. If there are multiple
+             versions of a file only the latest one is overwritten in
+             non incremental mode.
+
+   !         EXCLUDE file(s).
+             (See paragraph B.)
+
+   ;n        extract/delete OLDER VERSION of file
+             (See paragraph E.)
+
+   !DTT=YYYY-MM-DD/HH:MM:SS
+             DYNAMIC TIME TRAVEL, option for accessing older versions
+             (revisions) of (large) collections of files.
+             (See paragraph E.)
+
+   #         DESTINATION PATH of files in archive while adding or
+             DESTINATION PATH of files on disk while extracting.
+             (See paragraphs B and C.)
+
+   ##        Like #, but the specified source path(s) will be appended
+             to the destination path.
+
+   &         CONCATENATION OF COMMANDS.
+             (See paragraph D.)
+
+   @         specifies a SCRIPT which substitutes part of the command
+             line.
+             (See paragraph F.)
+
+   !@        like @, but puts '!' before all entries (useful to
+             exclude a collection of files)
+
+   !RELIA=   These options allow (temporary) CONFIGURATION of many of
+   !ARCON=   the values one can configure with the configuration
+   !SMSKIP=  screen. The exact usage of these options is documented
+   !BAN=     in chapter 6.
+   !VSCAN=
+   !SOS2EA=  Example: UC A -S !SYSHID=ON arch *.*
+   !NET=
+   !SYSHID=  In this example hidden and system files are also added to
+             the archive.
+
+
+4.B ADDING FILES, LISTING CONTENTS.
+===================================
+
+Examples:
+
+   UC A arch *.cpp
+      All *.cpp files in the current directory are compressed into the
+      archive arch.uc2. If the archive already exists, the files are
+      added to the archive.
+
+
+   UC A -TF docs *.* !*.bak
+      All (*.*) files except *.bak files are (RAPIDLY) compressed into
+      the archive docs.uc2.
+
+   UC A -S a:\back c:\doc\*.*
+      Create/update archive of complete directory with its
+      subdirectories to archive back.uc2 in the root directory of
+      drive A:.
+
+   When the files to be added are specified with *.*, the command can
+   be shortened: 'c:\doc\*.*' can be replaced by 'c:\doc\'. This also
+   applies to the exclude file(s) option.
+
+   UC A -S a:\back c:\doc\ !c:\doc\old\
+      All files in c:\doc and its subdirectories (except for files in
+      c:\doc\old and its subdirectories) will be added to back.uc2.
+
+   UC A -M arch *.bat
+      All *.bat files will be moved from the current directory to the
+      archive arch.uc2.
+
+   UC A arch #\dir1 *.cpp
+      Add all .cpp files from the current directory to directory dir1
+      in the archive arch.uc2. When a subdirectory does not already
+      exist in the archive, UC will ask you if it has to be created in
+      the archive.
+
+   UC A arch tools\*.c drivers\*.drv
+      The *.c files from the tools directory and the *.drv files from
+      the drivers directory are added to the root directory of the
+      archive.
+
+   UC A arch tools\*.c drivers\*.drv ##
+      The *.c files from the tools directory are added to the tools
+      directory in the archive, the *.drv files from the drivers
+      directory are added to the drivers directory in the archive.
+
+   UC A arch tools\*.c drivers\*.drv ##specials
+      The *.c files from the tools directory are added to the
+      specials\tools directory in the archive, the *.drv files from
+      the drivers directory are added to the specials\drivers
+      directory in the archive.
+
+   UC L arch
+      List contents of root directory of arch.uc2 without
+      subdirectories.
+
+   UC V arch
+      Verbose list contents of arch.uc2 without subdirectories. Not
+      only the files are shown, but also all the versions of the
+      files, with date and time of last update.
+
+   UC L -S arch
+      List contents of all directories and subdirectories in arch.uc2
+
+When you have a file whose name starts with #, !, @ or & you have to
+let UC know that you are referring to a file (and not to something
+else):
+
+   UC A arch .\#file
+      Add #file to arch.uc2. The .\ prefix is used to ensure that the
+      filename is not interpreted as destination path.
+
+
+Possible alternative ways to enter commands
+-------------------------------------------
+   Options can be put directly after the command or after the previous
+   option (no space allowed) or they can be prefixed by '-' or '/'.
+
+   Some example alternatives for 'UC A -S -TF docs *.* !*.bak':
+
+      UC  A -STF docs *.* !*.bak
+
+         You can concatenate options.
+
+      UC  ASTF docs *.* !*.bak
+
+         You can append the options directly to the command.
+
+      UC  -A -S -TF docs *.* !*.bak
+
+         It is allowed to precede the command with an '-'.
+
+      UC  A /S /TF docs *.* !*.bak
+
+         UC does not care whether you use '-' or '/'.
+
+      UC  A -S -TF docs !*.bak
+
+         If no file specifications are present, UC uses *.*.
+
+
+If you want an archive with a name without extension, type a '.' just
+after the archive name:
+
+   UC A sources. *.*
+      The archive will become 'sources' instead of 'sources.uc2'.
+
+
+4.C EXTRACTING FILES.
+=====================
+
+Examples:
+
+   UC E sources *.cpp
+      Extract all *.cpp files from sources.uc2 into the current
+      directory.
+
+   UC E backup \test\test.cpp
+      Extract test.cpp from subdirectory test in the archive, into
+      the current directory.
+
+   UC E -S backup \test\*.*
+      Extract contents of the archive's directory test and all its
+      subdirectories, into the current directory.
+
+   UC E -S backup \test\*.* #\dir1
+      Extract contents of the archive's directory test and all its
+      subdirectories into the directory \dir1.
+
+   UC E -M arch *.bat
+      All *.bat files will be moved from arch.uc2 to the current
+      directory.
+
+  UC E arch tools\*.c drivers\*.drv
+      The *.C files from the tools directory and the *.drv files from
+      the drivers directory are extracted into the current directory.
+
+   UC E arch \tools\*.c \drivers\*.drv ##
+      The *.c files from the tools directory are extracted into the
+      tools directory beneath the current directory, the *.drv files
+      from the drivers directory are extracted into the drivers
+      directory beneath the current directory.
+
+   UC E arch tools\*.c drivers\*.drv ##\
+      The *.c files from the tools directory are extracted into the
+      tools directory in the root directory, the *.drv files from the
+      drivers directory are extracted into the drivers directory in
+      the root directory.
+
+   UC E arch tools\*.c drivers\*.drv ##\specials
+      The *.c files from the tools directory are extracted into the
+      \specials\tools directory, the *.drv files from the drivers
+      directory are extracted into the \specials\drivers directory.
+
+
+   When a directory does not exist, UC will ask you if it has to be
+   created.
+
+   UC D arch *.bak
+      Delete all *.bak files from the archive.
+
+   UC D arch *.* !*.dbf !*.ntx
+      Delete all files except *.dbf and *.ntx files from the archive.
+
+
+4.D OTHER COMMANDS AND OPTIONS.
+===============================
+
+Examples:
+
+   UC T arch
+      Thoroughly test arch.uc2, and if it turns out to be damaged,
+      prompt the user for reparation of the archive.
+
+      In case the archive is repaired, a new archive is created with
+      the name FIX_xxxx.UC (xxxx stands for the sequence number of
+      existing FIX files), the original arch.uc2 remains unchanged.
+
+   UC P arch
+      Makes arch.uc2 damage protected.
+
+   UC U arch
+      Remove damage protection from arch.uc2.
+
+   UC C arch.arj  or
+   UC C arch.zip  or
+   UC C arch.lzh  etc.
+      An archive made with another archiver will be converted to a UC
+      archive. The extension (e.g. zip, arj) is optional; UC will read
+      'UC C arch' as 'UC C arch.*'.
+
+      Note: be sure the other archiver you need is in a directory
+      named in the PATH statement of your AUTOEXEC.BAT.
+
+
+   UC A one *.bat & A -S world *.bak & E -S exec *.exe & A world *.cmd
+      With '&' multiple commands can be given at once.
+
+      In this command all the .bat files from the current directory
+      are added to one.uc2, all the .bak files from the current
+      directory and all its subdirectories are added to world.uc2, all
+      the .exe files from the archive (including subdirectories) are
+      extracted from exec.uc2 and all the .cmd files from the current
+      directory are added to world.uc2.
+
+   For long commands we advise you to use '@'.
+   (See paragraph F.)
+
+   UC R arch
+      With your favorite editor you can view or edit the comment file
+      in the archive arch.
+
+      Note: be sure your U2_EDIT.BAT file is accessible and contains
+      your favorite editor.
+      (See chapter 6 paragraph D.)
+
+
+4.E VERSION MANAGEMENT.
+=======================
+
+When you want to keep the former versions (revisions) of a file in
+the archive, you can use the -I option to activate 'incremental mode'.
+
+You can use the -B option, to activate 'basic mode', when you do not
+want to keep the older versions of a file in the archive.
+
+In the configuration screen (see also chapter 6) it is possible to
+change the default mode from basic mode to incremental mode or vice
+versa.
+
+In the next examples the default mode of UC is basic:
+
+   UC A -I -S a:\back c:\docs\*.*
+      Incrementally update an archive (a:\back.uc2)
+
+   UC E arch filename.doc
+      Extracts the most recent version of the file 'filename.doc'
+      from arch.uc2.
+
+   UC E arch filename.doc;n
+      Extracts the requested version of the file 'filename.doc'.
+      'n' represents the number of the version.
+
+Some explanation about 'n':
+---------------------------
+   Different versions of the same file in the archive get a sequence
+   number.
+
+   The most recent version gets number 0. The oldest version gets the
+   highest number. Every time the same file is added to the archive in
+   incremental mode, to remain consistent, all versions get a new
+   number.
+
+   There is no practical limit to the number of versions of a file you
+   can keep in an archive.
+
+Now we will look at an archive arch.uc2 after completion of some
+operations:
+
+   UC A -I arch test.doc
+      The file test.doc is added to the archive arch.uc2. This is the
+      first operation on the archive, so it contains only test.doc.
+
+   UC V arch
+      The verbose list of arch.uc2 shows us:
+        TEST    DOC        1234      MAR-17-1993  12:24:12
+       (name    ext nr     length    date         time)
+
+After changing the file test.doc, we add it again to arch.uc2:
+
+   UC A -I arch test.doc
+      The second version of the same file is added to arch.uc2. The
+      archive now contains two files:
+
+   UC V arch
+      The verbose list of arch.uc2 shows us:
+        TEST    DOC;0      1245      MAR-17-1993  12:26:26
+        TEST    DOC;1      1234      MAR-17-1993  12:24:12
+       (name    ext nr     length    date         time)
+
+After adding some more versions of the file TEST.DOC, the verbose
+list gives:
+
+   UC V arch
+        TEST    DOC;0      1356      MAR-17-1993  14:02:00
+        TEST    DOC;1      1349      MAR-17-1993  13:50:56
+        TEST    DOC;2      1298      MAR-17-1993  13:28:32
+        TEST    DOC;3      1280      MAR-17-1993  13:15:42
+        TEST    DOC;4      1245      MAR-17-1993  12:26:26
+        TEST    DOC;5      1234      MAR-17-1993  12:24:12
+
+Now there are six different versions in the archive of the same file
+TEST.DOC.
+When you want to extract the most recent one, type the next command:
+
+   UC E arch test.doc    or
+   UC E arch test.doc;0
+      The most recent version of TEST.DOC is extracted from arch.uc2.
+
+When you want to see another version you have to include the version
+number in the command:
+
+   UC E arch test.doc;3
+      There are three more recent versions in the archive than the
+      version extracted.
+
+(Of course the archive is unchanged after extracting a file.)
+
+Deleting a version from the archive is possible with the next command:
+
+   UC D arch test.doc
+      The most recent version of the file is deleted from arch.uc2.
+
+The verbose list will give the next information:
+
+   UC V arch
+        TEST    DOC;0      1349      MAR-17-1993  13:50:56
+        TEST    DOC;1      1298      MAR-17-1993  13:28:32
+        TEST    DOC;2      1280      MAR-17-1993  13:15:42
+        TEST    DOC;3      1245      MAR-17-1993  12:26:26
+        TEST    DOC;4      1234      MAR-17-1993  12:24:12
+
+Also an older version of the file can be deleted:
+
+   UC D arch test.doc;2
+
+The verbose list will give the next information:
+
+   UC V arch
+        TEST    DOC;0      1349      MAR-17-1993  13:50:56
+        TEST    DOC;1      1298      MAR-17-1993  13:28:32
+        TEST    DOC;2      1245      MAR-17-1993  12:26:26
+        TEST    DOC;3      1234      MAR-17-1993  12:24:12
+
+When you want to remove the total file TEST.DOC with all its versions
+from the archive you type the following command:
+
+   UC D arch test.doc;*
+
+When you want to remove all the older versions from the archive but
+keep the most recent one, you type:
+
+   UC D arch test.doc;* !test.doc     or
+   UC D arch test.doc;* !test.doc;0
+
+When the archive contains more files with different versions and you
+only want to keep the most recent version of these files, you type:
+
+   UC D arch *.*;* !*.*       or
+   UC D arch *.*;* !*.*;0
+
+As you can see in the examples, for the most recent version of a
+file, you can just type the file name without number, or the filename
+with ';0'.
+
+Dynamic Time Travel (!DTT=YYYY-MM-DD/HH:MM:SS)
+----------------------------------------------
+   Time travel simulates the status of the archive, as it was at the
+   specified moment in the past.
+
+   The above explanation and samples work excellently for a small
+   amount of files, but not when large collections of files, all with
+   many versions, are involved. For this the 'Dynamic Time Travel'
+   option is the perfect solution.
+
+   Time travel is only available for the extract (E) and the list (L
+   and V) commands. Its syntax is !DTT=YYYY-MM-DD/HH:MM:SS with YYYY
+   being the year (e.g. 1993), MM being the month, DD being the day,
+   HH being the hour (e.g. 21), MM minute, SS second. The year MUST be
+   4 digits, all other numbers MUST be two digits.
+
+   You can supply only the left part of the arguments, UC will fill in
+   the rest:
+
+   e.g. !DTT=1993-03-17 will be expanded to 1993-03-17/00:00:00
+        !DTT=1991 will be expanded to 1991-01-01/00:00:00
+        !DTT=1992-01-22/18 will be expanded to 1992-01-22/18:00:00
+
+   Please note the -/:'s are optional, e.g. !DTT=19930317 can be used
+   instead of !DTT=1993-03-17. (Actually UC ignores the -/:'s
+   completely, their only purpose is to make the entered command more
+   readable.)
+
+   For the next two examples, assume the archive contains:
+
+      TEST    DOC;0      1349      MAR-17-1993  13:50:56
+      TEST    DOC;1      1298      MAR-17-1993  13:28:32
+      TEST    DOC;2      1280      MAR-17-1993  13:15:42
+      TEST    DOC;3      1245      MAR-17-1993  12:26:26
+      TEST    DOC;4      1234      MAR-17-1993  12:24:12
+
+   An example:
+      UC E !DTT=1993-03-17/13:30 arch test.doc
+
+   In this case a 'time travel' to 17 march 1993, 13:30 is executed.
+   Since at that moment the 13:28:32 version of test.doc was the one
+   last added to the archive, THAT version will be extracted.
+
+   Another example:
+      UC V !DTT=1993-03-17/13:20 arch
+
+        TEST    DOC;0      1280      MAR-17-1993  13:15:42
+        TEST    DOC;1      1245      MAR-17-1993  12:26:26
+        TEST    DOC;2      1234      MAR-17-1993  12:24:12
+
+   Note two versions have 'disappeared' and all other versions have
+   got a new index.
+
+   Please note Dynamic Time Travel NEVER alters the contents of
+   an archive, it only creates a different viewpoint.
+
+Important notes
+---------------
+   Especially where an archive has been updated many times and
+   contains many versions of specific files, optimize can
+   significantly reduce the size of an archive.
+
+   A just optimized archive, which contains multiple versions of
+   files, will often be only a little bit larger than an archive which
+   contains only the last version of all files.
+
+   Move mode only moves the specified versions. If 6 versions of test.c
+   are present in arch.uc2, then 'UC E -M arch test.c' will move
+   test.c;0 and all other versions (5) will remain in the archive.
+
+
+4.F FEATURES AND AUTOMATICS.
+============================
+
+Many advanced features are automatic in UC. The following topics are
+covered in this paragraph:
+
+   - Smart skipping
+
+   - Superior error handling
+   - Superior control-break handling
+   - Ensure mode
+   - Crash management
+
+   - Auto-Conversion of other archives
+   - Virus scan during conversion
+
+   - Scripts
+   - Wildcards in archives specification
+
+   - OS/2 2.x extended attributes
+   - Multimedia banners
+
+Smart skipping
+--------------
+   Smart skipping means: Do not do unnecessary things. While updating
+   an archive, files can be changed or not. Unchanged files will be
+   skipped, when smart skipping is on. This makes updating faster.
+
+   In the configuration, smart skipping can be on or off. UC compares
+   filename, filesize, file time and file date.
+
+Superior error handling
+-----------------------
+   No matter how deep UC gets into trouble, it will handle everything
+   with grace.
+
+   UC allows you not only to notice the error but also to do whatever
+   is needed (including going to DOS!) to solve the problem. UC does
+   not just stop, undoing all the work it has already done for you.
+   E.g. when a floppy turns out to be write protected, you can remove
+   the write protection and continue UC.
+
+Superior control-break handling
+-------------------------------
+   When you interrupt UC, you do not just stop it, canceling all
+   valuable work you have done. Instead, you are given the opportunity
+   to go to DOS to do whatever you like (after which UC can continue
+   where it left off). You can of course also abort the program.
+
+   If you press control-break while UC is adding files to an archive,
+   you get an extra option which allows you to skip all pending
+   additions. All additions already performed, remain in the archive.
+   (Since smart-skipping will automatically skip files which are
+   already in the archive (when unchanged), you can continue the
+   interrupted command later.)
+
+Ensure mode
+-----------
+   For those who need absolute reliability, e.g. mission critical data
+   compression tasks, UC has an ENSURE operation mode. In this mode UC
+   handles all updates to an archive as transactions. A transaction
+   can only be confirmed if PROOF has been gathered that the
+   transaction was completed 100% without problems. When a problem has
+   occurred, irrespective of the cause, e.g. hardware failures,
+   software conflicts, they will never get by unnoticed and the
+   operation can be reversed.
+
+Crash management
+----------------
+   When adding files to an archive in basic mode, crashes can do no
+   harm, because UC works with a temporary file. Only when everything
+   has been completed successfully will the temporary file, which
+   contains the new archive, be copied to the archive file. To prevent
+   data loss while adding files to an archive in incremental mode, UC
+   creates a new file with recovery information of the archive. This
+   file is called arch.UR2 (UltraRecover).
+
+   When everything goes right, this .UR2 file will be deleted
+   automatically and you will never notice it ever existed. But when
+   your computer crashes during adding files to the archive in
+   incremental mode, this .UR2 file will mostly still exist after the
+   crash.
+
+   If you try to do anything with the archive now, you will get a
+   message to repair the archive with 'UC T'. After the repair, the
+   files arch.UC2 and arch.UR2 will still exist. The repaired archive
+   is stored in the file named FIX_xxxx.UC2 (xxxx stands for the
+   sequence number of existing FIX files). Before you can use the
+   archive again, you have to move FIX_xxxx.UC2 to arch.UC2 and delete
+   the file arch.UR2. Now the situation is similar to the one before
+   the crash.
+
+Auto-Conversion of other archives
+---------------------------------
+   Archives made by other archivers can be converted by UC. The
+   automatic conversion can be set ON in the configuration (see also
+   chapter 6 paragraph A option D).
+
+   Adding a file to the archive or any other operation on it, starts
+   automatically with the conversion of it. It is important to know
+   that, when using an archive made with another archiver, you have to
+   type the archive name with the extension (e.g. arch.zip, arch.arj).
+
+   Note: be sure the other archiver you need is in a directory named
+   in the PATH of your AUTOEXEC.BAT.
+
+Virus scan during conversion
+----------------------------
+   The archive to be converted can be optionally scanned for viruses.
+   In the configuration this virus scanning can be switched ON or OFF.
+   In the batch file U2_CHECK.bat some virus scanners are called. Make
+   sure you have those virus scanners on your disk, in a directory
+   named in the PATH of your AUTOEXEC.BAT.
+
+   You can change the batch file and use different virus scanners (see
+   chapter 6 paragraph D).
+
+Scripts
+-------
+   A 'script' can contain a large list of files (e.g. to be
+   compressed). A script can also be used as a substitute for multiple
+   (complex) commands. Scripts can be nested, to allow the
+   construction of 'building blocks'. Scripts can be extremely long
+   (multi-megabyte).
+
+   There are several ways to define a script. If you have entered
+   '@exam' UC will look for:
+      (1) an environment variable called EXAM_USC
+      (2) the file 'exam.usc' (configured, current or PATH directory)
+      (3) the file 'exam' (configured, current or PATH directory)
+
+   UC @exam
+      The contents of 'exam': A arch *.bat & V arch
+      The .bat files are added to the archive arch.uc2 followed by a
+      verbose list of arch.uc2.
+
+      In this example multiple commands are concatenated by '&'.
+
+   UC A arch @names
+      The contents of 'names': *.bat *.cpp *.doc
+      The .bat, .cpp and .doc files are added to the archive arch.uc2.
+      In this example the files to be added are substituted by 'names'.
+
+   UC @toback *.cpp
+      The contents of 'toback': A c:\back
+      All .cpp files are added to c:\back.uc2.
+
+   UC @a arch *.cpp
+      The contents of 'a': A -TST -SMSKIP=OFF -F
+      This is an example of a 'personalized' add command.
+
+
+   !@ works like @, but puts '!' before all entries. It can be used to
+   exclude a collection of files.
+
+   UC A arch *.* !@names
+      The contents of 'names': *.bat *.cpp *.doc
+      All files except .bat, .cpp and .doc files are added to the
+      archive arch.uc2. In this example the files to be excluded are
+      substituted by 'names'.
+
+Wildcards in archives specification
+-----------------------------------
+   Instead of adding a file or a group of files to different archives
+   in different commands, it is possible to work with wildcards.
+
+   UC V *
+      Gives the verbose list of all the archives at once.
+
+   UC A * filename
+      The file 'filename' will be added to all the UC archives in the
+      current directory. Using a wildcard is the only way to access
+      more archives in one command. Only one archive description is
+      allowed in a command.
+
+   UC A * *.cpp *.bas
+      Of course more wildcards may be used for the files to be added.
+      All .cpp and .bas files will be added to all archives in the
+      current directory.
+
+   The commands P, U, T, O and C accept multiple archive
+   specifications. Here the archive specification cannot be confused
+   with the files specification because there is none. Also for all
+   these commands the -S option can be used to include archives in
+   subdirectories.
+
+   UC C *.zip *.arj *.lzh
+      All zip, arj and lzh archives will be converted.
+
+   UC T -S C:\*
+      All archives on drive C: (including those in subdirectories)
+      will be tested.
+
+OS/2 2.x extended attributes
+----------------------------
+   When the option 'Store OS/2 2.x extended attributes' (see chapter 6
+   paragraph A) is active, UC gets the capability to store OS/2
+   extended attributes. For example if you attach an icon to a file,
+   compress it and extract it somewhere else, the file will still have
+   its icon. Of course this is only possible on an OS/2 machine. When
+   you extract a file from an archive, the extended attributes will be
+   the same as when you put the file in the archive. An archive
+   optimized on a machine without extended attribute support (e.g. a
+   plain DOS machine) will still contain extended attributes.
+
+Multimedia banners
+------------------
+   Music, graphics and text banners can be added to an archive.
+   (See chapter 5 paragraph B.)
+
+
+4.G CREDITS.
+============
+
+Ad Infinitum Programs would like to thank the following people for
+their involvement, work, support, idea's, testing, checking, etc. etc.:
+
+   Aarif Rashid                           Jeroen Hoppenbrouwers
+   Ad NÅhn                                Joe Emenaker
+   Ad Spijkers                            Joergen Hjort
+   Allen Koberg                           John D. Mitchell
+   Andrew Cadach                          Joost Pruijt
+   Andy Hakim                             Juan Manuel Ruiz Lopez
+   Arjan Bosse                            Kai Uwe Rommel
+   Arno Haket                             Kit Thong
+   Arnold Jansen                          Leonid Yakovlev
+   Bernardo Javier Siu Fabry              Leslie Klieb
+   Bruce D. Ray                           Marco van de Wetering
+   Bruus Antonides                        Marijke Hoytink
+   Charles Evans                          Mark Adler
+   Charlie Negyesi                        Mark de Boer
+   Conny de Vries                         Mark Kovarski
+   Danny Bezemer                          Markus Kaemmerer
+   Dejan Markovic                         Marton Anka
+   Dirk Schreib                           Mike Charnock
+   Doug Lamb                              Mike Davis
+   Doug Tooley                            Mike Laster
+   Ellen de Vries                         Mike McCombs
+   Eric Morel                             Nico de Vries
+   Eric Veldhuyzen                        Oleg P. Serdjuk
+   Eugen Woiwod                           Oliver Fromme
+   Ewout de Klijne                        Paul Kocher
+   Fabian Meuller                         Peter Oudenhoven
+   Forrest Aldrich                        Piet van Oostrum
+   Frank Leene                            Pieter de Ruiter
+   Fred Snijder                           Rafael Ramirez
+   Fred Wijshoff                          Reinier de Groot
+   Gary van Beeck                         Rianne van Leur
+   Geoffrey Broadwell                     Richard Foster-Dingley
+   Glenn Evan Copeland                    Rick Hoorn
+   Graeme Cross                           Rob van Hoeven
+   Greg Roelofs                           Robert Lindeman
+   Gregory Flint                          Robbie Vance
+   Gudmundur J. Helgason                  Ronald Raymond Dippold
+   Hans Klunder                           Ryan Oakley
+   Hans Peer                              Ryan Watkins
+   Helen Derks                            Sjuck Brongersma
+   Ian Spenser Nelson                     Stefan Hermansson
+   Ingrid Foster-Dingley-Groot            Terry Chan
+   Itamar Even-Zohar                      Thaddaeus Kong
+   Jan van Hees                           Theo Boersma
+   Jan van Leeuwen                        Thomas Wolff
+   Jan Kalin                              Timothy F. Sipples
+   Jan-Pieter Cornet                      Udo van den Heuvel
+   Jan-Willem Overbeek                    Victor T. Ng
+   Janne Kankaala                         Vincent van Wichen
+   Jason S. Buchanan                      Wes Nakamura
+   Javier Manero                          Willem Verloop
+   Jean-loup Gailly                       Wong Ling
+
+We especially want to thank YOU, the reader of this manual, for
+considering the use of our products.
+
+Help us to make this product even better. Tell us what you want us to
+improve in UC and all our other products. AIP-NL applications are
+always designed in close cooperation with the people who use them.
+Comment on the manuals in general, or on a manual in a specific
+language, is also very welcome.
+
+
+4.H ACKNOWLEDGEMENTS.
+=====================
+
+Naming or not naming of specific products in the manuals is
+non-intentional.
+
+UltraCompressor II is a trademark of Ad Infinitum Programs (AIP-NL).
+
+Most mentioned brand and product names are trademarks or registered
+trademarks of their respective companies.
+
+
+4.Z (MAIN) SUMMARY.
+==================
+
+SYNTAX: UC command [option(s)] archive-name [files]
+                                                       UC -!      config
+COMMANDS: A D E   add / delete / extract               UC -? ...  search docs
+            L V   list / verbose list                  UC -? 105  error details
+            P U   damage protect / unprotect           UC -? 1.E  jump para
+              T   test (& repair)
+              C   convert archive to .UC2 archive
+              O   optimize (especially with many versions of files)
+              R   revise archive comment
+
+OPTIONS: (directly after command, or preceded by '-' or '/')
+       TF TN TT   fast / normal / tight-multimedia
+              S   include subdirectories
+              M   move mode
+              F   force mode (never ask, always yes)
+            I B   incremental mode (keep versions) / basic mode
+
+;n  specify version      !DTT=YYYY-MM-DD/HH:MM:SS  dynamic time travel
+!exclude files   #destination   ##+sourcepath   & concat   @script

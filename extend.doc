@@ -1,0 +1,668 @@
+8. EXTEND: tools; extended commands and options
+===============================================
+
+On of the toughest decisions to make, in designing a utility like
+UltraCompressor II, is what option should and should not be included.
+The problem is, that different users have a different view on what
+should be included in the tool. Some users prefer simple and clean,
+other users prefer a tool which adapts exactly to their specific
+wishes.
+
+We decided to split the user interface into sections in order to solve
+this conflict:
+
+BASIC (3)
+    This interface aims at maximum simplicity. It only allows
+    extraction of an entire archive, compression of an entire
+    directory and viewing archive contents.
+
+MAIN (4)
+    Several goals have driven the design of this section:
+    -> smart and advanced commands, not needing a lot of complicated
+       options
+    -> the entire interface description must fit on one screen (UC -?)
+    -> simple, clean and consistent
+
+BBS (5)
+    Special commands and options aimed at sysops have been put in a
+    separate section.
+
+EXTEND (8)
+    Simple is no longer an issue here, only power and flexibility
+    count. Extended commands always start with $, extended options
+    always start with !. Dynamic Time Travel and all options
+    documented in CONFIG (6) are therefore extended options as well,
+    although they are not covered again in this document.
+
+This document contains the following paragraphs:
+
+        - A. Tools: version manager
+        - B. Tools: lock archive
+        - C. Tools: compress/expand directory
+        - D. Tools: simple archive splitter
+        - E. Extended command/option overview
+        - F. Error messages
+        - Z. Summary
+
+To jump to a certain paragraph, press the corresponding letter. To
+jump to a specific document/chapter, press the corresponding digit.
+See chapter 1 paragraph E for an overview of all documentation.
+
+
+8.A TOOLS: VERSION MANAGER (VM.EXE)
+===================================
+
+UltraCompressor II allows you to keep multiple versions (revisions) of a
+file in an archive. This feature is, however, single file oriented.
+
+Version Manager allows you to manage versions of file collections
+(projects). It allows you to attach a 'version label' to a collection
+of files and to extract or list all file versions having that specific
+label.
+
+This is perfectly suited for marking specific stages of a project to
+allow simple reconstruction of those stages.
+
+Please note that version labels are case and space sensitive.
+
+Commands:
+---------
+
+VM Mark "label" archive-name
+
+   Attach "label" to the most current file versions (*.*;0). "label"
+   can be anything you want, e.g. "REV 1.2.1", "Version for Acme
+   Inc.", "LWV" (last working version) etc.. One file version can have
+   multiple labels. Labels are case sensitive and can be up to 80
+   characters long.
+
+
+VM Remove "label" archive-name
+
+   Remove a specific label from an archive (only the label is removed,
+   no files are deleted).
+
+
+VM LAbels archive-name
+
+   List all labels present in the archive in alphabetic order.
+
+
+VM History archive-name
+
+   List all labels present in the archive in chronological order.
+
+
+VM L "label" [options] archive-name [files]
+VM V "label" [options] archive-name [files]
+
+   List/verbose list of all files having the specified label. All UC
+   options can be used.
+
+
+VM E "label" [options] archive-name [files]
+
+   Extract files having the specified label.
+
+
+'Special' label names:
+----------------------
+
+If a label description ends with $, $$ or # then substitution takes
+place:
+
+   $   The $ is replaced by the current date (e.g. "LWV $" becomes
+       "LWV NOV-12-1997").
+
+   $$  The $$ is replaced by the current date and time (e.g. "LWV $$"
+       becomes "LWV NOV-12-1997 22:34:04").
+
+   #   The # is replaced by an automatic version number (e.g. "KQZ #"
+       becomes "KQZ 1.2.6"). VM always searches for labels with a
+       similar layout, finds the highest one, and increases the last
+       number. For 'major' releases the new version number has to be
+       specified.
+
+All labels get an index (e.g. @12) which can be used as abbreviation.
+The index for each label is shown by LABELS and HISTORY.
+
+
+Examples:
+---------
+
+VM MARK "LWV $$" arch
+
+   Mark the most current files as the current 'Last Working Version',
+   e.g. "LWV NOV-12-1997 12:34:04".
+
+
+VM M "REV #" arch
+
+   Mark the most current files as "REV xxx", where the new version
+   number is automatically determined.
+
+
+VM E "REV 1.2.2" -S arch #c:\build
+
+   Extract all files labelled REV 1.2.2 to c:\build.
+
+
+VM E @12 arch
+
+   Extract all files with the label with index @12.
+
+
+VM Finger printing
+------------------
+
+Often an executable should contain its own version label. This version
+label can for instance be shown in the startup screen of the
+application. This allows technical support to determine which version
+of a program a specific user is running.
+
+VM can automate the maintenance of such a version label. It can do this
+by generating an include file which contains a definition for the
+version label. This include file will then be updated automatically when
+the VM MARK or the VM E commands are used.
+
+The generation of this VM include file is controlled by an environment
+variable.
+
+Example:
+
+   SET VM_FINGERPRINT_CPP=mylab.h
+
+   In this sample the version label is maintained in the C++ include
+   file mylab.h.
+
+
+The following filetypes are supported:
+
+   Environment variable  Type         Sample contents
+   --------------------------------------------------------------
+   VM_FINGERPRINT_ASM    Assembly     db "..."
+
+   VM_FINGERPRINT_BAS    BASIC        const VM_LABEL$ = "..."
+
+   VM_FINGERPRINT_C      C            #define VM_LABEL "..."
+
+   VM_FINGERPRINT_CPP    C++          const char* VM_LABEL = "...";
+
+   VM_FINGERPRINT_MOD    Modula II    CONST VM_LABEL = "...";
+
+   VM_FINGERPRINT_PAS    Pascal       CONST VM_LABEL = "...";
+
+   VM_FINGERPRINT_RAW                 ...
+
+
+Any filename/extension is allowed. The file is always generated in the
+current directory (unless a full path is specified).
+
+
+8.B TOOLS: LOCK ARCHIVE (ULOCK.BAT, UPROT.BAT)
+==============================================
+
+Example:    ULOCK arch
+
+The archive arch.uc2 is protected against all manipulative commands
+(e.g. add and delete). Please note that someone could bypass this lock
+by just expanding all files in the archive, and creating a new one.
+
+
+Example:    UPROT arch
+
+All files in arch.uc2 will be protected against deletion. Incremental
+addition to the archive is still allowed, overwriting or deleting files
+not.
+
+
+The ULOCK and the UPROT commands can only be reversed by extracting
+all files from the locked/protected archive and building a new one.
+
+
+8.C TOOLS: COMPRESS/EXPAND DIRECTORY (UCDIR, UEDIR)
+===================================================
+
+UCDIR
+
+    This command moves all files from the current directory and below
+    to the archive UCDIRDAT.UC2. If this archive already exists smart
+    skipping will skip redundant work. UCDIRDAT.UC2 is always damage
+    protected. UCDIR will make UCDIRDAT.UC2 read-only to avoid
+    accidental deletion.
+
+
+UEDIR
+
+    This command completely expands UCDIRDAT.UC2 (if it is present in
+    the current directory). The archive is not removed to speed up the
+    UCDIR command. UEDIR will make UCDIRDAT.UC2 deletable.
+
+
+Used together UCDIR and UEDIR allow you to keep data readily available
+on disk, while it takes significantly less space than uncompressed, or
+even when compressed with a transparent disk compressor.
+
+
+8.D TOOLS: SIMPLE ARCHIVE SPLITTER (SAS)
+========================================
+
+Commands:
+   SAS S arch 111      split arch.uc2 in 111k pieces, 1k=1024 bytes
+   SAS B arch          build arch.uc2 from those pieces
+
+When arch.uc2 is split into 5 pieces, those pieces will be named
+arch.p01, arch.p02, arch.p03, arch.p04 and arch.p05. SAS adds a little
+amount of overhead to each piece.
+
+SAS allows very basic UC2 archive splitting. This can be used to allow
+archives which do not fit on a single floppy disk to be spread amongst
+more than one diskettes.
+
+This tool serves as an interim solution while AIP-NL is developing
+advanced multi-volume support for its next major UltraCompressor II
+release.
+
+
+8.E EXTENDED COMMAND/OPTION OVERVIEW
+====================================
+
+Extended commands always start with $, extended options always start
+with !. Dynamic Time Travel and all options documented in CONFIG (6)
+are all extended options as well.
+
+Add variants (can be used instead of A)
+---------------------------------------
+   $FRE    FREshen files in archive (update files, but do not add new
+           ones)
+
+
+Extract variants (can be used instead of E)
+-------------------------------------------
+   $EWP    Extract Without Path (extract all files to the same
+           directory, ignoring their original path). This command
+           automatically activates the -S (include subdirs) option.
+
+   $PRF    PRint Files (files are printed by U2_PRINT.BAT, this file
+           can be changed to alter the layout/device etc.)
+
+              Example: UC $PRF arch *.pas
+
+
+Archive manipulation commands
+-----------------------------
+   $RED    Remove Empty Directories
+
+           Usage: UC $RED archive-name(s)
+
+
+   $TSN    Time Stamp archive with date/time of Newest file
+
+           Usage: UC $TSN archive-name(s)
+
+
+Miscellaneous commands
+----------------------
+   $GLF    Generate List File (usable as script/list-file). Please
+           note that this command does not automatically include
+           subdirectories. The -S option is needed to include
+           subdirectories.
+
+           Usage: UC $GLF listfile-name [options] archive-name [files]
+
+           Example: UC $GLF listfile.txt -S arch *.c
+
+
+   $DOS    execute DOS command
+
+           Example: UC $DOS del *.bak & A arch *.*
+
+
+Filter/selection options
+------------------------
+   Filter/selection options can be used for add (A, $FRE), list (L, V,
+   $GLF), delete (D) and extract (E, $EWP, $PRF). Please note these
+   options only filter out files. They do not change the version number
+   of files (unlike Dynamic Time Travel and VM.EXE).
+
+   !CONTAINS="..."
+           only allow files which contain the specified string, upper
+           and lower case characters match for this option (e.g.
+           Test matches tEsT)
+           Note: the search string can be at most 40 characters.
+
+   !EFA=HSRA
+           Exclude Files with (Hidden/System/Read-only/Archive)
+           Attributes
+
+   !ARCA   only include files having the ARChive Attribute bit set
+
+   !ELD=YYYY/MM/DD-HH:MM:SS
+           only include files with Equal or Later Date/time
+
+   !EED=YYYY/MM/DD-HH:MM:SS
+           only include files with Equal or Earlier Date/time
+
+   !QUERY  ask permission for each single file
+
+   !NEWER  (add and extract only)
+           only add/extract a file, if the source file is NEWER than a
+           (to be overwritten) destination file, or if there is no
+           destination file
+
+   !NOF    (add and extract only)
+           Never Overwrite a File
+
+
+   Examples:
+
+      UC E !EFA=HS arch
+
+         Extract all files from arch, except files having the system
+         or the hidden attribute.
+
+
+      UC $GLF listfile !CONTAINS="#include <graph.hpp>" arch
+
+         Create a file 'listfile' which contains all files in arch.uc2
+         containing the string "#include <graph.hpp>".
+
+
+      UC A !CONTAINS="main" arch *.cpp
+
+         Add all *.cpp files containing "main" to arch.uc2.
+
+
+      UC D !CONTAINS="old" arch
+
+         Delete all files containing "old" from arch.uc2.
+
+
+      UC VS !CONTAINS="check" *
+
+         List all files containing "check" from all archives in the
+         current directory.
+
+
+      UC E -S !ELD=1992/07/28 !EED=1993/03/17 arch *.*;*
+
+         Extract all files in the archive dated 1992/07/28 -
+         1993/03/17. Notice the *.*;* ensures all versions of a file
+         will be considered, not only the newest one.
+
+
+      UC $PRF !CONTAINS="echo off" !QUERY arch
+
+         Try to print all files containing 'echo off', ask permission
+         for each file.
+
+
+Miscellaneous options
+---------------------
+   !RAB     Reset the Archive attribute Bit after adding a file
+
+   !BAK     keep BAcKup (.BAK) of updated archive (with the convert
+            command the original archive is not deleted)
+
+   !TSN     Time Stamp archive with date/time of Newest file
+
+   !VLAB    add:     copy Volume LABel from 'first named' drive to archive
+            extract: copy Volume LABel from archive to the destination drive
+
+   !VLAB=X  add:     copy Volume LABel from drive X: to archive
+            extract: copy Volume LABel from archive to drive X:
+
+   !ASUB    include Archives in SUBdirectories
+
+   Examples:
+
+      UC A -S !ARCA !RAB arch *.*
+          Backup files having the archive attribute bit set and after
+          that reset their attribute bit.
+
+      UC A !TSN arch *.bas
+          Add *.bas files to the archive, time stamp the archive with
+          the newest file in the archive.
+
+      UC C !TSN !BAK *
+          Convert all archives in the current directory to UC2
+          archives, time stamp the resulting archives with the newest
+          file in the archive, do not delete the original archive.
+
+      UC A !VLAB test d:*.cpp
+          Add files and copy volume label from drive D: to the
+          archive.
+
+      UC A !VLAB test *.cpp d:*.cpp
+          Add files and copy volume label from the current drive to
+          the archive.
+
+      UC A !ASUB c:\* u$~ban.txt
+          Add u$~ban.txt to all archives (including those in
+          subdirectories) on drive C:.
+
+
+8.F ERROR MESSAGES
+==================
+
+When something went wrong, UC displays an error message. UC has three
+levels of error messages:
+
+   Fatal Error  something occurred which forced UC to stop
+   Error        something went wrong, but execution could be continued
+   Warning      something happened which might be unwanted
+
+All errors have a "level", multiple error messages can share the same
+level. This level is shown on screen and also returned to DOS
+(errorlevel). If multiple errors occur, the highest level is returned
+to DOS. For more details the error logfile (if enabled) can be
+consulted.
+
+Error message level explanations:
+---------------------------------
+
+OK (0)
+
+   0  Everything went OK.
+
+Warnings (1-49)
+---------------
+
+   5  Internal error (UC beta versions only).
+
+   7  The archive is protected against changes in archive comment.
+
+  10  A device name has been mapped to a filename.
+
+  15  The archive's size did not change (optimize).
+
+  20  No file/archive found matching ...
+
+  25  The user chose to skip the rest of the ADD command.
+
+  30  Skipped file, AUTO-SKIP (network/locking related).
+
+  35  Skipped file, the user chose to skip the rest of the ADD command.
+
+Errors (50-99)
+--------------
+
+  50  Internal error.
+
+  55  Failed to delete a file.
+        This can be caused by a network (you do not have sufficient
+        rights to delete a specific file) or by attempts to delete a
+        file from a write-protected disk.
+
+  60  Failed to delete a directory.
+        This can be caused by a network (you do not have sufficient
+        rights to delete a specific directory) or by attempts to
+        delete a directory from a write-protected disk.
+
+  65  The conversion of a specific archive failed.
+        The archive has an unknown format, the file is not an archive,
+        or the archive is damaged.
+
+  70  Failed to set the volume label.
+        This can be caused by a network (you do not have sufficient
+        rights to set the volume label), by attempts to set the volume
+        label of write-protected disk or the volume label is not a
+        valid DOS volume label (e.g. the original was made with the
+        Norton utilities).
+
+  75  Failed to set OS/2 extended attributes.
+        This can be caused by a network (you do not have sufficient
+        rights to set extended attributes) or by attempts to set
+        extended attributes on a write-protected disk.
+
+  80  Skipped a file (could not write to it).
+        This can be caused by a network (you do not have sufficient
+        rights to create a specific file) or by attempts to write a
+        file to a write-protected disk.
+
+  85  Cannot create a directory.
+        This can be caused by a network (you do not have sufficient
+        rights to create a specific directory) or by attempts to
+        create a directory on a write-protected disk.
+
+  90  The archive is damaged (use 'UC T' to repair it).
+
+  95  Conversion of the archive failed, due to the detection of a virus.
+
+Fatal errors (100-255)
+----------------------
+
+ 100  The user aborted the program by choice or with Ctrl-Break.
+
+ 105  Some problem with UC.EXE or UC2r2.EXE.
+        (When trying to reconfigure) UC resides on a write-protected
+        diskette or has been made read-only. (Other) The executable is
+        damaged, obtain or install a new one.
+
+ 110  Configuration problem (UC -!).
+        You should reconfigure UC (the specific error message explains
+        what you should change).
+
+ 115  The viewer cannot find/open a document.
+        The UC *.DOC files are missing or their location is not
+        properly configured (UC -!).
+
+ 120  The command line is not correct.
+        You have entered an unknown command or option. Consult the
+        manuals for more information on what you want to achieve.
+
+ 123  A command/option is not allowed by the configuration (UC -!).
+        If ensure or protect mode is activated (UC -! C) you can no
+        longer use the unprotect command.
+
+ 125  The archive is encrypted.
+        You should use UCRYPT (with the proper password) to decrypt
+        the encrypted archive. UCRYPT is included in CRYSAF.UC2 which
+        is distributed and sold seperately by AIP-NL.
+
+ 130  Failed to access archive (e.g. archive does not exist).
+
+ 135  The archive is locked, some other tool (like VM) is using it.
+
+ 140  A command/option is not allowed by the archive.
+        Archives can be protected against certain commands. For more
+        details see chapter 8 paragraph B.
+
+ 145  A newer version of UC is needed for this archive.
+
+ 150  Cannot create file.
+        This can be caused by a network (you do not have sufficient
+        rights to create a specific file) or by attempts to write a
+        file to a write-protected disk.
+
+ 155  Failed to show banners.
+        U$~BAN.* files are present on disk. You have to remove them,
+        or execute the command from a different directory.
+
+ 157  Failed to edit comment.
+        The file U$~COMM.TXT is present on disk. You have to remove
+        it, or execute the command from a different directory.
+
+ 160  Out of memory.
+        UC needs 520,000 bytes (460,000 if EMS is used) free memory
+        for the add command. You can make more memory available by
+        removing TSR's and/or installing a memory manager like EMM386,
+        QEMM or 386^MAX (under OS/2 enough memory should always be
+        available). If insufficient memory is available because UC was
+        started from another program, you can use UltraStealth (see
+        chapter 5 paragraph C).
+
+ 163  EMS/XMS problem.
+        UC encountered a problem with EMS or XMS. Please consult the
+        manual of your memory manager to solve the problem, or disable
+        EMS/XMS usage (UC -!).
+
+ 165  Out of virtual memory.
+        The drive containing temporary data is full, or the upper
+        amount of virtual memory should be changed (see chapter 6
+        paragraph B option S).
+
+ 170  System/critical error followed by user abort.
+
+ 175  Failed to rename a file.
+        This can be caused by a network (you do not have sufficient
+        rights to rename a specific file) or by attempts to rename a
+        file on a write-protected disk.
+
+ 180  Failed to delete a directory.
+        This can be caused by a network (you do not have sufficient
+        rights to delete a specific directory) or by attempts to
+        delete a directory from a write-protected disk.
+
+ 185  Failed to change to a directory.
+        The directory no longer exists, or you do not have sufficient
+        rights to access the directory.
+
+ 190  Conversion failed due to virus infection.
+
+ 195  Failed to repair archive.
+
+ 200  The archive is damaged, needs repair.
+
+ 205  Conversion failed.
+        The archive has an unknown format, the file is not an archive,
+        or the archive is damaged.
+
+ 210  Update/operation failed.
+        The archive contained errors after an operation (it was
+        verified because ensure mode is enabled).
+
+ 250  Failed to write to error logfile.
+        This can be caused by a network (you do not have sufficient
+        rights to write to the error logfile) or by attempts to write
+        to the logfile on a write-protected disk. The location of the
+        error logfile can be changed with 'UC -! U'.
+
+ 255  Internal/special error.
+        This should not occur. Check if TSR's and drivers are
+        installed properly, and if everything seems to be OK consult
+        AIP-NL technical support.
+
+
+8.Z (EXTEND) SUMMARY.
+=====================
+
+EXTENDED COMMANDS             EXTENDED OPTIONS
+
+add                           filter/select
+  $FRE freshen                  !CONTAINS="+" only files containing +
+                                !EFA=HSRA     exclude files with attributes
+extract                         !ARCA         only files with archive attribute
+  $EWP extract without path     !ELD=...      only with equal or later date
+  $PRF print files              !EED=...      only with equal or earlier date
+                                !QUERY        query for each file
+manipulate                      !NEWER        only overwrite if newer
+  $RED remove empty dirs        !NOF          never overwrite file
+  $TSN timestamp with newest
+                              miscellaneous
+                                !RAB          reset archive attribute bit
+miscellaneous                   !BAK          create backup of archive
+  $GLF generate list file       !TSN          time stamp with newest
+  $DOS execute DOS command      !VLAB         include volume label (first drv)
+                                !VLAB=X       include volume label (drive X:)
+                                !ASUB         include archives in subdirs

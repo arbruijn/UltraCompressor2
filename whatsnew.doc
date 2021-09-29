@@ -1,0 +1,212 @@
+0. WHATSNEW: overview of changes from UC2 to UC2 revision 2
+===========================================================
+
+This document describes all differences between UltraCompressor II
+(the jan 1 1994 release) and UltraCompressor II revision 2.
+
+This document contains the following paragraphs:
+
+        - A. Bug fixes
+        - B. New commands
+        - C. New options
+        - D. Other enhancements
+        - E. New tools
+        - F. UC2-3PI
+        - G. Using UC.EXE stand alone, without the accompanying files
+
+To jump to a certain paragraph, press the corresponding letter. To
+jump to a specific document/chapter, press the corresponding digit.
+See chapter 1 paragraph E for an overview of all documentation.
+
+
+0.A BUG FIXES.
+==============
+
+Important:
+----------
+   UC now compresses properly on XT computers (including V20 machines).
+   Windows compatibility (regarding XMS) has been improved.
+   Bug removed from the optimizer.
+   Bug triggered when low amount of XMS (250k) was available removed.
+   EMS usage by UC2R2.EXE (caused crash on systems with flaky EMS) disabled.
+   'Floating point' bug triggered by files with unusual names removed.
+   Destination path #C: is no longer translated to #C:\.
+   Multiple UC.EXE copies can now concurrently update the error logfile.
+
+Other:
+------
+   Some small errors removed from the documentation.
+   UC now correctly restores the current directory on the temp-file drive.
+   UC2R2.EXE now works even if the root of a drive is selected as destination.
+   Multimedia banners are now shown if a destination path (#) is specified.
+   Redundant 'Create directory . ?' question removed.
+   Error message text 'network connection lost' corrected.
+   UC will now refuse attempts to extract to most device driver names.
+   'archive not found' problem present on some OS/2 systems solved.
+   UC now functions properly if 132 text columns are available.
+   PC-DOS 6.1 problems investigated, turned out to be FTP/UNIX related.
+   Compression now reports DONE instead of OK.
+   Error handling in case of an impossible archive name improved.
+   All batch files (including FLUSH, XTRA etc.) are now located the same way.
+   Extended options (e.g. !SMSKIP=OFF) now work from batch files as well.
+   References to COMMAND.COM eliminated.
+   When the temporary files location is wrong, UC now terminates immediately.
+   Checking of dates (!DTT, !ELD and !EED) improved.
+   UC now properly reports DOS 5.02 instead of DOS 5.2.
+   UC header corrected if the cursor is not at the left of the screen.
+   The unprotect command combined with !RELIA=DETECT now works.
+   'C:\\' like locations in error logfile corrected.
+   Problems with 'protected' ZIP and ARJ conversion solved.
+   The -S option now also applies to file specifications without wildcards.
+   UC will now function properly in the root dir of a PC-NFS system.
+
+Tools:
+------
+   UltraStealth now properly cooperates with 4DOS.
+   UltraStealth now works with large environment sizes.
+   UltraStealth now properly handles redirection.
+   UltraStealth now preserves and uses the environment of UUC.EXE.
+
+
+0.B NEW COMMANDS (more details are in MAIN.DOC and EXTEND.DOC).
+===============================================================
+
+-?      (?, /?, -h etc.) shows single screen HELP (no docs needed)
+-? ...  locates ... by searching through all documentation
+-? 110  searches for details on error 110 in the manuals
+-? 1.E  starts the manual viewer on chapter 1 paragraph E
+-!      (!, /!) immediate access to the configuration screen
+$TSN    stamp an archive with the date/time of its newest file
+$RED    remove all empty directories from archive(s)
+$EWP    extract without path
+$GLF    generate list file
+$DOS    execute a DOS command
+$FRE    freshen files
+$PRF    print files
+
+
+0.C NEW OPTIONS (more details are in MAIN.DOC and EXTEND.DOC).
+==============================================================
+
+!TSN           like $TSN but can be combined with add and delete
+##             always append the source path to the destination path
+-m             activate 'Move mode' (for both add and extract)
+!CONTAINS      filter based on file contents
+!VLAB          handle volume labels
+!ASUB          include archives in subdirectories
+!EFA           exclude files with specific attributes
+!ARCA          exclude files without the archive attribute bit
+!ELD and !EED  to define a date/time range
+!QUERY         to query the user for each file
+!NEWER         to handle newer files only
+!NOF           to never overwrite files
+!RAB           to reset the archive attribute bit of added files
+!BAK           to keep a backup of the former version of the archive
+!@             like @ but puts '!' before all entries (useful to
+               exclude a collection of files)
+
+
+0.D OTHER ENHANCEMENTS.
+=======================
+
+Configuration
+-------------
+   'UC2_NO_HIGH_ASCII=ON' setting added (Chinese/Japanese/Russian etc.).
+   'UC2_TMP' setting to override the temporary files location added.
+   The error logfile can now be disabled from the configuration menu.
+   EMS selection enhanced to allow EMS 4.0 and higher only (reduces problems).
+   UC will now also try to locate documents, batch and script files in the PATH.
+   Documented UC2_MAX_EMS, UC2_MAX_XMS, UC2_MAX_UMB and UC2_MAX_VMEM settings.
+   Changing instead of entering locations (config) is now allowed.
+   SuperTight compression is now selectable in the configuration menu.
+
+Operation
+---------
+   Overall performance increased.
+   Menus (e.g. errors) now clear the type-ahead buffer before they appear.
+   Smart skipping no longer compares attributes (including the archive one!).
+   Smart skipping is now used for decompression as well.
+   Performance of batch files under 4DOS improved.
+   The convert command will now continue with the next file after an error.
+   A script can now be in an environment variable (xxx_USC) as well.
+   In the manual viewer 'Tab' instead of 'Space' will show the summary.
+   Increased conversion performance (no more add cycle) and reduced problems.
+   The exclude option now supports paths (e.g. !lwv\*.cpp !c:\backups\).
+   The convert command can now convert archives in subdirectories (C -S).
+   Exclude now always overrides specified files (useful for list files).
+   Added HyperDISK and SuperPC KWIK flushing to U2_FLUSH.
+
+Feedback
+--------
+   The list command (not verbose) now only shows directories containing files.
+   The list command (not verbose) now summarizes the number of listed files.
+   UC now reports the presence of UltraSeals in an archive.
+   Information about program used to create archive to verbose list added.
+   UC feedback on what command UC is executing improved.
+   Optimize and convert now report the amount of reduction.
+   There are now multiple *.INT files with BASIC.DOC in various languages.
+   All error messages now include an errorlevel (more details in EXTEND.DOC).
+   The manual viewer now always shows the current paragraph title.
+   Verbose list now shows volume labels and if archives are damage protected.
+   The progress indicator has been improved to show relative progress.
+   If more than 15 files are skipped, UC will report that.
+   UC no longer shows caching activity with a popup window.
+   UC -TT will no longer report (normal), only (8 bit) etc. are reported.
+
+Other
+-----
+   UC can now also handle .AMG, .RAR and .SQZ archives.
+   Documentation (BBS.DOC) regarding UltraCompressor II use under 4DOS improved.
+   Aborting UC and shelling to DOS is now possible from all menus.
+   The manual viewer now has a search command.
+   The evaluation period has been doubled to 60 days.
+
+
+0.E NEW TOOLS (more details are in EXTEND.DOC).
+===============================================
+
+ORDER.EXE             Interactive ordering application (replaces ORDER.FRM)
+VM.EXE                Version Manager [1.0]
+SAS.EXE               Simple Archive Splitter [1.0]
+UCDIR.BAT, UEDIR.BAT  Compress/expand directory
+UPROT.BAT, ULOCK.BAT  Protect/lock archive
+
+
+0.F UC2-3PI (for details on our 3rd party interface please contact AIP-NL).
+===========================================================================
+
+File-correctness-check added to directory dump.
+Dampro status, serial no, volume label, UC2-revision added to directory dump.
+Date/time/attributes of directory created by UC A #... corrected.
+'UC2_OK=OFF' environment setting added to disable U$~RESLT.OK generation.
+Problem with tags and subdirectories corrected.
+UC2-3PI tag management performance significantly increased.
+The 'SET UC2_PUC=ON' setting now activates the (trans)portable file format.
+UC2-3PI commands now properly restore DOS colors when an error occurs.
+Redirection can now also be achieved with e.g. "UC ^dump.tmp ~D arch.uc2".
+The 'SET UC2_WIN=001 001 080 025' setting now defines the screen area for UC2.
+
+
+0.G USING UC.EXE STAND ALONE, WITHOUT THE ACCOMPANYING FILES.
+=============================================================
+
+This paragraph does not really belong in this document, but it is the
+most likely place people who want to get rid of the *.DOC, *.BAT etc.
+files will look.
+
+If you use UC.EXE stand alone you can not:
+   - use the document viewer            (needs *.DOC)
+   - use archive conversion             (needs U2_XTRA, CHECK, EX???.BAT)
+   - use ensure mode                    (needs U2_FLUSH.BAT)
+   - show multimedia banners            (needs U2_SHOW.BAT)
+   - use the $PRF (print files) command (needs U2_PRINT.BAT)
+   - use the R (revise comment) command (needs U2_EDIT.BAT)
+   - use any of the tools (ORDER, VM, US, UCDIR, etc.)
+
+To use UC.EXE stand alone, in the configuration menu you should:
+   - set the reliability level (C) to detect or protect
+   - switch 'Show (multimedia) banners' (H) to off
+   - (perhaps) disable the logfile (U)
+   - set the 'temporary files' (S) to a common directory (or use UC2_TMP)
+
+Other than this, everything works without needing the extra files.

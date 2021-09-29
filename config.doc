@@ -1,0 +1,590 @@
+6. CONFIG: how to configure UC
+==============================
+
+When UC is started without parameters there is the option to configure
+UC (by pressing the 'C' key).
+
+General options are:
+
+   A -> Default compression method
+   B -> Default operation
+   C -> Reliability level
+   D -> Automatic archive conversion
+   E -> Virus scan during conversion
+   F -> Smart skipping
+   G -> Amount of output/information
+   H -> Show (multimedia) banners
+   I -> Store OS/2 2.x extended attributes
+   J -> Store system/hidden files
+
+System options are:
+
+   M -> Video mode
+   N -> Dynamic program swapping
+   O -> Use EMS
+   P -> Use XMS
+   Q -> Use 386/486/Pentium features
+   R -> Advanced networking
+   S -> Location for temporary files
+   T -> First loc for manuals (*.DOC)
+   U -> Location for error logfile
+   V -> First loc for batch&script files
+
+Quick setup options are:
+
+   1 -> default
+   2 -> max speed
+   3 -> max compress
+   4 -> max safe
+   5 -> UNDO
+
+The configuration you choose here will be your default configuration
+when using UC. Some of the options in the configuration screen can
+also be temporary set on the command line. The command line options
+are also described in this document.
+
+This document contains the following paragraphs:
+
+        - A. General options
+        - B. System options
+        - C. Quick setup
+        - D. Batch files
+        - E. Optimizing performance
+
+To jump to a certain paragraph, press the corresponding letter. To
+jump to a specific document/chapter, press the corresponding digit.
+See chapter 1 paragraph E for an overview of all documentation.
+
+
+6.A GENERAL OPTIONS.
+====================
+
+A -> Default compression method
+-------------------------------
+   Equivalent command line options: -TN, -TT, -TST, -TF
+
+   The compression type can be NORMAL, TIGHT, S-TIGHT or FAST. When
+   installing UC the default compression type is normal.
+
+   In TT and in TST mode, UC will detect whether a file is a
+   multimedia file. Special (lossless) multimedia compression will
+   then take place.
+
+B -> Default operation
+----------------------
+   Equivalent command line options: -I, -B
+
+   The add operation can be in BASIC MODE or INCREMENTAL MODE. In
+   basic mode files that already exist in the archive will be replaced
+   by a new version.
+
+   In incremental mode more versions of a file can be kept in the
+   archive. When an already existing file is added to the archive, the
+   newer version of the file will be added. This mode increases the
+   speed of the addition significantly, especially for slow disks
+   and/or large archives.
+
+   Another advantage of the incremental mode is the possibility of
+   keeping multiple versions of a file in the archive. If, for
+   example, you want to see what is changed in the file, just look at
+   a previous version.
+
+C -> Reliability level
+----------------------
+   Equivalent command line options: !RELIA=DETECT, !RELIA=PROTECT,
+                                    !RELIA=ENSURE
+
+   The reliability level can be DETECT, PROTECT or ENSURE.
+
+   Detect means errors will be reported, but no action will be taken.
+
+   Protect means errors will be avoided, by using damage protection.
+
+   Ensure mode means UC will make as sure as technically possible,
+   everything will go perfect. First the existing archive will be
+   tested. Then the command given will be executed. The third step
+   includes a complete test on the new archive. When something went
+   wrong, a 'rollback' will take place, and the original archive will
+   be restored. To ensure correct storage on your hard disk, U2_FLUSH
+   is called at appropriate moments during execution of your command.
+   (See paragraph D.)
+
+D -> Automatic archive conversion
+---------------------------------
+   Equivalent command line options: !ARCON=ON, !ARCON=OFF
+
+   Automatic conversion of other archiver's archives can be ON or OFF.
+   When the automatic conversion is on, any operation can be done on
+   other archiver's archives. UC will automatically start rebuilding
+   the archive to a UC archive. After rebuilding, the command will be
+   executed.
+
+   When the automatic conversion is off, UC will not automatically
+   convert archives, but prompt the user, asking permission to convert
+   the archive.
+
+E -> Virus scan during conversion
+---------------------------------
+   Equivalent command line options: !VSCAN=ON, !VSCAN=OFF
+
+   Virus scan can be ON or OFF during the conversion of another
+   archiver's archive (also see paragraph D).
+
+F -> Smart skipping
+-------------------
+   Equivalent command line options: !SMSKIP=ON, !SMSKIP=OFF
+
+   Smart skipping can be ON or OFF.
+
+   When smart skipping is on, unchanged files (already in the archive)
+   are skipped during addition. This makes updating much faster.
+
+G -> Amount of output/information
+---------------------------------
+   The amount of output/information can be MINIMAL, VERBOSE or NORMAL.
+
+   UC shows all kinds of information while it is executing your
+   command. Minimal information mode only shows the filenames being
+   processed, no progress indicators are given. Verbose information
+   mode shows in great detail what UC is doing. For instance the file
+   name in process is followed by blocks indicating progress. Normal
+   information mode shows what UC is doing, but does not give undue
+   attention to details which are not directly related to the given
+   command.
+
+   In some environments (e.g. Chinese/Japanese/Russian) the behavior
+   of UC to print 'high ASCII' characters is unwanted. In those cases
+   you can use the 'SET UC2_NO_HIGH_ASCII=ON' environment setting to
+   disable high ASCII in UC output. Please note UC already uses an
+   ISO 9241 compliant subset of IBM high ASCII to avoid conflicts with
+   e.g. IBM OS/2 XGA systems.
+
+H -> Show (multimedia) banners
+------------------------------
+   Equivalent command line options: !BAN=ON, !BAN=OFF, !BAN=ASK
+
+   You can choose if the banners added to the archives are
+   shown/played automatically (ON), only when you agree (ASK) or never
+   (OFF).
+
+I -> Store OS/2 2.x extended attributes
+---------------------------------------
+   Equivalent command line options: !SOS2EA=ON, !SOS2EA=OFF
+
+   By putting this option ON, OS/2 EA's will be stored when UC finds
+   any during compression, when this option is OFF UC will not store
+   OS/2 2.x EA's. OS/2 2.x extended attributes (such as icons, WPS
+   long icon names, WordPerfect 5.2 for OS/2 summary information etc.)
+   will be retained in an archive when the option is ON. Please note
+   that OS/2 2.x EA's will ALWAYS be extracted, when present in an
+   archive. Extended attributes are preserved by the optimize command,
+   even if this is performed on a machine which does not run OS/2.
+
+J -> Store system/hidden files
+------------------------------
+   Equivalent command line options: !SYSHID=ON, !SYSHID=OFF,
+                                    !SYSHID=ASK
+
+   You can choose if you want 'system' and 'hidden' files to be added
+   ON, OFF or if you want UC to ASK you how to deal with them.
+
+
+6.B SYSTEM OPTIONS.
+===================
+
+M -> Video mode
+---------------
+   If your card is not compatible with MDA, HERCULES, CGA, EGA, VGA,
+   SVGA, XGA, etc. (very unlikely but possible for some older
+   computers) choose BIOS mode. If you have a monochrome monitor (or
+   laptops etc.) choose MONO instead of COLOR. Please note that if UC
+   detects DesqView (which prefers BIOS video on 286 computers) it
+   will use BIOS video, even if UC is not configured to use BIOS
+   video.
+
+N -> Dynamic program swapping
+-----------------------------
+   Dynamic program swapping can be ON (in which case UC will be
+   swapped to EMS or disk if it invokes DOS) or OFF.
+
+O -> Use EMS
+------------
+   In general '4.0+ ONLY' is the best option. Most modern EMS drivers
+   behave in a reliable way. Some older versions can cause unwanted
+   conflicts and this mode will not use those older versions. Switch
+   EMS OFF if your EMS (emulator) is not compatible with the
+   Lotus/Intel/Microsoft specifications. Switch EMS to 'ANY VERSION'
+   if you have an EMS driver lower than 4.0, which you verified to
+   work correctly with UC. Compressing and decompressing a large
+   collection of files is a good way to verify this.
+
+   Default, UC allocates all available EMS. By setting the environment
+   variable 'SET UC2_MAX_EMS=xxx', you can specify in kilobytes how much
+   EMS UC should use.
+
+P -> Use XMS
+------------
+   Switch XMS OFF if your XMS (emulator) is not compatible with the
+   Lotus/Intel/Microsoft specifications. This is not likely since UC
+   uses XMS very conservative.
+
+   Default, UC allocates all available XMS. By setting the environment
+   variable 'SET UC2_MAX_XMS=xxx', you can specify in kilobytes how much
+   XMS UC should use.
+
+   Default, UC allocates all available UMB (upper memory blocks) from
+   the UMA (upper memory area). By setting the environment variable
+   'SET UC2_MAX_UMB=xxx', you can specify in kilobytes how much UMB UC
+   should use.
+
+   It is also possible for UC to use "raw" extended memory (without an
+   XMS driver). With the environment variable 'SET UC2_RAW_EXT=xxx' you
+   can specify in kilobytes how much extended memory UC should use.
+   Please note this option is VERY dangerous. We strongly advise you to
+   use an XMS driver (like HIMEM.SYS) instead.
+
+Q -> Use 386/486/Pentium features
+---------------------------------
+   Switch off use of 386/486/Pentium options. This is useful in case
+   programs are active which violate 386/486/Pentium programming rules.
+
+R -> Advanced networking
+------------------------
+   Equivalent command line options: !NET=ON, !NET=OFF, !NET=AUTO-SKIP
+
+   Network Support. If you have a version of DOS which does not
+   support DOS network calls (e.g. 2.0), or if you have a network
+   which behaves very differently from IBM, Lantastic, Microsoft, Novell
+   or Vines networks, you can set this option to OFF. Sharing archives is
+   then no longer possible.
+
+   When UC attempts to compress a locked file, it allows the user to
+   skip this file by hand. When auto-skip mode is active, locked files
+   will be skipped automatically. A warning is reported if files are
+   skipped.
+
+S -> Location for temporary files
+---------------------------------
+   The location for temporary files can be configured. When everything
+   goes well you will never notice the temporary files. Please make sure
+   the directory configured exists on your disk.
+
+   You can override this setting with the environment variable UC2_TMP
+   e.g. 'SET UC2_TMP=F:\'.
+
+   The temporary files location will also be used by the virtual memory
+   manager. Default, UC will use up to 8192 kilobytes of virtual memory.
+   This amount can be changed with 'SET UC2_VMEM=xxx' to a value from
+   4096 to 49192 (kilobytes). UC needs 1 byte of base memory for each
+   kilobyte of virtual memory.
+
+T -> First loc for manuals (*.DOC)
+----------------------------------
+   UC will look for the manual files in the directory configured. If it
+   cannot locate the manual file there, it will look in the directory
+   where UC.EXE resides, in the current directory and in all
+   directories in the PATH.
+
+U -> Location for error logfile
+-------------------------------
+   The error logfile will register all errors and warnings that appear
+   while executing UC. You can also disable error logging by specifying
+   * as location for the logfile.
+
+V -> First loc for batch&script files
+-------------------------------------
+   UC will look for its special batch and script files in the directory
+   configured.  If it cannot locate the file there, it will look in the
+   directory where UC.EXE resides, in the current directory and in all
+   directories in the PATH.
+
+
+6.C QUICK SETUP.
+================
+
+1 -> default
+------------
+   The default setup changes the following subjects:
+
+       GENERAL OPTIONS:
+
+           default compression mode        into    normal
+           default operation               into    basic mode
+           reliability level               into    detect
+           automatic archive conversion    into    off
+           virus scan during conversion    into    off
+           amount of output/information    into    normal
+           show (multimedia) banners       into    ask
+           store OS/2 2.x ext. attributes  into    off
+           store system/hidden files       into    ask
+
+       SYSTEM OPTIONS:
+
+           video mode                      into    color
+           dynamic program swapping        into    on
+           use EMS                         into    4.0 and higher only
+           use XMS                         into    on
+           use 386/486/Pentium features    into    on
+           advanced networking             into    on
+           all locations will be set to the same location as UC.EXE
+
+2 -> max speed
+--------------
+   The max speed setup changes the following subjects:
+
+       GENERAL OPTIONS:
+
+           default compression             into    fast
+           default operation               into    incremental
+           reliability level               into    detect
+           automatic archive conversion    into    on
+           virus scan during conversion    into    off
+           amount of output/information    into    minimal
+           show (multimedia) banners       into    off
+
+       SYSTEM OPTIONS:
+
+           video mode   No matter whether the video mode is color or
+                        mono, this configuration will turn off BIOS usage
+           use EMS                         into    4.0 and higher only
+           use XMS                         into    on
+           use 386/486/Pentium features    into    on
+           advanced networking             into    auto-skip
+
+
+3 -> max compress
+-----------------
+   The max compress setup changes the following subjects:
+
+       GENERAL OPTIONS:
+
+           default compression             into    s-tight
+           default operation               into    basic mode
+           reliability level               into    detect
+           automatic archive conversion    into    on
+
+4 -> max safety
+---------------
+   The max safe setup changes the following subjects:
+
+       GENERAL OPTIONS:
+
+           default operation               into    incremental mode
+           reliability level               into    ensure
+           automatic archive conversion    into    off
+           virus scan during conversion    into    on
+           smart skipping                  into    off
+           show (multimedia) banners       into    off
+
+       SYSTEM OPTIONS:
+
+           video mode   No matter whether the video mode is color or
+                        mono, this configuration will turn on BIOS usage
+           use EMS                         into    off
+           use XMS                         into    off
+           use 386/486/Pentium features    into    off
+           only if advanced networking was auto-detect:
+                                           into    on
+
+5 -> UNDO
+---------
+   The configuration will be reset to the state it was before you
+   started the configuration screen.
+
+
+6.D BATCH FILES.
+================
+
+The following batch files are described in detail:
+
+   U2_EDIT    edit text file
+   U2_CHECK   check files for viruses
+   U2_FLUSH   flush hard disk cache
+   U2_SHOW    show/play (GIF, MOD, JPG and TXT) banner files
+   U2_EXxxx   extract all files from an archive
+   U2_XTRA    perform user defined operations during conversion
+   U2_PRINT   print a file (used by the $PRF command)
+
+You are free to edit supplied batch files, to make them call other
+than the default programs. You can also add new files (e.g. U2_EXxxx)
+to enhance the functionality of UC.
+
+U2_EDIT.BAT
+-----------
+   Task
+      This file calls your favorite editor with the file to be edited
+      as parameter.
+
+   When is it called?
+      The file is used when you use the command REVISE COMMENT.
+
+   Standard contents
+      The default editor is the DOS 5.x/6.x/7.x EDIT.
+
+U2_CHECK.BAT
+------------
+   Task
+      This file calls virus scanner(s). The current directory and
+      its subdirectories are scanned for viruses. When no viruses are
+      found, the file U$~CHK3 is generated, which is used as a flag.
+      (When this file is present, UC knows that no viruses are found
+      and that it can continue its work.) When viruses are found, a UC
+      fatal error will occur.
+
+   When is it called?
+      When virus scanning is on in the configuration, this file is
+      used during conversion of archives.
+
+   Standard contents
+      Default McAfee (100 or higher) and F-PROT are called.
+
+U2_FLUSH.BAT
+------------
+   Task
+      Everything in the disk-cache (e.g. SmartDrive, PC-CACHE or
+      Norton Cache) which is not yet written to the disk ('delayed' or
+      'deferred' write cache) will be written to disk immediately.
+
+   When is it called?
+      While using UC in ensure mode, it will secure its 'transactions'
+      using U2_FLUSH. This is to make sure contents of the disk are
+      correct, after the completion of a transaction.
+
+   Standard contents
+      Attempts to call PC-CACHE, Norton Cache, ADCACHE, SuperPCK,
+      HyperDISK and SmartDrive.
+
+U2_SHOW.BAT
+-----------
+   Task
+      Show/play banners while extracting files from an archive. The
+      banners are in the current directory when U2_SHOW is called.
+
+   When is it called?
+      When files are extracted from an archive and banners are present
+      they can be shown/played. In the configuration you can choose
+      whether you want the banners to be shown/played.
+
+   Standard contents
+      First MODPLAY is called to play the .MOD banner. The VPIC is
+      called to show the .GIF banner and then FullView is called to
+      show the .JPG file. Finally DOS TYPE is used to show the text
+      banner.
+
+U2_EXxxx.BAT
+------------
+   xxx stands for ARC, ARJ, LZH, PAK, UCN, ZIP etc..
+
+   Task
+      These files are used to extract all files, from the archive to
+      be converted, into the current directory. To check if everything
+      worked out well the files U$~CHK1 and U$~CHK2 must be generated.
+      UC checks for the existence of those files.
+
+   When is it called?
+      When an archive is converted, one of these batch files is used
+      to extract the original archive. The extension of the archive
+      corresponds with the xxx in the name of the batch file.
+
+   Standard contents
+      All batch files first add a file to an archive and then extract
+      the entire archive. The main reason for this is improving
+      reliability of the conversion, especially if certain tools are
+      incompatible (e.g. older versions). If you are sure certain
+      tools are present and up to date, you can simplify their batch
+      files if you wish, to speed up conversion.
+
+      U2_EXAMG.BAT       AMGC is called.
+
+      U2_EXARC.BAT       First ARC is called.
+                         When this fails, PK(X)ARC is called.
+                         When this also fails PAK is called.
+
+      U2_EXARJ.BAT       ARJ is called.
+
+      U2_EXHA.BAT        HA (e.g. 0.982b) is called.
+
+      U2_EXHPK.BAT       HPACK is called.
+
+      U2_EXHYP.BAT       HYPER is called.
+
+      U2_EXLZH.BAT       LHA is called.
+
+      U2_EXPAK.BAT       PAK is called.
+
+      U2_EXRAR.BAT       RAR is called.
+
+      U2_EXSQZ.BAT       SQZ is called.
+
+      U2_EXUCN.BAT       A .UC2  archive (being renamed to .UCN) is
+                         extracted. NOTICE NOTHING IS DONE TO PRESERVE
+                         FILES OF WHICH MULTIPLE VERSIONS ARE IN AN
+                         ARCHIVE, ONLY THE LATEST VERSION IS EXTRACTED.
+
+      U2_EXZIP.BAT       First PK(UN)ZIP 2.04ceg is called. When this is
+                         not present PK(UN)ZIP 1.x is called. When this
+                         fails, Info(UN)ZIP is called.
+
+      U2_EXZOO.BAT       ZOO is called.
+
+U2_XTRA.BAT
+-----------
+   Task
+      Performs user defined operations during archive conversion.
+
+   When is it called?
+      When UC converts an archive, it first calls a U2_EX???.BAT file
+      to extract all files from the original archive, the U2_EX???.BAT
+      file then calls U2_XTRA.BAT when it has finished extracting all
+      files from the archive.
+
+   Standard contents
+      No operations are performed. A disabled sample for adding
+      banners to archives during conversion is included in
+      U2_XTRA.BAT.
+
+U2_PRINT.BAT
+------------
+   Task
+      (Pretty) prints a file.
+
+   When is it called?
+      This batch file is used by the $PRF (print files) command.
+
+   Standard contents
+      A header containing general information of the file and the file
+      contents are printed through the PRN: device. Meta information
+      of the file is passed through parameters.
+
+
+6.E OPTIMIZING PERFORMANCE.
+===========================
+
+In general UC will automatically utilize available resources (RAM,
+microprocessor) in an optimal fashion. Please note UC does not stretch
+beyond the limits of your system to achieve this. It only uses
+officially documented methods to access XMS, EMS, DOS, Windows, OS/2
+etc.. In many cases the methods UC uses have been double checked with
+IBM, Microsoft, QuarterDeck, Novell and others. And of course
+everything has been extensively tested on many different environments.
+
+There are some tips to allow UC to work as fast as possible:
+
+   - make as much base, EMS and XMS memory available as you can spare
+
+   - (but) on systems supporting virtual memory (e.g. Windows NT, OS/2)
+     you should not make TOO much memory available for UC (to prevent
+     swapping)
+
+   - select maximal speed in the configuration menu
+
+   - or (e.g. if you prefer better compression)
+      - enable advanced networking (when applicable)
+      - enable EMS/XMS usage
+      - enable 386/486/Pentium usage
+      - set UC information to minimal
+
+   - redirect the output of UC to the NUL device (e.g. UC X test > NUL)
+
+   - install sufficient BUFFERS in your CONFIG.SYS and/or install a disk
+     caching utility

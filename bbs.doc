@@ -1,0 +1,190 @@
+5. BBS: special features for BBS sysops
+=======================================
+
+This document contains the following paragraphs:
+
+        - A. Archive conversion (with virus checking)
+        - B. Multimedia banners
+        - C. UltraStealth (run UC with only 32k free memory)
+        - Z. Summary
+
+To jump to a certain paragraph, press the corresponding letter. To
+jump to a specific document/chapter, press the corresponding digit.
+See chapter 1 paragraph E for an overview of all documentation.
+
+
+5.A ARCHIVE CONVERSION (WITH VIRUS CHECKING).
+=============================================
+
+Conversion of archives to UC archives can be done fully automatic.
+Perfect for the event list of your BBS. Conversion includes the
+optional calling of one or more virus checking programs. Any virus
+checking software can be used. You can define any extraction, checking
+or processing software you would like, to be called by UC.
+
+IF EXTRACTION IS NOT PERFECT UC WILL NOT CONVERT!
+
+The convert command
+-------------------
+   Command: UC C archives
+
+      C is the convert command. ARJ/ZIP/LZH etc. archives are converted
+      to UC2 archives.
+
+   Example: UC C *.ARJ *.ZIP *.ARC
+
+      All ARJ, ZIP and ARC archives in the current directory are
+      converted to UC2 archives.
+
+   Command: UC C -S archives
+
+      Include archives in subdirectories as well.
+
+   Example: UC C -S C:\*.ARJ C:\*.ZIP C:\*.ARC
+
+      All ARJ, ZIP and ARC archives on the C: drive (including all its
+      subdirectories) are converted to UC2 archives.
+
+   VOLUME LABELS, BANNERS, MULTIPLE VERSIONS OF A FILE AND COMMENTS
+   ARE NOT CONVERTED.
+
+   The original archive will be deleted by UC (unless the !BAK option
+   which is described in chapter 8 paragraph E is used).
+
+Customizing archive conversion
+------------------------------
+   To convert archives to UC archives the original archiver's software
+   will be used. In the UC package some .BAT files are supplied which
+   are able to extract all files from different archive types (see
+   chapter 6 paragraph D).
+
+   UC uses advanced swapping techniques to swap UC out of memory while
+   execution of the BAT files takes place. This assures the archivers
+   have enough memory available.
+
+   Currently supported formats are: AMG, ARC, ARJ, HA, HPK, HYP, LZH,
+   PAK, RAR, SQZ, ZIP and ZOO.
+
+   UC conversion also supports the 'UCN' format. This format is
+   exactly the same as UC2, but it denotes 'N'ew files. It can be
+   used to mark files new to your BBS, allowing 'conversion' to UC2
+   archives. This is useful since conversion can also include virus
+   scanning etc..
+
+Virus checking during conversion
+--------------------------------
+   When you activate virus checking (see chapter 6 paragraph A item E)
+   during conversion, the file U2_CHECK.BAT is used. In this batch
+   file virus scanners are called. If you want another virus scanner
+   to be used, or use more scanners in the check, you are free to
+   change the file U2_CHECK.BAT. Just be sure the virus scanner called
+   is available on your system. Default U2_CHECK calls McAfee and
+   F-Prot.
+   (See chapter 6 paragraph D.)
+
+Automatic changes during conversion
+-----------------------------------
+   The supplied U2_XTRA.BAT file can be used to make automatic changes
+   to archives contents during their conversion. Such a change could
+   include the addition of multimedia banners. The U2_XTRA.BAT file as
+   being distributed with UC does nothing at all, but can be adapted
+   to do anything you like. The U2_XTRA.BAT file contains (disabled)
+   sample code for adding banners to archives during their conversion.
+   (See chapter 6 paragraph D.)
+
+
+5.B MULTIMEDIA BANNERS.
+=======================
+
+UC gives you the opportunity to add (multimedia) banners to archives.
+Five file types are supported:
+
+   U$~BAN.GIF   GIF image
+   U$~BAN.JPG   JPEG image
+   U$~BAN.MOD   MOD music files (playable with e.g. Modplay)
+   U$~BAN.TXT   Standard text (will be integrated in UC output)
+   U$~BAN.ASK   Special file (determines if UC2 asks 'Continue?'
+                after showing/playing the banners. The content of
+                this file is of no importance.)
+
+If you want to add a banner to an archive, you will have to specify
+the banner file explicitly. No wild cards can be used, e.g. 'UC A arch
+U$~BAN.*' will not work.
+
+Example: UC A arch U$~BAN.TXT
+
+   A text banner is added to the archive arch.
+
+You can add multiple banner files (e.g. U$~BAN.GIF, U$~BAN.MOD and
+U$~BAN.ASK) to a single archive.
+
+The file U2_SHOW.BAT contains the default software to show or play
+banners. See chapter 6 paragraph D for more information on this batch
+file.
+
+The banners are shown/played when files are extracted from the
+archive.
+
+Under 4DOS ~ is sometimes used as 'compound character'. To resolve
+conflicts, you can change this with the 4DOS 'SETDOS /C^' command.
+
+
+5.C ULTRASTEALTH (RUN UC WITH ONLY 32K FREE MEMORY).
+====================================================
+
+With help of UltraStealth, you can run UC with only 32 kilobytes of
+free memory available.
+
+Suppose you have a huge program (e.g. a word processor or a mailer).
+When this huge program has the ability of starting another DOS program
+only a small amount of memory will be free. UltraStealth allows you to
+have this huge program call UC. To achieve this you need to do two
+things:
+
+(1) the (huge) program has to be started with US (UltraStealth)
+---------------------------------------------------------------
+   Just put US in front of the normal command you use to start the
+   (huge) program. So if the normal command is:
+
+      bigprog /a /q
+
+   You now have to use:
+
+      US bigprog /a /q
+
+(2) use UUC instead of UC
+-------------------------
+   Instead of calling UC from your (huge) program, you should call
+   UUC. UUC behaves exactly like UC. The only difference is that US
+   and UUC together solve the memory problem the (huge) program
+   causes.
+
+It is also possible to start US with no command behind it. In this
+case the DOS command processor (command.com) is started and UUC can be
+used anytime. The command processor (and US) can be stopped with the
+EXIT command.
+
+When UUC is called, while US is not active, UUC starts UC anyway. In
+this case there is no difference in the amount of memory needed for
+UUC and for UC.
+
+US and UUC together use about 32k of free memory, most of this will be
+claimed by US.
+
+Due to the complex nature of UltraStealth, it is recommended you
+test-drive UltraStealth thoroughly in your specific environment before
+you start using it.
+
+
+5.Z (BBS) SUMMARY.
+==================
+
+UC C *.ARJ *.ZIP *.LZH
+   Convert archives to UC archives.
+
+US <command>
+   Executes <command> and installs UltraStealth (needed to use UUC)
+
+UUC ...
+   Exactly the same as UC, but much less memory is needed. Will only
+   work with a small amount of memory if UltraStealth is active.
