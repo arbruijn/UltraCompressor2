@@ -26,7 +26,7 @@ void insline(void);
 int kbhit();
 int getch();
 
-struct text_info { int attribute, screenwidth, screenheight, currmode; };
+struct text_info { int attribute, screenwidth, screenheight, currmode, curx, cury; };
 void gettextinfo(struct text_info *);
 
 enum COLORS {
