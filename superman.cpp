@@ -49,8 +49,7 @@ void UpdateVersion (void){
       xhead[iArchArea].wVersionMadeBy = 202;
    if (xhead[iArchArea].wVersionNeededToExtract<200)
       xhead[iArchArea].wVersionNeededToExtract = 200;
-   char *p;
-   if ((p=getenv("UC2_PUC"))&&stricmp (p,"ON")==0)
+   if (getenv("UC2_PUC") && stricmp (getenv("UC2_PUC"),"ON")==0)
       if (xhead[iArchArea].wVersionNeededToExtract<202)
          xhead[iArchArea].wVersionNeededToExtract = 202;
 #ifdef UCPROX
@@ -2257,7 +2256,7 @@ void TTafl (VPTR dir, VPTR rev, DWORD no){
 		    &(((REVNODE*)V(rev))->location.dwOffset));
 	    if (!ValidMaster(((REVNODE*)V(rev))->compress.dwMasterPrefix)){
 	       ((REVNODE*)V(rev))->compress.dwMasterPrefix = SUPERMASTER;
-	       if (stricmp(getenv("UC2_PUC"),"ON")==0)
+	       if (getenv("UC2_PUC") && stricmp(getenv("UC2_PUC"), "ON")==0)
 		  ((REVNODE*)V(rev))->compress.dwMasterPrefix = NOMASTER;
 	    }
             Out (3,"\x7""Compressing %s ",WFull(rev,no));

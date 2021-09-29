@@ -762,7 +762,7 @@ again:
 	    strcpy (mext,".*");
 	    fnmerge (mask,drive,dir,mfile,".*");
 	 } else {
-	    if (stricmp (getenv("UC2_PUC"),"ON")==0)
+	    if (getenv("UC2_PUC") && stricmp (getenv("UC2_PUC"),"ON")==0)
 	       fnmerge (mask,drive,dir,mfile,".PU2");
 	    else
 	       fnmerge (mask,drive,dir,mfile,".UC2");
@@ -2020,11 +2020,10 @@ ue2_extract:
 	    char dir[MAXDIR];
 	    char file[MAXFILE];
 	    char ext[MAXEXT];
-	    char *env;
 	    if (atom[strlen(atom)-1]!='.'){
 	       fnsplit (atom,drive,dir,file,ext);
 	       if (ext[0]==0 || ext[1]==0) {
-                  if ((env=getenv ("UC2_PUC")) && stricmp (p,"ON")==0)
+                  if (getenv("UC2_PUC") && stricmp (getenv("UC2_PUC"),"ON")==0)
 		     fnmerge (atom,drive,dir,file,".PU2");
                   else
 		     fnmerge (atom,drive,dir,file,".UC2");
@@ -2264,7 +2263,7 @@ listing:
 	    if (atom[strlen(atom)-1]!='.'){
 	       fnsplit (atom,drive,dir,file,ext);
 	       if (ext[0]==0 || ext[1]==0) {
-                  if (stricmp (getenv("UC2_PUC"),"ON")==0)
+                  if (getenv("UC2_PUC") && stricmp (getenv("UC2_PUC"),"ON")==0)
    		     fnmerge (atom,drive,dir,file,".PU2");
                   else
 		     fnmerge (atom,drive,dir,file,".UC2");
