@@ -431,7 +431,7 @@ void CM (VPTR v){
    }
 }
 
-void Anal (char *s, int fSelect);
+void Anal (char *s, int fSelect, int fLocal=0);
 
 void RClearMask (void){
    CM (Mpath);
@@ -479,6 +479,7 @@ int rs (char *s, char c){
    return -1;
 }
 
+#ifdef DOS
 void Exp (char *pc, int i){
    int mode=0;
    pc[i]=0;
@@ -489,12 +490,17 @@ void Exp (char *pc, int i){
       if (mode==2) pc[j]=' ';
    }
 }
+#endif
 
 VPTR LocMac (int f, char *pcTPath){
    VPTR walk = Mpath;
    if (f) walk = Uqueue;
    while (!IS_VNULL(walk)){
+      #ifdef PATH_CASE
       if (strcmp (((MPATH *)V(walk))->pcTPath, pcTPath)==0) return walk;
+      #else
+      if (stricmp (((MPATH *)V(walk))->pcTPath, pcTPath)==0) return walk;
+      #endif
       walk = ((MPATH *)V(walk))->vpNext;
    }
    VPTR n = Vmalloc (sizeof (MPATH));
@@ -514,11 +520,21 @@ BYTE mark=0;
 
 int specialanal=0;
 
-void Anal (char *spi, int fSelect){
-   char s[200];
+#ifndef PATH_MAX
+#define PATH_MAX 200
+#endif
+
+void Anal (char *spi, int fSelect, int fLocal){
+   char s[MASK_PATH_MAX2];
    strcpy (s,spi);
+   if (!fLocal)
+      strupr (s);
+   #ifdef DOS
    if (s[strlen(s)-1]==PATHSEPC) strcat (s,"*.*");
-   char pcTPath[200];
+   #else
+   if (s[strlen(s)-1]==PATHSEPC) strcat (s,"*");
+   #endif
+   char pcTPath[MASK_PATH_MAX2];
    VPTR mm = Vmalloc (sizeof (MMASK));
    MMASK *m = (MMASK *)V(mm);
    m->bFlag=mark;
@@ -540,6 +556,7 @@ void Anal (char *spi, int fSelect){
       m->dwRevision=0;
       if (specialanal) m->fRevs=0;
    }
+   #ifdef DOS
    fnsplit (s, drive, dir, file, ext);
    if (ext[0]=='.') memmove (ext, ext+1, strlen(ext+1));
    Exp(file,8);
@@ -547,6 +564,18 @@ void Anal (char *spi, int fSelect){
    fnmerge (pcTPath, drive, dir, NULL, NULL);
    memcpy (m->pbName, file, 8);
    memcpy (m->pbName+8, ext, 3);
+   #else
+   char *p;
+   if ((p = strrchr (s, PATHSEPC)))
+      p++;
+   else if (s[0] && s[1] == ':')
+      p = s + 2;
+   else
+      p = s;
+   memcpy (pcTPath, s, p - s);
+   pcTPath[p - s] = 0;
+   strcpy (m->pcName, p);
+   #endif
    VPTR mp;
    if (fSelect){
       mp = LocMac (0, pcTPath);
@@ -604,7 +633,7 @@ int iDrvBack;
 
 extern int iDrv;
 
-int GetMask (){
+int GetMask (int fLocal=0){
    int ret=0;
    int once=1;
    iDrv = iDrvBack;
@@ -621,7 +650,7 @@ again:
 	 break;
       case '!':
 	 DB_TXT("negsel",atom+1);
-	 Anal(atom+1, 0);
+	 Anal(atom+1, 0, fLocal);
 	 if (ReadAtom()) goto again;
 	 break;
       default:
@@ -633,7 +662,7 @@ again:
          once=0;
 	 DB_TXT("sel",atom);
 	 ret=1;
-	 Anal(atom, 1);
+	 Anal(atom, 1, fLocal);
 	 if (ReadAtom()) goto again;
    }
 ex:
@@ -1763,7 +1792,7 @@ AADD:
 	 if (!GetArch()) FatalError(120,"no archive specified");
 	 specmode=0;
 	 if (ReadAtom()){
-	    GetMask();
+	    GetMask(1);
 	 }else
 	    Anal("*.*",1);
 	 DB_LF();

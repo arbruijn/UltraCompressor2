@@ -60,6 +60,7 @@ typedef uint32_t DWORD;
 #else
 #define PATHSEP "/"
 #define PATHSEPC '/'
+#define PATH_CASE
 #endif
 
 extern struct CONF {

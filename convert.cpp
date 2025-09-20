@@ -117,7 +117,7 @@ int TType (char *filename, char *aext, int mustexist){
 
 extern char pcEXEPath [260];
 extern BYTE bExtractMode;
-void Anal (char *s, int fSelect);
+void Anal (char *s, int fSelect, int fLocal=0);
 extern struct MODE MODE;
 void RClearMask (void);
 extern VPTR Mpath;
