@@ -1136,7 +1136,7 @@ reread:
 	    SetDest (atom+1);
 	    if (!ReadAtom()) return 0;
 	 }
-	 if (atom[0]=='-' || atom[0]=='/'){
+	 if (atom[0]=='-' || (PATHSEPC!='/' && atom[0]=='/')){
 	    p=1;
 	    goto again;
 	 }
