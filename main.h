@@ -54,8 +54,13 @@ typedef uint32_t DWORD;
 #define PRIXdw PRIX32
 #endif
 
+#ifdef DOS
 #define PATHSEP "\\"
 #define PATHSEPC '\\'
+#else
+#define PATHSEP "/"
+#define PATHSEPC '/'
+#endif
 
 extern struct CONF {
    BYTE finstall;    // 1 -> has to be installed !!!
