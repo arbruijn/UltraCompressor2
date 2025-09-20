@@ -36,7 +36,7 @@ int siz=25;
 void ask (char *q, char *a);
 
 int detectegavga (void){
-#ifndef UE2
+#if !defined (UE2) && defined(DOS)
    unsigned char tmp;
    union REGS r;
    r.h.ah = 18;
@@ -158,7 +158,9 @@ void ReadFile (){
 	 if (lino[i]==12)
 	    for (int j=i;j<85;j++)
 	       lino[j]=lino[j+1];
-      if (lino[strlen(lino)-1]=='\n')
+      if (lino[0] && lino[strlen(lino)-1]=='\n')
+	 lino[strlen(lino)-1]='\0';
+      if (lino[0] && lino[strlen(lino)-1]=='\r')
 	 lino[strlen(lino)-1]='\0';
 //      for (i=strlen(lino);i<80;i++)
 //         lino[i]=' ';
@@ -691,6 +693,8 @@ done2:
    }
 #endif
 }
+
+extern int dosvid;
 
 #pragma argsused
 void ViewFile (int index){
