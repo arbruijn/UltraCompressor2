@@ -102,31 +102,31 @@ void ReadFile (){
             pcFileName = sspec;
             break;
          case 0:
-       	    pcFileName = "WHATSNEW.DOC";
+       	    pcFileName = "whatsnew.doc";
    	    break;
          case 1:
-   	    pcFileName = "README.DOC";
+   	    pcFileName = "readme.doc";
    	    break;
          case 2:
-   	    pcFileName = "LICENSE.DOC";
+   	    pcFileName = "license.doc";
    	    break;
          case 3:
-	    pcFileName = "BASIC.DOC";
+	    pcFileName = "basic.doc";
    	    break;
          case 4:
-   	    pcFileName = "MAIN.DOC";
+   	    pcFileName = "main.doc";
    	    break;
          case 5:
-   	    pcFileName = "BBS.DOC";
+   	    pcFileName = "bbs.doc";
    	    break;
          case 6:
-   	    pcFileName = "CONFIG.DOC";
+   	    pcFileName = "config.doc";
    	    break;
          case 7:
-   	    pcFileName = "BACKGRND.DOC";
+   	    pcFileName = "backgrnd.doc";
    	    break;
          case 8:
-   	    pcFileName = "EXTEND.DOC";
+   	    pcFileName = "extend.doc";
    	    break;
       }
    } else {
@@ -715,39 +715,41 @@ void ViewFile (int index){
    } else
       Mode(CONFIG.bVideo);
 
-   textattr(attri);
+   if (!dosvid)
+     textattr(attri);
    FSOut (7," "); // set directvideo to right value
-   clrscr();
+   if (!dosvid)
+     clrscr();
 
 jp:
    jump=0;
    switch (master){
       case 0:
-	 pcFileName = "WHATSNEW.DOC";
+	 pcFileName = "whatsnew.doc";
 	 break;
       case 1:
-	 pcFileName = "README.DOC";
+	 pcFileName = "readme.doc";
 	 break;
       case 2:
-	 pcFileName = "LICENSE.DOC";
+	 pcFileName = "license.doc";
 	 break;
       case 3:
-	 pcFileName = "BASIC.DOC";
+	 pcFileName = "basic.doc";
 	 break;
       case 4:
-	 pcFileName = "MAIN.DOC";
+	 pcFileName = "main.doc";
 	 break;
       case 5:
-	 pcFileName = "BBS.DOC";
+	 pcFileName = "bbs.doc";
 	 break;
       case 6:
-	 pcFileName = "CONFIG.DOC";
+	 pcFileName = "config.doc";
 	 break;
       case 7:
-	 pcFileName = "BACKGRND.DOC";
+	 pcFileName = "backgrnd.doc";
 	 break;
       case 8:
-	 pcFileName = "EXTEND.DOC";
+	 pcFileName = "extend.doc";
 	 break;
    }
    if (sspec)
