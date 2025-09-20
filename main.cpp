@@ -905,12 +905,12 @@ void cdecl exito (void){
 	    sprintf (tmp,"%s and %s have been reported",err,war);
 	 } else if (errors){
 	    if (errors==1)
-	       sprintf (tmp,"1 error has been reported",err);
+	       sprintf (tmp,"1 error has been reported");
 	    else
 	       sprintf (tmp,"%s have been reported",err);
 	 } else {
             if (warnings==1)
-               sprintf (tmp,"1 warning has been reported",war);
+               sprintf (tmp,"1 warning has been reported");
             else
                sprintf (tmp,"%s have been reported",war);
          }
