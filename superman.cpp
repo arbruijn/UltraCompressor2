@@ -76,7 +76,7 @@ void CleanRoot (){ // A:2 OK
    dn->vpCurDir  = VNULL; // root
    dn->vpCurFile = VNULL; // none left
 
-   vpHomeDir[iArchArea] = dnRoot[iArchArea]; // CD \
+   vpHomeDir[iArchArea] = dnRoot[iArchArea]; // 'CD \'
 
    dwDirNTX[iArchArea]=1;
    dwMasNTX[iArchArea]=1;
