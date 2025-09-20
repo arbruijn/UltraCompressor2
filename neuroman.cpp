@@ -541,11 +541,15 @@ static huge BYTE *adr;
 static unsigned ctr;
 
 void far *norm (void far *adr){
+#ifndef DOS
+   return adr;
+#else
    unsigned seg = FP_SEG (adr);
    unsigned off = FP_OFF (adr);
    seg+=off/16;
    off%=16;
    return MK_FP(seg,off);
+#endif
 }
 
 static void far pascal Cwrite (BYTE *buf, WORD len){
