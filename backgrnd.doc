@@ -1,0 +1,334 @@
+7. BACKGRND: concepts, program design, compressor design, benchmarks
+====================================================================
+
+Although many aspects of UC look simple and straightforward, UC is a
+very advanced program.
+
+This document contains the following paragraphs:
+
+        - A. Inside UC
+        - B. Compression technology
+        - C. Damage protection technology
+        - D. Benchmarking
+
+To jump to a certain paragraph, press the corresponding letter. To
+jump to a specific document/chapter, press the corresponding digit.
+See chapter 1 paragraph E for an overview of all documentation.
+
+
+7.A INSIDE UC.
+==============
+
+Here a rough overview of the internals of UC is given. It can give
+those who are interested more insight into what is going on INSIDE
+UltraCompressor II (tm).
+
+If you want more detailed technical information (e.g. for making add-on
+tools) you can always contact us. Please note however we do not intend
+to supply the source code of UC to third parties. Sample add-on tools
+(including their source code) are available on request.
+
+UC is programmed in C++ and assembly language (for the time critical
+sections). It is devised in a number of modules which are briefly
+described in this section.
+
+
+Overview
+--------
+                        GENERAL CONTROL
+                           main
+                           command interpreter
+                           super manager
+                           archive I/O
+
+
+   SYSTEM SERVICES                             COMPRESSION SERVICES
+      video                                       neuro manager
+      low level I/O                               ultra engine
+      memory manager
+      virtual memory manager
+                                               RELIABILITY SERVICES
+                                                  error handler
+   OTHER                                          damage protection
+      lister                                      guard
+      viewer                                      test
+
+
+General control
+---------------
+   MAIN
+      The main module calls all initialization routines and takes care
+      of the configuration and help menus.
+
+   COMMAND INTERPRETER
+      The command line and script files are interpreted in this
+      module.
+
+   SUPER MANAGER
+      Finds out what should happen (e.g. ask the command interpreter,
+      scan the disk and the archive), and makes it happen (call the
+      data compressor etc.). This module is the most complex module of
+      UC, but it delegates a lot of hard work to other modules.
+
+   ARCHIVE I/O
+      Here the archive file format is managed. Conversion between
+      external (compressed flat file) and internal (object database)
+      formats, as well as all kinds of integrity checks are performed.
+
+System services
+---------------
+   VIDEO
+      The keyboard, screen and output file (in case of redirection)
+      are managed here.
+
+   LOW LEVEL I/O
+      Here low level file specifics and networking are handled. Also
+      this module takes care of file caching, an essential issue in
+      making UC perform fast on (floppy) disk and network access.
+
+   MEMORY MANAGER (MM)
+      This module manages base memory, XMS and EMS. The MM decides
+      which component of the program can get memory, and how much
+      memory it can get, to optimize overall performance.
+
+   VIRTUAL MEMORY MANAGER (VMM)
+      This module manages the 'persistent object database' containing
+      the central directory of an archive and numerous links needed to
+      make processing as efficient as possible. No matter the amount
+      of data in the VMM, it can always work (fast) with only a small
+      amount of memory. VMM uses the memory manager to optimize its
+      performance wherever possible. The VMM also supplies pipeline
+      services for decoupling translation (archive I/O) and compression
+      logic.
+
+Compression services
+--------------------
+   NEURO MANAGER
+      This component makes 'neuro models' of collections of files.
+      These neuro models allow UC to use similarities between
+      different files to compress all files even further. The
+      analyzing phase of UC refers to the creation of neuro models
+      based on found files. The optimizing phase (which is different
+      from the optimize command) refers to the compression of the
+      neuro models. One special neuro model (the 'master') is built
+      into the compressor. This model is used to improve compression
+      of the neuro models. The master contains information about the
+      general structure of common file types such as: documents,
+      spreadsheets, databases, sources etc..
+
+   ULTRA ENGINE
+      The bare high speed compressor/decompressor. Based on a neuro
+      model the redundancy of a stream of data is analyzed and
+      compressed.
+
+Reliability services
+--------------------
+   ERROR HANDLER
+      The error handler traps DOS system errors and handles them in a
+      neat and consistent way. It often allows the user to go to DOS,
+      solve the problem, leave DOS and continue where UC has stopped.
+      The error handler makes it impossible for the user to specify
+      'ignore', (an unfortunate option DOS offers if something goes
+      wrong).
+
+   DAMAGE PROTECTION
+      This module handles damage protection, damage detection and
+      damage recovery.
+
+   GUARD
+      The guard continuously checks the internal integrity of UC. It
+      is often able to prevent damage caused by e.g. software
+      conflicts or hardware problems.
+
+   TEST (only available in beta versions)
+      Tests and interrogates various components of UC during
+      execution.
+
+Other
+-----
+   LISTER
+      Shows contents of archive in various formats.
+
+   VIEWER
+      Online help viewer.
+
+
+7.B COMPRESSION TECHNOLOGY.
+===========================
+
+UC significantly outperforms existing data compression technology. For
+those interested in background information, we will discuss WHY and
+HOW UC is capable of doing this.
+
+AIP-NL would like to specifically thank the University of Utrecht, Drs.
+Ing. D. Bezemer, Prof. Dr. J. van Leeuwen, Dr. P. van Oostrum and Drs.
+Ing. N.E. de Vries for their significant participation in the design
+of the UC compression engine. The detailed design is on request
+available at the public library of the University of Utrecht.
+
+To begin, we will give a brief explanation of AR002. Most modern
+data compressors (ARJ, LHA, ZIP, ZOO) are derivatives of AR002. AR002
+was designed by Haruhiko Okumura.
+
+AR002, a two phase compressor
+-----------------------------
+   DATA <-> (#1, LZ) <-> (grouping) <-> (#2, Huffman) <-> COMPRESSED
+
+   In phase #1 (the 'LempelZiv' phase) 'matches' are located. Matches
+   are strings of data which are equal. The string 'hello there hello'
+   can be converted to 'hello there '(-12,5) since 'hello' is matched.
+   In general ARJ, LHA, ZIP and ZOO can find matches with a maximum
+   distance of about 32700, and a maximum length of about 500 (rough
+   estimates).
+
+   In phase #2 (the 'Huffman' phase) the output of phase #1 is divided
+   into blocks. For each block statistics are analyzed (for example
+   the compressor notices the character 'e' is used much more often
+   than 'q'). From this analysis an optimal translation table
+   ('Huffman tree') is generated (e.g. 'e'=001 'q'=100100010). The
+   compressed block then consists of the Huffman tree and the
+   translated contents of the block.
+
+   The storage of the Huffman tree, at the beginning of each block, is
+   a complicated matter which we will not cover here.
+
+   The number of different values phase #1 can generate is very large
+   (e.g. all 256 possible values of a byte, and about 32700 * 500
+   different match descriptions). Since it is very inefficient to make
+   a Huffman tree for all those possible values, the values are
+   grouped, and statistics are gathered for the groups instead of the
+   single values. LHA, ZOO, ARJ and ZIP all use different methods to
+   realize this grouping.
+
+UltraEngine
+-----------
+   The UltraEngine is also an AR002 derivative, but with some
+   fundamental enhancements. These enhancements can be divided into
+   two major features: the core engine and the neuro manager.
+
+   The neuro manager is the most significant enhancement. Ordinary
+   data compression engines always start completely 'blank', knowing
+   absolutely nothing about the data they are going to compress. The
+   neuro-manager collects generic information about a group of files.
+   For example a collection of *.DOC files will all have similar
+   characteristics, and share common text strings like 'paper'. The
+   neuro-manager collects this common 'knowledge' in a neuro model.
+   This neuro model is used to make the core engine much smarter when
+   similar files are compressed.
+
+   UC has a neuro model ('master') built into the executable as well.
+   This master contains information about common file formats. It
+   contains for example information about spreadsheets, databases,
+   word processors, programming languages, common words in: English,
+   French, German and Dutch etc.. This built in information improves
+   compression.
+
+   The core engine also has some enhancements over the basic AR002
+   engine.
+
+   The match engine has been replaced by a completely new one. This
+   new engine is capable of finding matches at a distance of 64000 and
+   with a maximum length of 30000.
+
+   Also the way in which blocks of data are gathered for further
+   Huffman compression is completely different. Instead of looking at
+   one block at a time, the core engine attempts to 'learn' from
+   previous blocks so less information is needed to encode statistical
+   information of a block.
+
+Alternative
+-----------
+   A collection of files can also be compressed more, with the often
+   used TAR+COMPRESS 'trick'. First collect all files in a single
+   large file, and then compress this single large file at once.
+   Especially for large collections of small files, this improves
+   compression significantly. This approach can be reached with ARJ as
+   well, by first compressing with ARJ -m0, and compressing the
+   resulting archive again with ARJ -jm1.
+
+   It should be noted, however, that the UltraEngine approach works
+   much better. First of all, the compression is better. The neuro
+   manager is much smarter than just a simple concatenation. This can
+   be verified by compressing the output of ARJ -m0 with UC -tt. Also
+   the core engine is fine tuned for optimal performance in
+   cooperation with neuro models. The 64000 byte match length is one
+   of the essential enhancements.
+
+   Another reason why the UC approach is much better, is random access.
+   Try to delete a single file of a collection of 5000 C files when
+   ARJ -m0/-jm1 has been used, or try to add or extract SOME files. UC
+   will mostly do this much faster than ordinary archivers (this is a
+   result of better caching and a better file format), and remarkably
+   faster than a collect/compress archiver.
+
+
+7.C DAMAGE PROTECTION TECHNOLOGY.
+=================================
+
+When an archive is 'damage protected' with the P command, it becomes
+resistant to a certain amount of damage. This paragraph explains how
+UC achieves this.
+
+We will start with a mathematical operator called 'XOR'. XOR has the
+following properties:
+
+0 XOR 0 = 0; 0 XOR 1 = 1; 1 XOR 0 = 1; 1 XOR 1 = 0
+
+if   a1 XOR a2 XOR a3 XOR a4 XOR a5 = xx
+then a1 XOR xx XOR a3 XOR a4 XOR a5 = a2
+and  a1 XOR a2 XOR a3 XOR xx XOR a5 = a4
+etc.
+
+This exactly shows the essence of damage protection, a1..a5 are the
+bare data, xx is special (damage recovery) information which can be
+used to restore bare data if it somehow has been destroyed.
+
+In practice UC XOR's groups of 512 bytes (sectors) instead of single
+bits. To determine if a specific sector is correct or damaged a
+checksum of all sectors is included in the damage recovery
+information.
+
+About 1% of damage protection information is added to an archive. For
+short files this is a single recovery sector (meaning up to 1 damaged
+sector can be recovered). But if the archive is longer multiple damage
+recovery sectors are added, for example one for odd and one for even
+sectors.
+
+
+7.D BENCHMARKING.
+=================
+
+Benchmarking is a very complicated matter. It is always possible to
+create a legitimate looking benchmark which makes product A or product
+B look better. A nice example of this can be seen by just looking at
+some ads.
+
+Some products are even optimized for running benchmarks. An
+unfortunate habit which makes it even more difficult to compare
+products.
+
+We have done a successful attempt to optimize UC for daily 'real life'
+use. This means it compresses fast and it decompresses very fast.
+
+But when archives are used intensively, the bare compression/
+decompression speed is only an aspect of the whole picture. What is
+also very important is how efficient updates are performed. Especially
+when 'the going gets tough', for example when a large archive resides
+on a floppy disk, or when the archive is on a network, UC can be much
+faster than other products.
+
+An unfortunate problem in benchmarking archivers is the 'Calgary
+Compression Corpus', which is often used to compare data compressors.
+Well, UC will do noticeably better than other compressors with this
+test, yet the real power of the compression engine is not used in this
+unrealistic test. When collections of 'real life' files (e.g. a large
+collection of documents, or sources, or the average archive one finds
+on a BBS) is compressed the difference between UC and other products
+becomes much more significant.
+
+Of course, although performance is very important, it is only one
+aspect in the usability of a product.
+
+In general it is our opinion that you, the user, are the best person
+to perform benchmarks. Try the product the way you would actually USE
+it and see for yourself.

@@ -1,0 +1,583 @@
+1. README: how to get started, features etc.
+============================================
+
+JUST GIVE THE UC COMMAND TO GET ACCESS TO THE HELP MENU!
+
+This document describes the purpose of UltraCompressor II (tm),
+UltraCrypt and UltraSafe.
+
+UltraCompressor II, UltraCrypt and UltraSafe ARE NOT FREE PRODUCTS.
+You have to pay for them if you use them. Read LICENSE.DOC for more
+information. They are 'try-before-you-buy' programs so you can try them
+before you buy them. LICENSE.DOC also contains the AIP-NL license
+agreement. By using this package, you are agreeing to be bound by the
+terms of this agreement.
+
+All details on ordering UltraCompressor II are built into ORDER.EXE.
+
+This document contains the following paragraphs:
+
+        - A. What is UltraCompressor II?
+        - B. Support, feedback, dealers, third party tools
+        - C. Ultra Compressor main feature overview
+        - D. UltraCrypt and UltraSafe
+        - E. Manual overview
+        - F. Included files
+
+To jump to a certain paragraph, press the corresponding letter. To
+jump to a specific document/chapter, press the corresponding digit.
+See chapter 1 paragraph E for an overview of all documentation.
+
+
+1.A WHAT IS ULTRA COMPRESSOR II?
+================================
+
+UltraCompressor II from Ad Infinitum Programs (AIP-NL) is an
+archiver. An archiver is a file handling and compression utility. It
+will make most of your files significantly smaller and it can keep
+related files together. When you need the files, you can decompress
+them with the same UC utility. UC is very easy to use, thanks to its
+simple user interface and has support for all archiving needs.
+
+An archive behaves just like a floppy disk. It has a directory
+structure, you can copy from the archive with extraction and copy to
+the archive by adding. It is also possible to delete files from the
+archive.
+
+UC can also make such an archive DAMAGE PROTECTED, so ALL files in the
+archive are safe, even if there are disk errors (within reasonable
+limits).
+
+With UC an archive can contain multiple versions of the same file.
+
+With a clear manual and a limited number of commands, UC will turn out
+to be very easy to use. Most of the options are configurable, so the
+commands are very simple and easy to remember.
+
+In general UC is very fast, especially when updating archives or
+extracting files from archives. At the same time it has superior
+compression. UC can handle near unlimited collections of files, in
+multi-gigabyte archives, even on an XT. For a detailed overview of the
+features of UC, see paragraph C.
+
+
+1.B SUPPORT, FEEDBACK, DEALERS, THIRD PARTY TOOLS.
+==================================================
+
+How to contact AIP-NL:
+----------------------
+   Mail       : P.O. Box 1432, 3430 BK Nieuwegein, The Netherlands
+
+   Phone      : +31-30-662107
+   FAX        : +31-30-616571
+   BBS        : +31-3402-55707
+
+   Internet   : desk@aip.nl
+   CompuServe : 100115,2303
+   FidoNet    : 2:281/713.1
+
+   We actively monitor:
+
+      FidoNet areas
+
+         UC2
+         COMPRESSION
+
+      CompuServe forums
+
+         IBM Systems/Util., File Utilities (go IBMSYS, section 6)
+         IBM Programming, Data Compression (go IBMPRO, section 10)
+
+      Internet newsgroups
+
+         comp.compression
+         sci.crypt
+
+
+Helpdesk (support)
+------------------
+   When you have any questions about the use of UC, just ask us or any
+   of our dealers. We will answer your questions as soon as possible.
+
+
+Help us!
+--------
+   Help us to make this product even better. Tell us what you want us to
+   improve in UC and all our other products. Comment on the manuals in
+   general, or on a manual in a specific language, is also very welcome.
+
+
+Dealers
+-------
+   USA, BMT Micro
+
+      Mail        : 452 Horn Rd, Wilmington, NC 28412-2411, USA
+      Phone       : (800) 414-4268 (toll free, orders only)
+                    (910) 791-7052
+      FAX         : (910) 350-2937
+      BBS         : (910) 350-8061 (direct link to AIP-NL)
+      Internet    : thomas.bradford@bmtmicro.com
+      CompuServe  : 74031,307
+      FidoNet     : 1:3628/11
+
+   France, SERMEDITECH
+
+      Mail        : 6 Rue Racine, 02200 Courmelles, France
+      Phone       : 23.73.98.90
+      FAX         : 23.73.40.71
+      BBS         : 23.73.02.51
+      Internet    : rfrey@sermeditec.win.net
+      CompuServe  : 100346,1161
+      FidoNet     : 2:322/12
+      SparkNet    : 74:322/1
+      FrancoMedia : 101:176/106
+
+   Singapore, Online Technology
+
+      Mail        : P.O. Box 0685, Bukit Merah Central, Singapore 9115
+      Phone       : (65) 298-8634
+      FAX         : (65) 298-1324
+      Internet    : 71413.3330@compuserve.com
+      CompuServe  : 71413,3330
+
+   Israel, Magic
+
+      Mail        : 29 Etzion St., Ra'anana 43562, Israel
+      Phone       : 09-441-579
+      FAX         : 09-984-945, 09-916-647
+      BBS         : 09-916-647, 09-984-945, 09-918-533
+      Internet    : tammar@chemsg5.tau.ac.il
+      FidoNet     : 2:405/52
+
+
+   We welcome dealer inquiries.
+
+
+Third party tools
+-----------------
+   For third parties AIP has implemented a third party interface in UC
+   (UC2-3PI). For documentation and samples sources please contact
+   AIP-NL.
+
+   The following tools have UltraCompressor II support:
+   (we list the lowest version number with UC support)
+
+      ArcMaster 10.0, New-Ware, archiver shell, shareware $35 USD
+
+         Mail       : 8050 Camino Kiosco, San Diego, CA 92122-1820, USA
+         Phone      : (619) 455-6225 (Business hours ONLY please!)
+         BBS        : (619) 455-5226
+
+      AVIEW 4.5, Chris Buijs, archive viewer, freeware
+
+         Mail       : De Spil 22, 1507 CX Zaandam, The Netherlands
+         BBS        : +31-(0)75-704890
+         CompuServe : 100117,3242
+         FidoNet    : 2:280/407.16
+
+      DOS Navigator(tm) 1.30, RIT S.R.L., DOS shell, shareware $35 USD
+
+         Mail       : str. Tudor Vladimirescu 18, Chishinau, 277024,
+                      Republic of Moldova
+         Phone      : +373 2 26-10-16
+         FAX        : +373 2 26-14-16
+         BBS        : +373 2 22-64-83, +373 2 22-85-77
+         Internet   : AxoNSoft@silk.glas.apc.org
+         FidoNet    : 2:469/33
+
+      MTA 15.56, DISP, archive converter, shareware $25 USD
+
+         Mail       : P.O. box 131, 1170 AC, Badhoevedorp, The Netherlands
+         BBS        : +31-(0)1749-48422
+         CompuServe : 100120,1146
+         FidoNet    : 2:281/904.5
+
+      REARJ 2.25, ARJ Software, archive converter, included with ARJ 2.41a
+
+         Mail       : 2606 Village Road West, Norwood, Massachusetts 02062
+         Internet   : robjung@world.std.com
+         CompuServe : 72077,445
+
+      SHEZ 9.7, CSD, archiver shell, shareware $39 USD
+
+         Mail       : P.O. Box 15248, Santa Rosa, CA 95402, USA
+         Phone      : (707) 575-9868
+         Internet   : jim.derr@kandy.com
+         CompuServe : 76266,2634
+
+
+   If you are aware of a tool which has UltraCompressor II support, but
+   which is not included on this list, please let us know.
+
+   The products included here are manufactured by vendors independent of
+   AIP-NL; we make no warranty, implied or otherwise, regarding these
+   products' performance or reliability.
+
+
+1.C ULTRA COMPRESSOR MAIN FEATURE OVERVIEW.
+===========================================
+
+Most topics refer to another part of the documentation where you can
+get more information.
+
+GENERAL FEATURES
+----------------
+
+ * BETTER COMPRESSION
+        On an average 8%, but often above 60%, better compression than
+        competing software.
+        (See chapter 4 paragraph A options TF, TN, TT; chapter 6
+        paragraph A.)
+
+ * SPEED
+        Compression is fast and configurable to favor compression speed
+        or archive size. Extraction is very fast. UC is also very fast
+        when it UPDATES an archive, even if this archive is large,
+        stored on a network server or stored on a slow (floppy) disk.
+        (See chapter 4 paragraph A options TF and I; paragraph F
+        'smart skipping'; chapter 6 paragraph A.)
+
+ * RELIABILITY
+        Archives can optionally be protected against damage, allowing
+        them to recover from most disk-errors without any loss of data.
+        UC always works 'transaction oriented' allowing recovery from
+        most crashes without any loss of data. It has optional
+        double-verification, preventing data loss in case of hardware or
+        software problems.
+        (See chapter 4 paragraph A the P command; chapter 6 paragraph
+        A 'reliability level'.)
+
+ * EASY TO USE (INTEGRATED HELP)
+        UC has integrated help (with search) and an, easy to use,
+        integrated configuration tool. Only a few commands are needed
+        to manage archives with UC. UC can automatically deal with
+        ARC, ARJ, LZH, ZIP etc. archives as if they are UC archives.
+        (See chapter 3; chapter 6.)
+
+ > ADVANCED VERSION MANAGEMENT  *** NEW ***
+        Multiple versions of file collections (projects) can be managed
+        with the included 'Version Manager' (VM) tool. VM supports
+        project level version labelling.
+        (See chapter 8 paragraph A.)
+
+ * FULL SUPPORT OF OS/2 2.X EXTENDED ATTRIBUTES
+        OS/2 2.x extended attributes (such as icons, WPS long icon
+        names, WordPerfect 5.2 for OS/2 summary information etc.) can
+        be kept in an archive. They are managed automatically.
+        (See chapter 6 paragraph A 'Store OS/2 2.x extended
+        attributes'.)
+
+
+BUSINESS USE
+------------
+
+ * SCRIPTS
+        A 'script' file can contain a large list of files (e.g. to be
+        compressed). A script file can also be used as a substitute
+        for multiple (complex) commands. Scripts can be nested, to
+        allow the construction of 'building blocks'. Scripts can be
+        extremely long (multi-megabyte).
+        (See chapter 4 paragraph F 'scripts'.)
+
+ * CAPABLE OF HEAVY DUTY TASKS
+        There is almost no limit to the amount of files in an archive
+        or to the amount of files processed in a single command. Where
+        some other programs get into trouble with more than 10,000
+        files, UC can easily handle a much larger number of files. Even
+        a simple PC-XT can (given time) handle this workload.
+        (See chapter 7 paragraph A.)
+
+ * ERROR HANDLING AND LOGGING
+        UC has advanced error handling and logging. This is
+        especially important when large collections of files are
+        archived from shared (network) disks. In almost all cases UC
+        allows you to solve severe problems and enables you to
+        continue the operation.
+        (See chapter 4 paragraph F 'superior error handling' and
+         chapter 8 paragraph F.)
+
+ * STATE OF THE ART ENCRYPTION
+        UltraCrypt (a separate AIP-NL product) can protect your data
+        with heavy duty enhanced-triple-DES (Digital Encryption
+        Standard) encryption. Faster encryption is included as well.
+        (UCRYPT is a separate tool with its own manual.)
+
+ * STATE OF THE ART AUTHENTICITY VERIFICATION
+        UltraSeal and UltraSafe, separate AIP-NL products, can help you
+        protect your data against undetected changes (e.g. virus
+        infections or data falsifications). They do not use 'security by
+        obscurity', but they use digital signatures based on Lucas
+        functions.
+        (USAFE and USEAL are separate tools with their own manuals.)
+
+
+PROGRAMMERS
+-----------
+
+ * FILE VERSION MANAGEMENT
+        Multiple versions of a file (e.g. the MAY 2 21:33:18 and the
+        MAY 3 02:17:22 version) can be kept in an archive. UC version
+        management is very simple to use.
+        (See chapter 4 paragraph E.)
+
+ * VERY FAST UPDATES
+        UC is very fast in updating large archives while maintaining
+        superior compression and reliability. No complex commands or
+        options are needed for this.
+        (See chapter 4 paragraph A options TF and I; paragraph F
+        'smart skipping'; chapter 6 paragraph A.)
+
+ * TRIVIAL PATH MANAGEMENT
+        With UC it is very easy to copy any set of files from anywhere
+        on disk to anywhere in the archive and vice versa.
+        (See chapter 4 paragraphs A and B, the # option.)
+
+ > FILTER ON FILE CONTENTS  *** NEW ***
+        Define a search string and only files containing this string
+        will be printed, listed, extracted, added etc..
+        (See chapter 8, paragraph E.)
+
+ > FILTER ON ANYTHING ELSE  *** NEW ***
+        Filter on date/time, attributes, if a file is newer, query for
+        each file etc..
+        (See chapter 8, paragraph E.)
+
+ > PRINT FILES  *** NEW ***
+        Print files using YOUR favorite printing tool/method.
+        (See chapter 8, paragraph E.)
+
+
+BBS SYSOPS
+----------
+
+ * MULTIMEDIA BANNERS
+        UC allows you to add multimedia banners (text, graphics, sound
+        and music) to an archive, or to a collection of archives.
+        (See chapter 5 paragraph B.)
+
+ * EASY CONVERSION COMBINED WITH VIRUS SCANNING
+        UC can convert collections of archives of almost any kind with
+        just one simple command. If preferred, UC will scan archive
+        contents for viruses during conversion.
+        (See chapter 5 paragraph A.)
+
+ * GET RID OF VIRUSES FOREVER
+        The industrial strength authenticity verification software (see
+        'business use') can help you to get rid of viruses forever by
+        protecting archives against unauthorized changes.
+        (USAFE and USEAL are separate tools with their own manuals.)
+
+ * NEEDS ONLY 32KB FREE MEMORY TO RUN
+        UC can be used together with other large programs, perfect for
+        mailers and other (large) programs that need to call UC.
+        (See chapter 5 paragraph C.)
+
+ > TIME STAMP  *** NEW ***
+        Time stamp (collections of) archives with the date/time of their
+        newest file.
+        (See chapter 8, paragraph E.)
+
+
+1.D ULTRA-CRYPT AND ULTRA-SAFE.
+===============================
+
+UCRYPT (distributed in separate package)
+----------------------------------------
+   UltraCrypt (a separate UC companion) can protect your data with
+   heavy duty enhanced-triple-DES (Digital Encryption Standard)
+   encryption.
+
+USAFE/USEAL (distributed in separate package)
+---------------------------------------------
+   UltraSeal and UltraSafe (separate UC companions) can help you
+   protecting your data against undetected changes (e.g. virus
+   infections or data falsifications). UltraSafe uses on Lucas
+   functions based digital signatures.
+
+
+1.E MANUAL OVERVIEW.
+====================
+
+0 WHATSNEW: overview of changes from UC2 to UC2 revision 2
+   A. Bug fixes
+   B. New commands
+   C. New options
+   D. Other enhancements
+   E. New tools
+   F. UC2-3PI
+   G. Using UC.EXE stand alone, without the accompanying files
+
+1 README: how to get started, features etc.
+   A. What is Ultra Compressor II?
+   B. Support, feedback, dealers, third party tools
+   C. UltraCompressor main feature overview
+   D. UltraCrypt and UltraSafe
+   E. Manual overview
+   F. Included files
+
+2 LICENSE: the licenses, warranty etc.
+   A. Limited warranty
+   B. Documentation
+   C. Trial use license (only valid during 60 days evaluation period)
+   D. General license agreement (not valid during evaluation period)
+   E. Distribution restrictions
+
+3 BASIC: the most essential commands of UC
+   A. Decompressing a complete UC archive
+   B. Compressing a complete directory (tree) into an archive
+   C. Making an archive DAMAGE PROTECTED
+   D. Verbose list of the archive
+   Z. (BASIC) Summary
+
+4 MAIN: the use of the UC command in detail
+   A. Command/option summary
+   B. Adding files, listing contents
+   C. Extracting files
+   D. Other commands and options
+   E. Version management
+   F. Features and automatics
+   G. Credits
+   H. Acknowledgements
+   Z. (MAIN) Summary
+
+5 BBS: special features for BBS sysops
+   A. Archive conversion (with virus checking)
+   B. Multimedia banners
+   C. UltraStealth (run UC with only 32k free memory)
+   Z. (BBS) Summary
+
+6 CONFIG: how to configure UC
+   A. General options
+   B. System options
+   C. Quick setup
+   D. Batch files
+   E. Optimizing performance
+
+7 BACKGRND: concepts, program design, compressor design, benchmarks
+   A. Inside of UC
+   B. Compression technology
+   C. Damage protection technology
+   D. Benchmarking
+
+8 EXTEND: tools; extended commands and options
+   A. Tools: version manager
+   B. Tools: lock archive
+   C. Tools: compress/expand directory
+   D. Tools: simple archive splitter
+   E. Extended command/option overview
+   F. Error messages
+   Z. (EXTEND) Summary
+
+  UCRYPT: the use of the UCRYPT command
+   A. Command summary
+   B. Encryption
+   C. Encryption with destruction of the original archive
+   D. Decryption
+   Z. Summary
+
+  USAFE: the use of the USAFE command
+   A. Command
+   B. How secure are these seals?
+   C. How to create seals?
+   D. Very important note!
+   E. Error levels
+   Z. Summary
+
+
+
+1.F INCLUDED FILES.
+===================
+
+Please note UC2R2.EXE and CRYSAF.UC2 are both protected by UltraSeal.
+You can use UltraSafe to verify whether you have an original version.
+
+
+UC2R2.EXE  UltraCompressor II revision 2 install package
+--------------------------------------------------------
+
+Main executable. (See chapter 4.)
+
+   UC.EXE         UltraCompressor II executable
+
+   ORDER.EXE      Ordering application.
+
+Documentation.
+
+   README.DOC     how to get started, features etc.
+   LICENSE.DOC    the licenses, warranty etc.
+   BASIC.DOC      the most essential commands of UC
+   MAIN.DOC       the use of the UC command in detail
+   BBS.DOC        special features for BBS sysops
+   CONFIG.DOC     how to configure UC
+   BACKGRND.DOC   concepts, program design, compressor design, benchmarks
+   EXTEND.DOC     tools; extended commands and options
+
+   WHATSNEW.DOC   detailed overview of changes to UC
+
+   FILE_ID.DIZ    short description of UC2R2.EXE for sysops
+
+   ???????.INT    BASIC.DOC in various languages
+
+Supporting batch files. (See chapter 6 paragraph D.)
+
+   U2_CHECK.BAT   virus checking
+   U2_EDIT.BAT    text editing
+   U2_FLUSH.BAT   flush disk-cache
+   U2_XTRA.BAT    user defined conversion specifics
+   U2_SHOW.BAT    show multimedia banners
+   U2_PRINT.BAT   print a single file (See chapters 5 and 8.)
+
+   U2_EXAMG.BAT   expand AMG archives
+   U2_EXARC.BAT   expand ARC archives
+   U2_EXARJ.BAT   expand ARJ archives
+   U2_EXHA.BAT    expand HA archives
+   U2_EXHPK.BAT   expand HPACK archives
+   U2_EXHYP.BAT   expand HYPER archives
+   U2_EXLZH.BAT   expand LHA/LHArc archives
+   U2_EXPAK.BAT   expand PAK archives
+   U2_EXRAR.BAT   expand RAR archives
+   U2_EXSQZ.BAT   expand SQZ archives
+   U2_EXUCN.BAT   expand new UC2 archives
+   U2_EXZIP.BAT   expand ZIP archives
+   U2_EXZOO.BAT   expand ZOO archives
+
+UltraStealth executables. (See chapter 5 paragraph C.)
+
+   US.EXE         install UltraStealth
+   UUC.EXE        use UltraStealth
+
+Tools. (See chapter 8.)
+
+   VM.EXE         version manager (Paragraph A.)
+
+   SAS.EXE        simple archive splitter (Paragraph D.)
+
+   UCDIR.BAT      compress directory (Paragraph C.)
+   UEDIR.BAT      expand directory
+
+   UPROT.BAT      protect archive (Paragraph B.)
+   ULOCK.BAT      lock archive
+
+
+CRYSAF.UC2 package  UltraCrypt and UltraSafe
+--------------------------------------------
+
+Executables.
+
+   USAFE.EXE      UltraSafe executable
+   UCRYPT.EXE     UltraCrypt executable
+
+Documentation and order forms.
+
+   README.DOC     how to get started, features etc.
+   LICENSE.DOC    the licenses, warranty etc.
+   UCRYPT.DOC     the use of the UCRYPT command
+   USAFE.DOC      the use of the USAFE command
+
+   ORDER.FRM      order form
+   SYSOP.FRM      special order form for BBS sysops
+   USEAL.FRM      special order form for USEAL
+
+   (please note ORDER.EXE should be used instead of the .FRM files)
+
+   FILE_ID.DIZ    short description of CRYSAF.UC2 for sysops

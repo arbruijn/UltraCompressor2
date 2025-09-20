@@ -1,0 +1,85 @@
+3. BASIC: the most essential commands of UC
+===========================================
+
+This document describes the most essential commands of UC. No special
+features are mentioned. UC is very easy to use.
+
+All details on ordering UltraCompressor II are built into ORDER.EXE.
+
+This document contains the following paragraphs:
+
+        - A. Decompressing a complete UC archive
+        - B. Compressing a complete directory(tree) into an archive
+        - C. Making an archive damage protected
+        - D. Verbose list of the archive
+        - Z. Summary
+
+To jump to a certain paragraph, press the corresponding letter. To
+jump to a specific document/chapter, press the corresponding digit.
+See chapter 1 paragraph E for an overview of all documentation.
+
+
+3.A DECOMPRESSING A COMPLETE UC ARCHIVE.
+========================================
+
+Command: UC ES archive-name
+
+   Put the archive where you want the extracted files to be, and type
+   the command UC ES archive-name, where 'archive-name' is the name of
+   the archive (e.g. UC ES newstuff). All files in the archive will be
+   extracted.
+
+   UC ES works cautiously. It will never overwrite files, create
+   directories etc., without first consulting you.
+
+
+3.B COMPRESSING A COMPLETE DIRECTORY (TREE) INTO AN ARCHIVE.
+============================================================
+
+Command: UC A archive-name
+
+   All files in the current directory are compressed into an archive
+   (e.g. 'UC A mydocs' creates mydocs.uc2). If the archive already
+   exists, only new and changed files are (re)compressed.
+
+Command: UC AS archive-name
+
+   The files in the current directory and ALL subdirectories are
+   compressed into an archive (e.g. 'UC AS mydocs' creates
+   mydocs.uc2). If the archive already exists, only new and changed
+   files are (re)compressed.
+
+
+3.C MAKING AN ARCHIVE DAMAGE PROTECTED.
+=======================================
+
+Command: UC P archive-name
+
+   The archive will become damage protected and it will remain damage
+   protected if you add files to it or delete files from it etc.. A
+   damage protected archive can recover from most disk errors without
+   losing ANY data. (The disadvantage of making archives damage
+   protected is that the archives become a little bit larger).
+
+
+3.D VERBOSE LIST OF THE ARCHIVE.
+================================
+
+Command: UC VS archive-name
+
+   All files in the archive will be listed. The contents of all its
+   subdirectories will be listed as well.
+
+
+3.Z (BASIC) SUMMARY.
+====================
+
+UC ES name     EXTRACT all files from archive name.uc2
+
+UC A  name     COMPRESS all files in current directory into name.uc2
+UC AS name     COMPRESS all files in current directory AND its
+               SUBDIRECTORIES into name.uc2
+
+UC P  name     make name.uc2 DAMAGE PROTECTED
+
+UC VS name     the full contents of the archive will be LISTED
