@@ -253,6 +253,7 @@ static void I_Close (int i){
 
 static WORD I_Read (BYTE *bBuf, int iHan, WORD wSiz){
    static int nest;
+#ifdef DOS
    if ((FP_SEG(bBuf)>0x9FFF) && !nest && (wSiz<1100)){
       nest=1;
       BYTE buf[1101];
@@ -261,6 +262,7 @@ static WORD I_Read (BYTE *bBuf, int iHan, WORD wSiz){
       nest=0;
       return w;
    }
+#endif
 
 #ifdef UCPROX
    if (debug) Out (7,"[R %s %u",afdl[iHan]->pcFileName,wSiz);
