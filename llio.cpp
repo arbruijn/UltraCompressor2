@@ -786,7 +786,7 @@ void SetFileSize (int iHandle, DWORD dwNewSize){
 
 char *TmpFile (char *pcLocat, int pure, char *useext){
    static int first=1;
-   register char   *cp;
+   char   *cp;
    int             len;
    int f;
    char locat[260];
