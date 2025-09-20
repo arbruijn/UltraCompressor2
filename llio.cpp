@@ -591,11 +591,12 @@ extern int ex;
 
 void Close (int iHandle){
    TRACEM("Enter Close");
-   if (afdl[iHandle]==NULL)
+   if (afdl[iHandle]==NULL){
       if (ex){
 	 TRACEM("Leave Close");
 	 return;
       } else IE();
+   }
    UnCache (iHandle);
    I_Close (iHandle);
    TRACEM ("Leave Close");
