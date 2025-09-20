@@ -22,6 +22,8 @@
 #include "llio.h"
 #include "dirman.h"
 
+#ifdef DOS
+
 // On redefenition of BLOCK_SIZE please also redefine CUT !!!
 #define BLOCK_SIZE  1054   // allow 2kb blocks (6 bytes overhead)
 #define RAM_BLOCKS  16     // max 250 blocks (determines max ref number !)
@@ -176,6 +178,9 @@ VPTR pvpFirst[257];
 struct PRE {
    WORD wSize;  // size of memory block
    VPTR vpNext; // next block in memory chain
+#ifndef DOS
+   WORD pad;    // ensure proper dword alignment
+#endif
 };
 
 void RInit (void);
@@ -710,6 +715,29 @@ BYTE *V (VPTR vpAdr){
    lastblock = vpAdr.wBlock;
    return ret;
 }
+
+#else
+
+#undef malloc
+#undef free
+
+int fCloseVmem=0;
+
+void *LLVmalloc(int size){
+   return malloc(size);
+}
+
+void LLVfree(void *p){
+   free(p);
+}
+
+void InitVmem(){
+}
+
+void CloseVmem(){
+}
+
+#endif
 
 void MakePipe (PIPE &p){
    p.vpStart = p.vpCurrent = p.vpTail = VNULL;
