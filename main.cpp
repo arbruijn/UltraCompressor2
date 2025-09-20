@@ -344,11 +344,19 @@ void GetCFG (){
 #if defined(UE2) || !defined(DOS)
    Default();
    if (dosvid){
+#ifdef DOS
       CONFIG.fOut = 4;
+#else
+      CONFIG.fOut = 2;
+#endif
    } else {
       CONFIG.fOut = 2;
    }
+#ifdef DOS
    CONFIG.bVideo = 4;
+#else
+   CONFIG.bVideo = 3;
+#endif
    strcpy (CONFIG.pcLog,"C:" PATHSEP "*");
 #ifndef DOS
    snprintf(pcCfgPath, sizeof(pcCfgPath), "%s/.config/uc/config", getenv("HOME"));
