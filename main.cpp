@@ -6,6 +6,10 @@ unsigned _stklen = 10240;
 /**********************************************************************/
 /*$ INCLUDES */
 
+#ifndef DOS
+#include <sys/utsname.h>
+#include <sys/stat.h>
+#endif
 #include <process.h>
 #include <stdlib.h>
 #include <string.h>
@@ -545,6 +549,7 @@ void oel (void){
 // Returns the version of DR-DOS active or -1 if not DR-DOS. Returns the
 // version as a word, high word major version, low word minor version.
 int DRDosVer(void) {
+#ifdef DOS
    unsigned tmp;
 
    _FLAGS |= 1; // Set carry flag
@@ -575,9 +580,13 @@ int DRDosVer(void) {
       oe2();
    }
    return 0;
+#else
+   return -1;
+#endif
 }
 
 void DVver(int chk) {
+#ifdef DOS
    _AX = 0x2B01;
    _CX = 0x4445;
    _DX = 0x5351;
@@ -600,9 +609,11 @@ void DVver(int chk) {
 	 oe2();
       }
    }
+#endif
 }
 
 void DWin(void) {
+#ifdef DOS
    _AX = 0x160a;
    geninterrupt (0x2F);
    if (_AX==0){ // Windows 3.1
@@ -627,9 +638,11 @@ void DWin(void) {
 	 }
       }
    }
+#endif
 }
 
 void Win(void) {
+#ifdef DOS
    _AX = 0x160a;
    geninterrupt (0x2F);
    if (_AX==0){ // Windows 3.1
@@ -679,6 +692,7 @@ void Win(void) {
 	 }
       }
    }
+#endif
 }
 
 int Logo (void){
@@ -740,6 +754,7 @@ int Logo (void){
    }
 #endif
    ctr=0;
+#ifdef DOS
    union REGS regs;
    regs.h.ah = 0x30;
    intdos (&regs,&regs);
@@ -796,6 +811,20 @@ int Logo (void){
 	 break;
    }
    oel();
+#else
+   Out (3,"LGPL Cross-Platform version 0.1");
+   ctr=0;
+   struct utsname utsname;
+   if (!uname(&utsname)) {
+      oe1();
+      Out (3,"%s",utsname.sysname);
+      oe2();
+      oe1();
+      Out (3,"%s",utsname.machine);
+      oe2();
+      oel();
+   }
+#endif
    Out (7,"\n\r\n\r");
    return ret;
 }
