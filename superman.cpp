@@ -738,7 +738,7 @@ static char EAtpt[260];
 extern int scan1;
 
 long GetOS2ExtAttrSize (char far *filename){
-#ifndef UE2
+#if !defined(UE2) && defined(DOS)
    unsigned long ret;
    static unsigned char dump[26];
    union REGS regs; struct SREGS sregs;
@@ -773,7 +773,7 @@ long GetOS2ExtAttrSize (char far *filename){
  */
 
 void GetOS2ExtAttr (char *filename, BYTE *buffer, unsigned maxlen){
-#ifndef UE2
+#if !defined(UE2) && defined(DOS)
    union REGS regs; struct SREGS sregs;
    struct EAOP {
       long dummy1;
@@ -802,6 +802,7 @@ void GetOS2ExtAttr (char *filename, BYTE *buffer, unsigned maxlen){
 
 void SetOS2ExtAttr (char *filename, BYTE *buffer)
 {
+#ifdef DOS
    union REGS regs; struct SREGS sregs;
    struct EAOP {
       long dummy1;
@@ -821,6 +822,7 @@ void SetOS2ExtAttr (char *filename, BYTE *buffer)
    regs.x.di = FP_OFF(&eaop);
    sregs.es = FP_SEG(&eaop);
    intdosx (&regs, &regs, &sregs);
+#endif
 }
 
 char noextrea=0;
