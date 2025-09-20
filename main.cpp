@@ -437,12 +437,15 @@ void Default (void){
 }
 
 void NoLastS (char *buf){
+#ifdef DOS
    if (buf[0]==0){
       buf[0]=PATHSEPC;
       buf[1]=0;
    }
+#endif
    if (buf[strlen(buf)-1]==PATHSEPC)
       buf[strlen(buf)-1]=0;
+#ifdef DOS
    if (buf[1]!=':'){
       char tmp[300];
       strcpy (tmp,"C:");
@@ -458,6 +461,7 @@ void NoLastS (char *buf){
       strcpy (buf, tmp);
    }
    strupr (buf);
+#endif
 }
 
 int menu=0;
