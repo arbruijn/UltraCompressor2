@@ -1263,7 +1263,7 @@ int TCWI(char *pp, int f){
       };
       pt2=pt+1;
       while ((*pt2!=PATHSEPC)&&(*pt2!='/')&&(*pt2!=' ')&&(*pt2!='\0')) pt2++;
-      if (pt2!='\0') ptn = pt2+1; else ptn = pt2;
+      if (*pt2!='\0') ptn = pt2+1; else ptn = pt2;
       *pt2='\0';
       memcpy (rp, Name2Rep (pt), 11);
       VPTR walk = TFirstDir();
