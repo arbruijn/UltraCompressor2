@@ -5,6 +5,9 @@
 #include <conio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifndef DOS
+#include "dosdef.h"
+#endif
 #include "main.h"
 #include "video.h"
 #include "vmem.h"
