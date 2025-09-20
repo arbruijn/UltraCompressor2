@@ -8,6 +8,9 @@
 #include <dir.h>
 #include <stdlib.h>
 #include <alloc.h>
+#ifndef DOS
+#include <fnmatch.h>
+#endif
 
 #include "main.h"
 #include "archio.h"
@@ -698,6 +701,14 @@ char * GetPath (VPTR here, int levels){ // A:2 OK
 
 int iLastNoQ;
 
+#ifndef DOS
+int FitStr (char *name, char *pat, int exact){
+   return fnmatch(pat, name, FNM_PATHNAME) == 0;
+}
+int FitRep (BYTE *rep, char *pat, int exact){
+   return FitStr (Rep2Name (rep), pat, exact);
+}
+#else
 // file, mask, exact?
 int Fit (BYTE *b, BYTE *a, int exact){
 
@@ -723,6 +734,7 @@ int Fit (BYTE *b, BYTE *a, int exact){
    }
    return !prob;
 }
+#endif
 
 extern VPTR Uqueue; // negative selections (!*.bak)
 
@@ -904,6 +916,7 @@ void ScanAddR (VPTR dir, VPTR Mpath, int parents, int rapid){
 
    VPTR ppos = ((MPATH *)V(Mpath))->vpMasks;
    if (!MODE.fSubDirs && !IS_VNULL(ppos) && IS_VNULL(((MMASK *)V(ppos))->vpNext)){
+#ifdef DOS
       char msk[20];
       strncpy (msk, (char*)((MMASK *)V(ppos))->pbName, 15);
       msk[11] = msk[10];
@@ -916,6 +929,9 @@ void ScanAddR (VPTR dir, VPTR Mpath, int parents, int rapid){
       }
 //      Out (7,"[%s]", msk);
       strcat (mask, msk);
+#else
+      strcpy (mask, ((MMASK *)V(ppos))->pcOrig);
+#endif
    }  else
       strcat (mask, "*.*");
    struct ffblk ffblk;
@@ -941,7 +957,9 @@ void ScanAddR (VPTR dir, VPTR Mpath, int parents, int rapid){
 //      if (obj%7==0) SOut ("Scanning %s %lu (%lu)\r",where,obj,sel);
       Hint();
       obj++;
+#ifdef DOS
       strupr (ffblk.ff_name);
+#endif
       if (strcmp(ffblk.ff_name,".")!=0)
 	 if (strcmp(ffblk.ff_name,"..")!=0) {
 	    if (ffblk.ff_attrib&FA_DIREC) {
@@ -1015,7 +1033,11 @@ void ScanAddR (VPTR dir, VPTR Mpath, int parents, int rapid){
 	       int ok=0;
 	       VPTR walk = ((MPATH *)V(Mpath))->vpMasks;
 	       while (!IS_VNULL(walk)){ // select masks
+	          #ifndef DOS
+		  if (FitStr(ffblk.ff_name,((MMASK *)V(walk))->pcName,level==1)){
+	          #else
 		  if (Fit(Name2Rep(ffblk.ff_name),((MMASK *)V(walk))->pbName,level==1)){
+		  #endif
 		     ((MMASK *)V(walk))->bFlag=1;
 		     ok=1;
 		     if (iLastNoQ) goto nounmask;
@@ -1030,7 +1052,11 @@ void ScanAddR (VPTR dir, VPTR Mpath, int parents, int rapid){
                                      strlen (((MPATH *)V(w2))->pcTPath))){
                           walk = ((MPATH *)V(w2))->vpMasks;
                           while (!IS_VNULL(walk)){ // unselect masks
+                             #ifndef DOS
+                             if (FitStr(ffblk.ff_name,((MMASK *)V(walk))->pcName,level==1)){
+                             #else
                              if (Fit(Name2Rep(ffblk.ff_name),((MMASK *)V(walk))->pbName,level==1)){
+                             #endif
                                 ok=0;
                                 break;
                              }
@@ -1452,7 +1478,11 @@ loopo:
 	 int ok=0;
 	 VPTR walk = ((MPATH *)V(Mpath))->vpMasks;
 	 while (!IS_VNULL(walk)){ // for all select masks
+	    #ifndef DOS
+	    if (FitRep(((REVNODE*)V(rev))->osmeta.pbName,((MMASK *)V(walk))->pcName,level==1)){
+	    #else
 	    if (Fit(((REVNODE*)V(rev))->osmeta.pbName,((MMASK *)V(walk))->pbName,level==1)){
+	    #endif
 	       if (((MMASK*)V(walk))->fRevs)
 		  if (((MMASK*)V(walk))->dwRevision!=i) // correct revision ?
 		     goto nono;
@@ -1467,7 +1497,11 @@ okq:
 	 if (ok && !IS_VNULL(Uqueue)){ // for all unselect masks
 	    VPTR walk = ((MPATH *)V(Uqueue))->vpMasks;
 	    while (!IS_VNULL(walk)){ // unselect masks
+	       #ifndef DOS
+	       if (FitRep(((REVNODE*)V(rev))->osmeta.pbName,((MMASK *)V(walk))->pcName,level==1)){
+	       #else
 	       if (Fit(((REVNODE*)V(rev))->osmeta.pbName,((MMASK *)V(walk))->pbName,level==1)){
+	       #endif
 		  if (((MMASK*)V(walk))->fRevs)
 		     if (((MMASK*)V(walk))->dwRevision!=i) // correct revision ?
 			goto ddn;

@@ -3,6 +3,9 @@
 // COMOTERP.H
 
 #include <io.h>
+#ifndef DOS
+#include <limits.h>
+#endif
 
 extern struct MODE { // not completed yet
    BYTE fForce;       // forcemode is active
@@ -65,21 +68,32 @@ extern struct MODE { // not completed yet
    char cDrive;
 } MODE;
 
+#ifdef DOS
+#define MASK_PATH_MAX1 150
+#define MASK_PATH_MAX2 200
+#else
+#define MASK_PATH_MAX1 PATH_MAX
+#define MASK_PATH_MAX2 PATH_MAX
+#endif
 
 struct MPATH {
-   char pcTPath[150]; // true path
+   char pcTPath[MASK_PATH_MAX1]; // true path
    VPTR vpMasks;     // select masks
    VPTR vpNext;
 };
 
 struct MMASK {
-   char pcDestPath[150]; // command line defined destination path
+   char pcDestPath[MASK_PATH_MAX1]; // command line defined destination path
+   #ifdef DOS
    BYTE pbName[11];    // name mask (? for open)
+   #else
+   char pcName[PATH_MAX];
+   #endif
    BYTE fRevs;         // 0 all revisions; 1 specified revision
    DWORD dwRevision;
    VPTR vpNext;
    BYTE bFlag; // ever used ??
-   char pcOrig[150];
+   char pcOrig[MASK_PATH_MAX1];
 };
 
 extern VPTR Mpath;
