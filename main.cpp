@@ -1225,6 +1225,7 @@ restart:
             } else {
                _useems=1; // 1--> XSPAWN cannot use EMS
             }
+            #ifdef DOS
             if (CONFIG.fXMS){
                gmaxXMS=0xFFFF;
                if (getenv("UC2_MAX_XMS")) gmaxXMS=atoi(getenv("UC2_MAX_XMS"))/16;
@@ -1238,6 +1239,7 @@ restart:
    //          gmaxUMB=0;
    //       }
             }
+            #endif
 
       //      if (CONFIG.fExt) gmaxI15=0xFFFF; //NEVER use raw extended memory
             if (getenv("UC2_RAW_EXT") && !gmaxXMS && !gmaxEMS && !gmaxUMB){
@@ -1443,12 +1445,16 @@ restart:
       farfree (p);
    #endif
 
+      #ifdef DOS
       _harderr(errHan);
+      #endif
       struct text_info ti;
       gettextinfo(&ti);
       attri = ti.attribute;
+      #ifdef DOS
       setcbrk (0);
       ctrlbrk (breakNono);
+      #endif
       for (int i=0;i<argc;i++) strupr (argv[i]);
       GetPath(argv); // MUST be called before InitVmem !!!
 
@@ -1537,8 +1543,10 @@ restart:
          doexit (EXIT_SUCCESS);
       }
    #endif
+      #ifdef DOS
       ctrlbrk (breakHan);
       setcbrk(1);
+      #endif
 
       GetCFG ();
       GKeep();
@@ -1722,6 +1730,7 @@ noarg:
             } else {
                _useems=1; // 1--> XSPAWN cannot use EMS
             }
+            #ifdef DOS
             if (CONFIG.fXMS){
                gmaxXMS=0xFFFF;
                if (getenv("UC2_MAX_XMS")) gmaxXMS=atoi(getenv("UC2_MAX_XMS"))/16;
@@ -1735,6 +1744,7 @@ noarg:
    //          gmaxUMB=0;
    //       }
             }
+            #endif
 
       //      if (CONFIG.fExt) gmaxI15=0xFFFF; //NEVER use raw extended memory
             if (getenv("UC2_RAW_EXT") && !gmaxXMS && !gmaxEMS && !gmaxUMB){
