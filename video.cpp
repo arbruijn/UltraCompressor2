@@ -805,7 +805,9 @@ void StartProgress (int ihints, int level)
       x = wherex();
    }
    y = wherey();
+   #ifdef DOS
    gotoxy (x, y);
+   #endif
 //   FSOut (7,"\x7\xb0\xb0\xb0\xb0\xb0\xb0\xb0\xb0\xb0\xb0");
    FSOut (7,"\x7\xfa\xfa\xfa\xfa\xfa\xfa");
    putchar(' ');
@@ -872,10 +874,14 @@ void Hint (void)
       }
       if (rel==4) rel=0;
    for (int i=8;i--;) putchar('\x8');
+   #ifdef DOS
    gotoxy (x, y);
+   #endif
    checkit=0;
    FSOut (7, tmp);
+   #ifdef DOS
    gotoxy (x+7, y);
+   #endif
    //for (i=strlen(tmp)-1;i>0;i--) putchar('\x8');
    checkit=1;
 //   gotoxy (x, y);
@@ -889,10 +895,14 @@ void EndProgress (void)
    if (!busy) return;
    UnPlop();
    for (int i=8;i--;) putchar('\x8');
+   #ifdef DOS
    gotoxy (x,y);
+   #endif
    checkit=0;
    FSOut (7,"\x7\xfe\xfe\xfe\xfe\xfe\xfe  ");
+   #ifdef DOS
    gotoxy (x+7, y);
+   #endif
 //   Out (3,"\n\r");
 //   gotoxy (x,y);
 #ifdef UCPROX
