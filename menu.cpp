@@ -86,8 +86,20 @@ void ask (char *q, char *a);
 void NoLastS (char *buf);
 void Default (void);
 
-
-
+static void ConfigOutOpt(char *opts[], int count, int cur) {
+   if ((cur%=count) < 0)
+      cur+=count;
+   for (int i=0;i<count;i++) {
+      int j=(i+cur)%count;
+      if (!i) {
+         char opt[20];
+         strcpy(opt, opts[j]);
+         strupr(opt);
+         FSOut (7,"\x5%s\x7", opt);
+      } else
+         FSOut (7," (%s)", opts[j]);
+   }
+}
 
 void ConfigMenu (){
 #ifndef UE2
@@ -100,6 +112,9 @@ void ConfigMenu (){
    for (;;){
       NoCursor();
       gotoxy(1,1);
+      #ifndef DOS
+      FSOut(7,"\n\r\n\r");
+      #endif
       FSOut(7,"\x5""GENERAL OPTIONS:\x7");
       FSOut(7,"\n\r \x6  A\x7 -> Default compression method         ");
       if (CONFIG.bDComp==0) FSOut (7,"\x5""FAST\x7"" (normal) (tight) (s-tight)");
@@ -113,8 +128,10 @@ void ConfigMenu (){
       if (CONFIG.bRelia==0) FSOut (7,"\x5""DETECT\x7"" (protect) (ensure)");
       if (CONFIG.bRelia==1) FSOut (7,"\x5""PROTECT\x7"" (ensure) (detect)");
       if (CONFIG.bRelia==2) FSOut (7,"\x5""ENSURE\x7"" (detect) (protect)");
+      #ifdef DOS
       FSOut(7,"\n\r \x6  D\x7 -> Automatic archive conversion       "); OnOff (CONFIG.fAutoCon);
       FSOut(7,"\n\r \x6  E\x7 -> Virus scan during conversion       "); OnOff (CONFIG.fVscan);
+      #endif
       FSOut(7,"\n\r \x6  F\x7 -> Smart skipping                     "); OnOff (CONFIG.fSMSkip);
       FSOut(7,"\n\r \x6  G\x7 -> Amount of output/information       ");
       if (CONFIG.fOut==1) FSOut (7,"\x5""VERBOSE\x7 (normal) (minimal)");
@@ -124,7 +141,9 @@ void ConfigMenu (){
       if (CONFIG.fMul==0) FSOut (7,"\x5""ASK\x7 (on) (off)");
       if (CONFIG.fMul==1) FSOut (7,"\x5""ON\x7 (off) (ask)");
       if (CONFIG.fMul==2) FSOut (7,"\x5""OFF\x7 (ask) (on)");
+      #ifdef DOS
       FSOut(7,"\n\r \x6  I\x7 -> Store OS/2 2.x extended attributes "); OnOff (CONFIG.fEA);
+      #endif
       FSOut(7,"\n\r \x6  J\x7 -> Store system/hidden files          ");
       if (CONFIG.fHID==0) FSOut (7,"\x5""OFF\x7"" (ask) (on)");
       if (CONFIG.fHID==1) FSOut (7,"\x5""ON\x7"" (off) (ask)");
@@ -132,10 +151,19 @@ void ConfigMenu (){
 
       FSOut(7,"\n\r\x5""SYSTEM OPTIONS:\x7");
       FSOut(7,"\n\r \x6  M\x7 -> Video mode                       ");
+      #ifdef DOS
+      static char *vopts[] = {"color", "mono", "color-bios", "mono-bios"};
+      #else
+      static char *vopts[] = {"color", "mono"};
+      #endif
+      ConfigOutOpt (vopts, sizeof(vopts)/sizeof(vopts[0]), CONFIG.bVideo-1);
+      #if 0
       if (CONFIG.bVideo==1) FSOut (7,"\x5""COLOR\x7"" (mono) (color-bios) (mono-bios)");
       if (CONFIG.bVideo==2) FSOut (7,"\x5""MONO\x7"" (color-bios) (mono-bios) (color)");
       if (CONFIG.bVideo==3) FSOut (7,"\x5""COLOR-BIOS\x7"" (mono-bios) (color) (mono)");
       if (CONFIG.bVideo==4) FSOut (7,"\x5""MONO-BIOS\x7"" (color) (mono) (color-bios)");
+      #endif
+      #ifdef DOS
       FSOut(7,"\n\r \x6  N\x7 -> Dynamic program swapping         "); OnOff (CONFIG.fSwap);
       FSOut(7,"\n\r \x6  O\x7 -> Use EMS                          ");
       if (CONFIG.fEMS==0) FSOut (7,"\x5""OFF\x7 (4.0+ only) (any version)");
@@ -143,6 +171,7 @@ void ConfigMenu (){
       if (CONFIG.fEMS==2) FSOut (7,"\x5""ANY VERSION\x7 (off) (4.0+ only)");
       FSOut(7,"\n\r \x6  P\x7 -> Use XMS                          "); OnOff (CONFIG.fXMS);
       FSOut(7,"\n\r \x6  Q\x7 -> Use 386/486/Pentium/M1 features  "); OnOff (CONFIG.fx86);
+      #endif
       FSOut(7,"\n\r \x6  R\x7 -> Advanced networking              ");
       if (CONFIG.fNet==0) FSOut (7,"\x5""OFF\x7 (on) (auto-skip)");
       if (CONFIG.fNet==1) FSOut (7,"\x5""ON\x7 (auto-skip) (off)");
