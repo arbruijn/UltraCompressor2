@@ -47,6 +47,12 @@ But notice:
 
 #define UC2_LABEL 0x1A324355L  // "UC2^Z" (notice Intel ordering)
 
+#ifdef DOS
+#define __pack__
+#else
+#define __pack__ __attribute__((packed))
+#endif
+
 // location of start of object header
 struct LOCATION {
    DWORD dwVolume;
@@ -66,7 +72,7 @@ struct FHEAD {
    DWORD dwComponentLength;  // length of component contents
    DWORD dwComponentLength2; // length of component contents
    BYTE fDamageProtected;   // component damage protected
-};
+} __pack__;
 
 // global object header
 struct XHEAD {
@@ -77,7 +83,7 @@ struct XHEAD {
    WORD wVersionMadeBy;           // e.g. 200 means 2.00
    WORD wVersionNeededToExtract;
    BYTE dummy;
-};
+} __pack__;
 // BUSY indicates an archive update is in progress (e.g. reset during upd)
 // STREAM GEN determines a single pass write was used (e.g. tape streamer)
 
@@ -92,7 +98,7 @@ struct XTAIL {
                          // 128 -> private lock, even ULOCK won't work
    DWORD serial;         // special serial number (0 = none)
    BYTE pbLabel[11];     // (MS-DOS) volume label
-};
+} __pack__;
 
 
 // compressed information block meta information
@@ -100,7 +106,7 @@ struct COMPRESS {
    DWORD dwCompressedLength;
    WORD wMethod;                 // compression method
    DWORD dwMasterPrefix;
-};
+} __pack__;
 
 #define SUPERMASTER  0           // master is supermaster
 #define NOMASTER     1           // no master defined at all
@@ -109,7 +115,7 @@ struct COMPRESS {
 // basic object header
 struct OHEAD {
    BYTE bType;    // basic object type
-};
+} __pack__;
 #define BO_DIR   1  // directory
 #define BO_FILE  2  // file
 #define BO_MAST  3  // master
@@ -124,7 +130,7 @@ struct OSMETA {
    BYTE pbName[11];  // MS-DOS compatible name (also seen EXTMETA)
    BYTE bHidden;     // 0 = plain visual, 1 = completely hidden
    BYTE tag;         // tags?
-};
+} __pack__;
 
 #define TAG_SIZE 16
 
@@ -132,24 +138,25 @@ struct EXTMETA {
    char tag[TAG_SIZE]; // zero terminated TAG string
    DWORD size;  // size of object
    BYTE next;   // more tags?
-};
+} __pack__;
 
 // Possible tags:
 #define TAG_OS2EA   "AIP:OS/2 2.x EA"
 #define TAG_VERLBL  "AIP:Version LBL"
 #define TAG_COMMENT "AIP:Comment"
+#define TAG_W95LNGN "AIP:Win95 LongN"
 
 // extended basic object meta information (files only)
 struct FILEMETA {
 //   LOCATION loc;      // where is file in archive
    DWORD dwLength;    // file length
    WORD wFletch;      // fletcher checksum of raw data
-};
+} __pack__;
 
 // extended basic object meta information (directories only)
 struct DIRMETA {
    DWORD dwIndex;     // directory index for referencing
-};
+} __pack__;
 
 // master meta information
 struct MASMETA {
@@ -159,13 +166,13 @@ struct MASMETA {
    DWORD dwRefCtr;    // total number of refering files
    WORD wLength;      // master length
    WORD wFletch;      // fletcher checksum of raw data
-};
+} __pack__;
 
 // CDIR meta information
 struct CDIRMETA {
    DWORD dwMasters;   // number of masters
    DWORD dwObjects;   // number of objects
-};
+} __pack__;
 
 /*** SUPERMAN internal records ***/
 
