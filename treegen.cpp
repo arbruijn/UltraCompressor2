@@ -248,7 +248,7 @@ void far pascal RepairLengths(BYTE far *pbLength, WORD wMaxCodeLen)
 
    // Initialise array
    for(i = 0;i <= MAX_CODE_LENGTH;i++) scl[i] = NO_MORE;
-   memset(LengthCount,0,MAX_CODE_LENGTH*2+2);
+   memset(LengthCount,0,sizeof(LengthCount));
 
    /*
       Now sort all characters on length by storing them in an array of
