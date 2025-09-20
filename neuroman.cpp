@@ -620,12 +620,25 @@ void Transfer (BYTE *pbAddress, WORD *pwLen, DWORD dwIndex){
    #ifdef UCPROX
 	       if (debug) Out (7,"{(Super)master diskread}");
    #endif
-	       exfp = _fsopen (pcEXEPath,"rb",SH_DENYWR);
+   #ifdef DOS
+	       char *pcSuperPath = pcEXEPath;
+   #else
+	       char pcSuperPath[MAXPATH], *p;
+	       snprintf(pcSuperPath, sizeof(pcSuperPath) - 10, "%s", _argv[0]);
+	       if ((p = strrchr(pcSuperPath, '/')))
+		  p++;
+	       else
+		  p = pcSuperPath;
+	       strcpy(p, "super.bin");
+   #endif
+	       exfp = _fsopen (pcSuperPath,"rb",SH_DENYWR);
 	       if (!exfp){
 		  Doing ("reading data from UC2 executable");
-		  FatalError (105,"cannot read %s\n\r",pcEXEPath);
+		  FatalError (105,"cannot read %s\n\r",pcSuperPath);
 	       }
+   #ifdef DOS
 	       fseek (exfp, CONFIG.dwSoffset,SEEK_SET);
+   #endif
 	       adr = pbAddress;
 	       Decompressor (4, Cread, Cwrite, NOMASTER,49152L);
 //	       Out (7,"[FLETCH: %04X]",Fletcher(&Fout));
