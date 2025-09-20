@@ -1018,7 +1018,7 @@ int dosvid=0;
 
 #ifdef UE2
 
-   void cdecl main (int argc, char **argv){
+   int cdecl main (int argc, char **argv){
       if (argc>=2 && argv[1][0]=='='){ // UC2-3PI
 	 strcpy (argv[1],argv[1]+1);
 	 dosvid=1;
@@ -1300,7 +1300,7 @@ restart:
 
    void UnGetKey (char);
 
-    void cdecl main (int argc, char **argv){
+   int cdecl main (int argc, char **argv){
       if (getenv("UC2_WIN")){
          int i,ctr;
 	 window (
