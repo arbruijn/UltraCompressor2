@@ -559,7 +559,7 @@ static void far pascal Cwrite (BYTE *buf, WORD len){
 
 static BYTE bMasCas=0;
 static WORD wMasLen;
-static mcbuf[4];
+static int mcbuf[4];
 
 void MMinit (void){
    if (!bMasCas&&coreleft16(6)>=3){
