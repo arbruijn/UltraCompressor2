@@ -294,7 +294,7 @@ int VerifyDP (void){
       for (i=0;i<wDrs;i++){
 	 Hint();
 	 Read (tbuf, iHandle, 512);
-	 if (!memcmp(tbuf, pbBuf[(WORD)i],512)==0){
+	 if ((!memcmp(tbuf, pbBuf[(WORD)i],512))==0){
 	    if (ret==1){
 		Doing ("testing protection records");
 		Error (90,"protection record %d is damaged (but all data is 100% OK)",i+1);
