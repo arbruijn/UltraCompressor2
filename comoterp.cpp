@@ -213,7 +213,9 @@ void TotP (void){
 
 void AddAtom (char *at){
    TotP();
+#ifdef DOS
    strupr (at);
+#endif
 //   Out (7,"[%s]",at);
    VPTR tmp = Vmalloc (sizeof(ATOM));
    strcpy (((ATOM*)V(tmp))->atom, at);

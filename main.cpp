@@ -1213,7 +1213,9 @@ restart:
       attri = ti.attribute;
       setcbrk (0);
       ctrlbrk (breakNono);
+      #ifdef DOS
       for (int i=0;i<argc;i++) strupr (argv[i]);
+      #endif
       GetPath(argv); // MUST be called before InitVmem !!!
 
    #ifdef UCPROX
@@ -1561,7 +1563,9 @@ restart:
       setcbrk (0);
       ctrlbrk (breakNono);
       #endif
+      #ifdef DOS
       for (int i=0;i<argc;i++) strupr (argv[i]);
+      #endif
       GetPath(argv); // MUST be called before InitVmem !!!
 
    #ifdef UCPROX
