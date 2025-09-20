@@ -61,7 +61,9 @@
                             // with donate16 (32 blocks = 512K)
 
 // FP_LIN. Returns the linear address of p
+#ifdef DOS
 #define FP_LIN(p) ((unsigned long)(16L*(unsigned)FP_SEG(p)+(unsigned)FP_OFF(p)))
+#endif
 
 // 4k and 16k memory block slot status
 #define ST_EMPTY 1 // no memory in this slot
@@ -104,10 +106,12 @@ static int fUMB;  // UMB alive?
 static unsigned hEMS;            // handle of EMS
 static unsigned EMS_frame;       // segment of EMS frame
 static unsigned hXMS;            // handle of XMS
+#ifdef DOS
 static void far* XMM_control;    // needed for XMS calls
 static void interrupt (* old_int15)(...); // Original INT15 handler
 static unsigned top_of_int15;    // needed for INT15 allocation & usage
 static int UMBlinkstate;         // old UMB link state, or -1
+#endif
 static int allocstrat;           // old allocation strategy or -1
 static unsigned convmemend;      // paragraph where conventional memory ends
 
@@ -128,6 +132,8 @@ typedef void t_XMemCopy(unsigned, unsigned long, unsigned,
 typedef t_XMemCopy* t_pXMemCopy;
 
 // Function prototypes
+static int coreleft16r (void);
+#ifdef DOS
 static void interrupt NewInt15(IREGS);
 static int InitDOS5UMB(void);
 static void ExitDOS5UMB(void);
@@ -144,7 +150,6 @@ static int AllocateEMS(int);
 static int QueryFreeXMS(void);
 static unsigned AllocateXMS(int);
 static int AllocateInt15(int);
-static int coreleft16r (void);
 static t_XMemCopy CopyExtended; // a function prototype via a typedef!
 static t_XMemCopy CopyXMS;
 static void DealWithOddLength(t_pXMemCopy, unsigned, unsigned long,
@@ -348,7 +353,6 @@ static void DeallocateXMS(unsigned hXMS)
    _AH = 0xA;
    (*((void far (*)(void))XMM_control))();
 }
-
 
 // Automatically called with atexit to release memory.
 void ExitMem(void) {
@@ -601,6 +605,9 @@ static int AllocateInt15(int maxI15) {
 
    return tmp;
 }
+#else
+void ExitMem() {}
+#endif
 
 int fExitMem=0;
 
@@ -628,6 +635,7 @@ void InitMem (void){
    for (i=0;i<MAX_DIRMETA16;i++)
       dir_meta16[i] = (void far*) NULL;
 
+   #ifdef DOS
    // Automatic deallocate EMS etc at program exit.
    fExitMem=1;
 
@@ -743,6 +751,7 @@ void InitMem (void){
 
    if ( fDOS5UMB )
       ExitDOS5UMB();
+   #endif
 
    // Don't divide the memory just yet, wait for calls to donate16() to
    // complete.
@@ -751,7 +760,11 @@ void InitMem (void){
 //   if (getenv("UC2_VMEM")) return; // hyper-virtual mode, leave mem alone
 
 #ifndef STAND_ALONE
+   #ifdef DOS
    #define MAX_MEM_USE 1265000L // qqq
+   #else
+   #define MAX_MEM_USE 0
+   #endif
    unsigned long spare = farcoreleft()-MAX_MEM_USE;
    if (getenv("UC2_VMEM")){
       WORD wSize = 1024 * atoi (getenv("UC2_VMEM"));
@@ -814,6 +827,7 @@ void oe2 (void);
 #ifndef STAND_ALONE
 
 void repit (void){
+#ifdef DOS
    if (fEMS && hEMS){
       oe1();
       Out (3|8,"EMS %d.%d",emshi,emslo);
@@ -834,6 +848,7 @@ void repit (void){
       Out (3|8,"UMA");
       oe2();
    }
+#endif
 }
 
 #endif
@@ -842,6 +857,7 @@ void repit (void){
 // looking at the CRTL will change that thought in a few seconds. It
 // is recomended to only call the function for the larger blocks. (e.g. >3k)
 void far* exmalloc (long size){
+#ifdef DOS
    int i,j;
    unsigned no = (unsigned)((size+4095L)/4096L); // no of 4k blocks
 
@@ -868,12 +884,14 @@ void far* exmalloc (long size){
       }
 failed:; // ANSI required ; (BCC can live without it)
    }
+#endif
    return NULL;
 }
 
 
 // Free "extra" memory. (NOT foolproof!)
 void exfree (void far* adr){
+#ifdef DOS
    int i;
    unsigned para = FP_SEG(adr);
 
@@ -890,6 +908,7 @@ void exfree (void far* adr){
             i++;
          }
       }
+#endif
 }
 
 
@@ -901,6 +920,7 @@ void exfree (void far* adr){
 // It is tempting to let exfree handle this automatically but
 // in some memory models this might give problems.
 int extest (void far* adr){
+#ifdef DOS
    int i;
    unsigned para = FP_SEG(adr);
 
@@ -908,6 +928,7 @@ int extest (void far* adr){
    for (i=0;i<MAX_META4;i++)
       if (META4[i].para==para)
          return 1; // Found.
+#endif
    return 0; // Not found.
 }
 
@@ -1092,6 +1113,7 @@ int coreleft16 (char g){
 }
 
 
+#ifdef DOS
 // Copy to/from INT 15 extended memory. fdest, fsrc are indicators whether
 // dest, src are far pointers to something in the first meg (fdest or
 // fsrc == 0) or a linear address to anything (fdest or fsrc != 0).
@@ -1279,7 +1301,7 @@ static void DealWithOddLength(t_pXMemCopy pXMemCopy,
       }
    }
 }
-
+#endif
 
 // Copy 0..16k of memory to a cache block.
 void to16 (int itx, unsigned ofs, void far* ptr, int len) {
@@ -1302,6 +1324,10 @@ void to16 (int itx, unsigned ofs, void far* ptr, int len) {
    // Memory usage is: donated, Int15. OR: donated, XMS, EMS.
    if ( (tmp = itx - nDIR) < 0 ) { // page is in donated memory
       RapidCopy((void far*) ((char far*) dir_meta16[itx] + ofs), ptr, len);
+#ifndef DOS
+   } else
+      IE ();
+#else
    } else if ( fI15 ) { // page is in INT15 extended memory.
       // Note that tmp contains the "page" of INT15 memory.
       // Let DealWithOddLength handle the copying...
@@ -1333,6 +1359,7 @@ void to16 (int itx, unsigned ofs, void far* ptr, int len) {
       EMS_map (page, page); // Restore EMS for use as UMB.
       // What if page 3 wasnt mapped? Then there's no cache EMS memory anyway
    }
+#endif
    Normal();
 }
 
@@ -1355,6 +1382,10 @@ void from16 (void far* ptr, int itx, unsigned ofs, int len){
    itx--;
    if ( (tmp = itx - nDIR) < 0 ) {
       RapidCopy(ptr, (void far*) ((char far*) dir_meta16[itx] + ofs), len);
+#ifndef DOS
+   } else
+      IE ();
+#else
    } else if ( fI15 ) {
       DealWithOddLength(CopyExtended, 0, (unsigned long) ptr,
 	    1, 0x100000L + 1024L*top_of_int15 + 16384L*tmp + ofs, len);
@@ -1372,6 +1403,7 @@ void from16 (void far* ptr, int itx, unsigned ofs, int len){
       RapidCopy(ptr, MK_FP(EMS_frame, page*16384U + ofs), len);
       EMS_map (page, page);
    }
+#endif
    Normal();
 }
 

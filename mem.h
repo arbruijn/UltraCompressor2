@@ -3,6 +3,9 @@
    use is granted to Jean-loup Gailly and Robert Jung.
    Partial (C) 1993 Jan-Pieter Cornet.
 */
+#ifndef DOS
+#include "dosdef.h"
+#endif
 
 // INIT & EXIT
 void InitMem (void);                    // Init memory manager.
