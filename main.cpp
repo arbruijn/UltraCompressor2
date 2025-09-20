@@ -389,7 +389,8 @@ void HelpMenu (){
    int opt=3;
    int i;
    Out (7,"\x7");
-   clrscr();
+   if (!dosvid)
+     clrscr();
    for (;;){
       menu=1;
       NoCursor();
@@ -951,9 +952,13 @@ void cdecl exito (void){
    if (beta) Out (7,"\n\r\x7Memory: PROG=%ld DYNRAM=%ld BASETOTAL=%ld VIRTUAL=%lu",(long)progmem,(long)maximal-minimal,(long)progmem+maximal-minimal,virt);
 #endif
    if (problemos || (!dosvid && !bDump && StdOutType()==D_CON)){
-      textattr (attri);
-      cputs ("\n\r \r");
+      if (!dosvid) {
+         textattr (attri);
+         cputs ("\n\r \r");
+      }
    }
+   if (dosvid)
+      printf("\n");
 #ifdef UCPROX
    if (debug){
       Out (7,"{{Correct exit of program}}\n\r");
@@ -989,6 +994,9 @@ int dosvid=0;
 	 strcpy (argv[1],argv[1]+1);
 	 dosvid=1;
       }
+      #ifndef DOS
+      dosvid=1;
+      #endif
 restart:
       if ((argc==1) ||
 	  (argv[1][0]=='?' || (argv[1][0]=='-' && argv[1][1]=='?') || (argv[1][0]=='/' && argv[1][1]=='?')) ||
@@ -1641,7 +1649,8 @@ noarg:
                Mode(CONFIG.bVideo);
       //      textattr (attri);
             FSOut (7,"\x7");
-            clrscr();
+            if (!dosvid)
+              clrscr();
       #ifdef UCPROX // special testing software
             if (beta && getenv("DEBUG") && strcmp(getenv("DEBUG"),"ON")==0){
                Out (7,"[[DEBUG MODE ENABLED]]\n\r");
