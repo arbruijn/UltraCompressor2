@@ -178,8 +178,93 @@ void QTrans (void){
    }
 }
 
+#ifndef DOS
+#include <errno.h>
+
+char pcCfgPath[MAXPATH];
+
+void WriteConf(const char *path) {
+   FILE *f;
+   if (!(f = fopen(path, "w"))) {
+      Doing ("updating configuration");
+      FatalError (105, "cannot create %s\n\r",path);
+   }
+   fprintf(f, "HID=%d\n", CONFIG.fHID);
+   fprintf(f, "EA=%d\n", CONFIG.fEA);
+   fprintf(f, "Mul=%d\n", CONFIG.fMul);
+   fprintf(f, "Video=%d\n", CONFIG.bVideo);
+   fprintf(f, "Net=%d\n", CONFIG.fNet);
+   fprintf(f, "SMSkip=%d\n", CONFIG.fSMSkip);
+   fprintf(f, "Relia=%d\n", CONFIG.bRelia);
+   fprintf(f, "DComp=%d\n", CONFIG.bDComp);
+   fprintf(f, "Inc=%d\n", CONFIG.fInc);
+   fprintf(f, "AutoCon=%d\n", CONFIG.fAutoCon);
+   fprintf(f, "Vscan=%d\n", CONFIG.fVscan);
+   fprintf(f, "Out=%d\n", CONFIG.fOut);
+   fprintf(f, "TPATH=%s\n", (char *)CONFIG.pbTPATH);
+   fprintf(f, "Man=%s\n", CONFIG.pcMan);
+   fprintf(f, "Log=%s\n", CONFIG.pcLog);
+   fprintf(f, "Bat=%s\n", CONFIG.pcBat);
+   fclose(f);
+}
+
+int ReadConf(const char *path) {
+   FILE *f;
+   char buf[256];
+   if (!(f = fopen(path, "r")))
+      return 0;
+   while ((fgets(buf, sizeof(buf), f))) {
+      char *p;
+      if (buf[0] && buf[strlen(buf) - 1] == '\n')
+	     buf[strlen(buf) - 1] = 0;
+      if (buf[0] && buf[strlen(buf) - 1] == '\r')
+	     buf[strlen(buf) - 1] = 0;
+	  p = strchr(buf, '=');
+	  if (!p)
+         continue;
+      *p = 0;
+      char *sval = p + 1;
+      int val = strtol(sval, NULL, 10);
+      if (strcmp(buf, "HID") == 0)
+         CONFIG.fHID = val;
+      else if (strcmp(buf, "EA") == 0)
+         CONFIG.fEA = val;
+      else if (strcmp(buf, "Mul") == 0)
+         CONFIG.fMul = val;
+      else if (strcmp(buf, "Video") == 0)
+         CONFIG.bVideo = val;
+      else if (strcmp(buf, "Net") == 0)
+         CONFIG.fNet = val;
+      else if (strcmp(buf, "SMSkip") == 0)
+         CONFIG.fSMSkip = val;
+      else if (strcmp(buf, "Relia") == 0)
+         CONFIG.bRelia = val;
+      else if (strcmp(buf, "DComp") == 0)
+         CONFIG.bDComp = val;
+      else if (strcmp(buf, "Inc") == 0)
+         CONFIG.fInc = val;
+      else if (strcmp(buf, "AutoCon") == 0)
+         CONFIG.fAutoCon = val;
+      else if (strcmp(buf, "Vscan") == 0)
+         CONFIG.fVscan = val;
+      else if (strcmp(buf, "Out") == 0)
+         CONFIG.fOut = val;
+      else if (strcmp(buf, "TPATH") == 0)
+         snprintf((char *)CONFIG.pbTPATH, sizeof(CONFIG.pbTPATH), "%s", sval);
+      else if (strcmp(buf, "Man") == 0)
+         snprintf(CONFIG.pcMan, sizeof(CONFIG.pcMan), "%s", sval);
+      else if (strcmp(buf, "Log") == 0)
+         snprintf(CONFIG.pcLog, sizeof(CONFIG.pcLog), "%s", sval);
+      else if (strcmp(buf, "Bat") == 0)
+         snprintf(CONFIG.pcBat, sizeof(CONFIG.pcBat), "%s", sval);
+   }
+   return 1;
+}
+#endif
+
 void UpdateCFG (){
 #ifndef UE2
+#ifdef DOS
    FILE *fp = fopen (pcEXEPath,"r+b");
    if (!fp){
       Doing ("updating configuration");
@@ -190,6 +275,21 @@ void UpdateCFG (){
    fwrite (&CONFIG, 1, sizeof (CONF), fp);
    QTrans();
    fclose (fp);
+#else
+   char buf[sizeof(pcCfgPath)], *p;
+   strcpy(buf, pcCfgPath);
+   p = buf + 1;
+   while ((p = strchr(p, '/'))) {
+      *p = 0;
+      puts(buf);
+      if (mkdir(buf) && errno != EEXIST) {
+         Doing ("updating configuration");
+         FatalError (105, "cannot create directory %s\n\r", buf);
+      }
+      *p++ = '/';
+   }
+   WriteConf(pcCfgPath);
+#endif
 #endif
 }
 
@@ -199,6 +299,7 @@ void Default (void);
 extern int dosvid;
 
 void GetCFG (){
+#ifdef DOS
    FILE *fp = _fsopen (pcEXEPath,"rb",SH_DENYWR);
    if (!fp){
       FatalError (105, "cannot read configuration from %s",pcEXEPath);
@@ -239,7 +340,8 @@ void GetCFG (){
    } else {
       fclose (fp);
    }
-#ifdef UE2
+#endif
+#if defined(UE2) || !defined(DOS)
    Default();
    if (dosvid){
       CONFIG.fOut = 4;
@@ -248,6 +350,10 @@ void GetCFG (){
    }
    CONFIG.bVideo = 4;
    strcpy (CONFIG.pcLog,"C:" PATHSEP "*");
+#ifndef DOS
+   snprintf(pcCfgPath, sizeof(pcCfgPath), "%s/.config/uc/config", getenv("HOME"));
+   ReadConf(pcCfgPath);
+#endif
    SPARE=CONFIG;
 #endif
 //   Out (7,"[[%ld]]",CONFIG.dwSoffset);
